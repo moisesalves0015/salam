@@ -1,0 +1,223 @@
+@import "tailwindcss";
+
+:root {
+  --sm-canvas: #F8FAFC;
+  --sm-surface: #FFFFFF;
+  --sm-surface-soft: #F1F5F9;
+  --sm-ink: #0F172A;
+  --sm-ink-muted: #64748B;
+  --sm-primary: #3B82F6;
+  --sm-primary-deep: #1D4ED8;
+  --sm-turquoise: #06B6D4;
+  --sm-reward: #F59E0B;
+  --sm-reward-deep: #D97706;
+  --sm-success: #10B981;
+  --sm-attention: #F97316;
+  --sm-error: #EF4444;
+  --sm-special: #8B5CF6;
+  --sm-border: #E2E8F0;
+}
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    background-color: var(--sm-canvas);
+    color: var(--sm-ink);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif;
+    color: var(--sm-ink);
+  }
+}
+
+/* Hide scrollbars for TV mode and smooth marquee lists */
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+}
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+/* Custom subtle Light Game Scrollbar for regular views */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3B82F6;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 14px rgba(59, 130, 246, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 26px rgba(59, 130, 246, 0.35);
+  }
+}
+
+@keyframes rewardGlow {
+  0%, 100% {
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.2);
+  }
+  50% {
+    box-shadow: 0 6px 24px rgba(245, 158, 11, 0.4);
+  }
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes marqueeLeft {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes coinFall {
+  0% {
+    transform: translateY(-25px) rotate(0deg) scale(0.85);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.95;
+  }
+  85% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translateY(80px) rotate(220deg) scale(1);
+    opacity: 0;
+  }
+}
+
+.animate-coin-fall-1 {
+  animation: coinFall 3.2s ease-in-out infinite;
+}
+
+.animate-coin-fall-2 {
+  animation: coinFall 2.6s ease-in-out infinite 0.8s;
+}
+
+.animate-coin-fall-3 {
+  animation: coinFall 3.5s ease-in-out infinite 1.6s;
+}
+
+.animate-coin-fall-4 {
+  animation: coinFall 2.9s ease-in-out infinite 2.2s;
+}
+
+.animate-shimmer {
+  animation: shimmer 2.5s infinite;
+}
+
+.animate-float {
+  animation: floatGentle 3s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spinSlow 12s linear infinite;
+}
+
+.glow-reward {
+  animation: rewardGlow 3s infinite ease-in-out;
+}
+
+.glow-card {
+  animation: pulseGlow 4s infinite ease-in-out;
+}
+
+.animate-fade-in {
+  animation: fadeInScale 0.4s ease-out forwards;
+}
+
+.animate-marquee-smooth {
+  display: flex;
+  width: max-content;
+  animation: marqueeLeft 38s linear infinite;
+}
+
+.animate-marquee-smooth:hover {
+  animation-play-state: paused;
+}
+
+.animate-marquee-slow {
+  display: flex;
+  width: max-content;
+  animation: marqueeLeft 50s linear infinite;
+}
+
+.animate-marquee-slow:hover {
+  animation-play-state: paused;
+}
+
+/* Glassmorphism TV Mode Utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05), 0 4px 12px -2px rgba(15, 23, 42, 0.03);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 16px 0 rgba(15, 23, 42, 0.04);
+}
+
+.glass-card-subtle {
+  background: rgba(241, 245, 249, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}

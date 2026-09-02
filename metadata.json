@@ -1,0 +1,6 @@
+{
+  "name": "Sala de Missões",
+  "description": "Plataforma pedagógica gamificada para acompanhamento evolutivo, diagnóstico de habilidades, trilhas de aprendizagem e intervenções docentes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
