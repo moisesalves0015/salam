@@ -12,24 +12,20 @@ import {
   Star, 
   BrainCircuit, 
   Target, 
-  Trophy, 
   HeartHandshake, 
   Home, 
   Pause, 
   PlayCircle, 
-  Coins, 
   Clock, 
   Globe2, 
   GraduationCap, 
-  Lock, 
   Users2, 
   Smile, 
   Crown, 
-  TrendingUp, 
   Sparkle, 
   Camera,
-  CheckCircle2,
-  Award
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { Student, CardItem, AchievementItem, ClassMetrics } from '../types';
 
@@ -41,23 +37,42 @@ interface PainelSalaMissoesProps {
   onClose?: () => void;
 }
 
-// Standard Frosted Glass Coin Badge - Pure Emerald Theme (No Yellow / No Mismatched Purple)
-export const GlassCoin: React.FC<{ size?: 'xs' | 'sm' | 'md' }> = ({ size = 'sm' }) => {
+// Ultra-Polished Shiny Blue Game Coin (Vector with 3D Bevel & Radiant Cyan/Blue Gradients + Star)
+export const ShinyCoin: React.FC<{ size?: 'xs' | 'sm' | 'md' | 'lg'; className?: string }> = ({ 
+  size = 'sm', 
+  className = '' 
+}) => {
   const sizeMap = {
-    xs: 'w-4 h-4',
-    sm: 'w-5 h-5',
-    md: 'w-6 h-6'
-  };
-
-  const iconMap = {
-    xs: 'w-2.5 h-2.5',
-    sm: 'w-3 h-3',
-    md: 'w-3.5 h-3.5'
+    xs: 'w-3.5 h-3.5',
+    sm: 'w-4.5 h-4.5',
+    md: 'w-6 h-6',
+    lg: 'w-7.5 h-7.5'
   };
 
   return (
-    <div className={`inline-flex items-center justify-center rounded-full bg-emerald-500 text-white shadow-2xs shrink-0 ${sizeMap[size]}`}>
-      <Coins className={`${iconMap[size]} text-white`} />
+    <div className={`relative inline-flex items-center justify-center shrink-0 select-none ${sizeMap[size]} ${className}`}>
+      <svg viewBox="0 0 24 24" fill="none" className="w-full h-full drop-shadow-xs">
+        {/* Outer Radiant Blue Rim */}
+        <circle cx="12" cy="12" r="11" fill="url(#blueCoinOuter)" />
+        {/* Main Radiant Blue Body */}
+        <circle cx="12" cy="12" r="9.5" fill="url(#blueCoinBody)" />
+        {/* Specular White Engraved Ring */}
+        <circle cx="12" cy="12" r="7.5" stroke="#FFFFFF" strokeWidth="1.2" strokeOpacity="0.85" fill="none" />
+        {/* Center Star Emblem */}
+        <path d="M12 6.5L13.5 10.2H17.5L14.2 12.6L15.4 16.5L12 14.1L8.6 16.5L9.8 12.6L6.5 10.2H10.5L12 6.5Z" fill="#FFFFFF" fillOpacity="0.95" />
+        <defs>
+          <linearGradient id="blueCoinOuter" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#38BDF8" />
+            <stop offset="0.5" stopColor="#2563EB" />
+            <stop offset="1" stopColor="#1E40AF" />
+          </linearGradient>
+          <linearGradient id="blueCoinBody" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#60A5FA" />
+            <stop offset="0.4" stopColor="#3B82F6" />
+            <stop offset="1" stopColor="#1D4ED8" />
+          </linearGradient>
+        </defs>
+      </svg>
     </div>
   );
 };
@@ -80,10 +95,10 @@ export const GlassCoinBadge: React.FC<{
   };
 
   return (
-    <span className={`inline-flex items-center font-black rounded-xl bg-emerald-50/90 backdrop-blur-md border border-emerald-200/90 text-emerald-900 shadow-2xs ${paddingMap[size]} ${className}`}>
-      <GlassCoin size={size === 'xs' ? 'xs' : 'sm'} />
+    <span className={`inline-flex items-center font-black rounded-full bg-blue-500/10 backdrop-blur-md border border-blue-500/25 text-blue-900 shadow-2xs ${paddingMap[size]} ${className}`}>
+      <ShinyCoin size={size === 'xs' ? 'xs' : 'sm'} />
       <span>{prefix}{typeof amount === 'number' ? amount.toLocaleString('pt-BR') : amount}</span>
-      <span className="text-[9px] text-emerald-700 font-bold uppercase tracking-wider">Moedas</span>
+      <span className="text-[9px] text-blue-700 font-bold uppercase tracking-wider">Moedas</span>
     </span>
   );
 };
@@ -107,7 +122,7 @@ export const GlassXpBadge: React.FC<{
   };
 
   return (
-    <span className={`inline-flex items-center font-black rounded-xl bg-sky-50/90 backdrop-blur-md border border-sky-200/90 text-sky-900 shadow-2xs ${paddingMap[size]} ${className}`}>
+    <span className={`inline-flex items-center font-black rounded-full bg-sky-500/10 backdrop-blur-md border border-sky-500/25 text-sky-900 shadow-2xs ${paddingMap[size]} ${className}`}>
       <Star className="w-3.5 h-3.5 fill-sky-500 text-sky-600 shrink-0" />
       <span>{prefix}{typeof amount === 'number' ? amount.toLocaleString('pt-BR') : amount} XP</span>
     </span>
@@ -128,25 +143,25 @@ const CLASSROOM_MEMORIES = [
   {
     title: 'Projeto Científico em Grupo',
     caption: 'Descobrindo os segredos da natureza e das plantas com muita curiosidade!',
-    photoUrl: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&auto=format&fit=crop&q=80',
+    photoUrl: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?w=800&auto=format&fit=crop&q=80',
     tag: 'Laboratório Vivo'
   },
   {
     title: 'Desafio da Leitura Criativa',
     caption: 'Criando histórias e contos incríveis com toda a turma unida!',
-    photoUrl: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&auto=format&fit=crop&q=80',
+    photoUrl: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&auto=format&fit=crop&q=80',
     tag: 'Clube do Livro'
   },
   {
     title: 'Oficina de Robótica & Lógica',
     caption: 'Montando engrenagens e resolvendo enigmas em equipe!',
-    photoUrl: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&auto=format&fit=crop&q=80',
+    photoUrl: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80',
     tag: 'Makers da Sala'
   },
   {
     title: 'Gincana da Matemática Divertida',
     caption: 'Quando todo mundo ajuda, nenhum desafio é difícil demais!',
-    photoUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&auto=format&fit=crop&q=80',
+    photoUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&auto=format&fit=crop&q=80',
     tag: 'Matemáticos Mirins'
   }
 ];
@@ -155,12 +170,17 @@ interface ClassroomAdventureData {
   id: string;
   name: string;
   grade: string;
-  tagline: string;
   totalXp: number;
   xpToday: number;
   completedMissions: number;
   coinsCount: number;
   
+  teacher: {
+    name: string;
+    role: string;
+    avatar: string;
+  };
+
   specialMission: {
     title: string;
     theme: string;
@@ -188,11 +208,9 @@ interface ClassroomAdventureData {
     id: string;
     name: string;
     icon: React.ComponentType<{ className?: string }>;
-    colorClass: string;
-    badgeClass: string;
-    barColor: string;
+    accentColor: string;
+    tag: string;
     availableMissions: number;
-    progressPct: number;
   }[];
 
   pairs: {
@@ -209,27 +227,8 @@ interface ClassroomAdventureData {
     name: string;
     mission: string;
     avatars: string[];
-    progressPct: number;
+    statusTag: string;
     xpReward: number;
-  }[];
-
-  recentCelebrations: {
-    type: 'missao' | 'sequencia' | 'fase' | 'dupla';
-    title: string;
-    classroom: string;
-    xp: number;
-    coins: number;
-    author: string;
-    avatar: string;
-  }[];
-
-  positiveHighlights: {
-    category: string;
-    studentName: string;
-    avatar: string;
-    description: string;
-    icon: React.ComponentType<{ className?: string }>;
-    badgeClass: string;
   }[];
 
   explorers: {
@@ -241,47 +240,39 @@ interface ClassroomAdventureData {
   }[];
 }
 
-// 4 Standard Worlds guaranteed in ALL classrooms (Blue, Indigo, Emerald, Purple - Harmonious Tones)
+// 4 Standard Worlds guaranteed in ALL classrooms (No Progress Percentage Bars!)
 const STANDARD_WORLDS_TEMPLATE = [
   {
     id: 'w1',
     name: 'Reino dos Números',
     icon: Calculator,
-    colorClass: 'text-sky-900 bg-sky-50/90 border-sky-200/90',
-    badgeClass: 'bg-sky-600 text-white',
-    barColor: 'bg-sky-500',
-    availableMissions: 5,
-    progressPct: 80
+    accentColor: 'text-sky-600 bg-sky-50 border-sky-200',
+    tag: 'Lógica & Cálculos',
+    availableMissions: 5
   },
   {
     id: 'w2',
     name: 'Jornada da Leitura',
     icon: BookOpen,
-    colorClass: 'text-indigo-900 bg-indigo-50/90 border-indigo-200/90',
-    badgeClass: 'bg-indigo-600 text-white',
-    barColor: 'bg-indigo-600',
-    availableMissions: 4,
-    progressPct: 75
+    accentColor: 'text-indigo-600 bg-indigo-50 border-indigo-200',
+    tag: 'Contos & Poesias',
+    availableMissions: 4
   },
   {
     id: 'w3',
     name: 'Ilha das Ciências',
     icon: Atom,
-    colorClass: 'text-emerald-900 bg-emerald-50/90 border-emerald-200/90',
-    badgeClass: 'bg-emerald-600 text-white',
-    barColor: 'bg-emerald-600',
-    availableMissions: 3,
-    progressPct: 70
+    accentColor: 'text-emerald-600 bg-emerald-50 border-emerald-200',
+    tag: 'Natureza & Espaço',
+    availableMissions: 3
   },
   {
     id: 'w4',
     name: 'Mundo dos Desafios',
     icon: BrainCircuit,
-    colorClass: 'text-purple-900 bg-purple-50/90 border-purple-200/90',
-    badgeClass: 'bg-purple-600 text-white',
-    barColor: 'bg-purple-600',
-    availableMissions: 6,
-    progressPct: 88
+    accentColor: 'text-purple-600 bg-purple-50 border-purple-200',
+    tag: 'Enigmas & Robótica',
+    availableMissions: 6
   }
 ];
 
@@ -290,12 +281,17 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
     id: '5a',
     name: '5º ANO A',
     grade: '5º Ano Fundamental',
-    tagline: 'Exploradores da Lógica & Aventura dos Números',
     totalXp: 8420,
     xpToday: 450,
     completedMissions: 134,
     coinsCount: 3280,
     
+    teacher: {
+      name: 'Profª. Camila Ribeiro',
+      role: 'Educadora Responsável',
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=160&auto=format&fit=crop&q=80'
+    },
+
     specialMission: {
       title: 'O Enigma do Tesouro Perdido dos Números',
       theme: 'Reino dos Números',
@@ -313,7 +309,7 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
         title: 'A Batalha das Frações Coloridas',
         world: 'Reino dos Números',
         worldIcon: Calculator,
-        worldBadgeClass: 'bg-sky-100 text-sky-800 border-sky-200',
+        worldBadgeClass: 'text-sky-700 bg-sky-50 border-sky-200',
         xpReward: 160,
         coinsReward: 80,
         coverUrl: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=500&auto=format&fit=crop&q=80',
@@ -324,7 +320,7 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
         title: 'Expedição ao Ecossistema da Floresta',
         world: 'Ilha das Ciências',
         worldIcon: Atom,
-        worldBadgeClass: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+        worldBadgeClass: 'text-emerald-700 bg-emerald-50 border-emerald-200',
         xpReward: 220,
         coinsReward: 110,
         coverUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=80',
@@ -335,7 +331,7 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
         title: 'O Labirinto dos Códigos Secretos',
         world: 'Mundo dos Desafios',
         worldIcon: BrainCircuit,
-        worldBadgeClass: 'bg-purple-100 text-purple-800 border-purple-200',
+        worldBadgeClass: 'text-purple-700 bg-purple-50 border-purple-200',
         xpReward: 250,
         coinsReward: 120,
         coverUrl: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=500&auto=format&fit=crop&q=80',
@@ -343,7 +339,7 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
       }
     ],
 
-    adventureWorlds: STANDARD_WORLDS_TEMPLATE.map(w => ({ ...w, availableMissions: 5, progressPct: 82 })),
+    adventureWorlds: STANDARD_WORLDS_TEMPLATE.map(w => ({ ...w, availableMissions: 5 })),
 
     pairs: [
       {
@@ -394,7 +390,7 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
           'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100',
           'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100'
         ],
-        progressPct: 80,
+        statusTag: 'Missão em Grupo Ativa',
         xpReward: 300
       },
       {
@@ -406,65 +402,8 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
           'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100',
           'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100'
         ],
-        progressPct: 92,
+        statusTag: 'Equipe Avançando',
         xpReward: 320
-      }
-    ],
-
-    recentCelebrations: [
-      {
-        type: 'missao',
-        title: 'MISSÃO CONCLUÍDA!',
-        classroom: '5º Ano A',
-        xp: 200,
-        coins: 100,
-        author: 'João & Maria',
-        avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=120'
-      },
-      {
-        type: 'sequencia',
-        title: 'SEQUÊNCIA DE 5 DIAS!',
-        classroom: '5º Ano A',
-        xp: 150,
-        coins: 80,
-        author: 'Sofia R.',
-        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120'
-      },
-      {
-        type: 'fase',
-        title: 'NOVA FASE DESBLOQUEADA!',
-        classroom: 'Turma Toda',
-        xp: 300,
-        coins: 150,
-        author: 'Mundo das Frações',
-        avatar: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=120'
-      }
-    ],
-
-    positiveHighlights: [
-      {
-        category: 'Super Colaboração',
-        studentName: 'Lucas P. & Pedro H.',
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=140',
-        description: 'Ajudaram colegas na missão de divisão com muita paciência!',
-        icon: HeartHandshake,
-        badgeClass: 'text-emerald-900 bg-emerald-50 border-emerald-200'
-      },
-      {
-        category: 'Grande Evolução',
-        studentName: 'Ana Clara M.',
-        avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=140',
-        description: 'Superou o desafio de leitura e descobriu todas as pistas!',
-        icon: TrendingUp,
-        badgeClass: 'text-sky-900 bg-sky-50 border-sky-200'
-      },
-      {
-        category: 'Foco & Criatividade',
-        studentName: 'Manuela B.',
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=140',
-        description: 'Criou uma solução genial para organizar o grupo nas ciências!',
-        icon: Sparkles,
-        badgeClass: 'text-purple-900 bg-purple-50 border-purple-200'
       }
     ],
 
@@ -483,12 +422,17 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
     id: '5b',
     name: '5º ANO B',
     grade: '5º Ano Fundamental',
-    tagline: 'Mestres dos Sólidos 3D & Construtores de Ideias',
     totalXp: 7890,
     xpToday: 380,
     completedMissions: 118,
     coinsCount: 2940,
     
+    teacher: {
+      name: 'Prof. Rafael Albuquerque',
+      role: 'Educador Responsável',
+      avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=160&auto=format&fit=crop&q=80'
+    },
+
     specialMission: {
       title: 'A Construção da Fortaleza dos Sólidos 3D',
       theme: 'Mundo dos Desafios',
@@ -506,7 +450,7 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
         title: 'A Batalha da Energia Solar',
         world: 'Ilha das Ciências',
         worldIcon: Atom,
-        worldBadgeClass: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+        worldBadgeClass: 'text-emerald-700 bg-emerald-50 border-emerald-200',
         xpReward: 190,
         coinsReward: 95,
         coverUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=80',
@@ -517,7 +461,7 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
         title: 'Poliedros e Prismas Mágicos',
         world: 'Reino dos Números',
         worldIcon: Calculator,
-        worldBadgeClass: 'bg-sky-100 text-sky-800 border-sky-200',
+        worldBadgeClass: 'text-sky-700 bg-sky-50 border-sky-200',
         xpReward: 210,
         coinsReward: 105,
         coverUrl: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=500&auto=format&fit=crop&q=80',
@@ -525,7 +469,7 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
       }
     ],
 
-    adventureWorlds: STANDARD_WORLDS_TEMPLATE.map(w => ({ ...w, availableMissions: 4, progressPct: 75 })),
+    adventureWorlds: STANDARD_WORLDS_TEMPLATE.map(w => ({ ...w, availableMissions: 4 })),
 
     pairs: [
       {
@@ -557,31 +501,8 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
           'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=100',
           'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100'
         ],
-        progressPct: 88,
+        statusTag: 'Construção Coletiva',
         xpReward: 310
-      }
-    ],
-
-    recentCelebrations: [
-      {
-        type: 'missao',
-        title: 'FORTALEZA 3D COMPLETA!',
-        classroom: '5º Ano B',
-        xp: 220,
-        coins: 110,
-        author: 'Beatriz & Matheus',
-        avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120'
-      }
-    ],
-
-    positiveHighlights: [
-      {
-        category: 'Criatividade Espacial',
-        studentName: 'Helena C.',
-        avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=140',
-        description: 'Montou o prisma mais simétrico da turma toda!',
-        icon: Sparkles,
-        badgeClass: 'text-indigo-900 bg-indigo-50 border-indigo-200'
       }
     ],
 
@@ -596,12 +517,17 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
     id: '4a',
     name: '4º ANO A',
     grade: '4º Ano Fundamental',
-    tagline: 'Campeões da Multiplicação & Contadores de Histórias',
     totalXp: 7120,
     xpToday: 320,
     completedMissions: 104,
     coinsCount: 2650,
     
+    teacher: {
+      name: 'Profª. Juliana Mendes',
+      role: 'Educadora Responsável',
+      avatar: 'https://images.unsplash.com/photo-1580894732444-8ecded7900cd?w=160&auto=format&fit=crop&q=80'
+    },
+
     specialMission: {
       title: 'A Grande Fábrica da Multiplicação Mágica',
       theme: 'Reino dos Números',
@@ -619,7 +545,7 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
         title: 'O Segredo da Germinação da Semente',
         world: 'Ilha das Ciências',
         worldIcon: Atom,
-        worldBadgeClass: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+        worldBadgeClass: 'text-emerald-700 bg-emerald-50 border-emerald-200',
         xpReward: 180,
         coinsReward: 90,
         coverUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=80',
@@ -627,7 +553,7 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
       }
     ],
 
-    adventureWorlds: STANDARD_WORLDS_TEMPLATE.map(w => ({ ...w, availableMissions: 6, progressPct: 84 })),
+    adventureWorlds: STANDARD_WORLDS_TEMPLATE.map(w => ({ ...w, availableMissions: 6 })),
 
     pairs: [
       {
@@ -650,31 +576,8 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
           'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100',
           'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100'
         ],
-        progressPct: 80,
+        statusTag: 'Pesquisa em Andamento',
         xpReward: 280
-      }
-    ],
-
-    recentCelebrations: [
-      {
-        type: 'missao',
-        title: 'TABUADA CONQUISTADA!',
-        classroom: '4º Ano A',
-        xp: 190,
-        coins: 95,
-        author: 'Bernardo & Luiza',
-        avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=120'
-      }
-    ],
-
-    positiveHighlights: [
-      {
-        category: 'Rapidez & Alegria',
-        studentName: 'Luiza M.',
-        avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=140',
-        description: 'Leu o conto em voz alta com entonação incrível!',
-        icon: BookOpen,
-        badgeClass: 'text-indigo-900 bg-indigo-50 border-indigo-200'
       }
     ],
 
@@ -687,12 +590,17 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
     id: '4b',
     name: '4º ANO B',
     grade: '4º Ano Fundamental',
-    tagline: 'Detetives das Frações & Criadores Poéticos',
     totalXp: 6850,
     xpToday: 290,
     completedMissions: 98,
     coinsCount: 2410,
     
+    teacher: {
+      name: 'Prof. Marcos Vinícius',
+      role: 'Educador Responsável',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=160&auto=format&fit=crop&q=80'
+    },
+
     specialMission: {
       title: 'A Pizza Mágica das Frações',
       theme: 'Reino dos Números',
@@ -710,7 +618,7 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
         title: 'O Ciclo Secreto da Chuva',
         world: 'Ilha das Ciências',
         worldIcon: Atom,
-        worldBadgeClass: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+        worldBadgeClass: 'text-emerald-700 bg-emerald-50 border-emerald-200',
         xpReward: 190,
         coinsReward: 95,
         coverUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=80',
@@ -718,7 +626,7 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
       }
     ],
 
-    adventureWorlds: STANDARD_WORLDS_TEMPLATE.map(w => ({ ...w, availableMissions: 4, progressPct: 72 })),
+    adventureWorlds: STANDARD_WORLDS_TEMPLATE.map(w => ({ ...w, availableMissions: 4 })),
 
     pairs: [
       {
@@ -740,31 +648,8 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
           'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
           'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100'
         ],
-        progressPct: 75,
+        statusTag: 'Oficina de Rimas',
         xpReward: 260
-      }
-    ],
-
-    recentCelebrations: [
-      {
-        type: 'missao',
-        title: 'FRAÇÃO 1/2 DESVENDADA!',
-        classroom: '4º Ano B',
-        xp: 170,
-        coins: 85,
-        author: 'Samuel & Melissa',
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120'
-      }
-    ],
-
-    positiveHighlights: [
-      {
-        category: 'Poeta da Turma',
-        studentName: 'Samuel V.',
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=140',
-        description: 'Compôs uma rima genial sobre a água e a chuva!',
-        icon: Sparkles,
-        badgeClass: 'text-indigo-900 bg-indigo-50 border-indigo-200'
       }
     ],
 
@@ -777,12 +662,17 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
     id: 'escola',
     name: 'ESCOLA TODA',
     grade: 'EM Monte das Águas • 4º e 5º Anos',
-    tagline: 'Todos os Exploradores Juntos na Grande Aventura!',
     totalXp: 30280,
     xpToday: 1440,
     completedMissions: 454,
     coinsCount: 11280,
     
+    teacher: {
+      name: 'Corpo Docente',
+      role: 'Equipe Pedagógica',
+      avatar: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=160&auto=format&fit=crop&q=80'
+    },
+
     specialMission: {
       title: 'A Grande Jornada dos 50.000 XP da Escola',
       theme: 'Aventura Escolar Coletiva',
@@ -800,7 +690,7 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
         title: 'Festival da Leitura e das Histórias',
         world: 'Jornada da Leitura',
         worldIcon: BookOpen,
-        worldBadgeClass: 'bg-indigo-100 text-indigo-800 border-indigo-200',
+        worldBadgeClass: 'text-indigo-700 bg-indigo-50 border-indigo-200',
         xpReward: 400,
         coinsReward: 200,
         coverUrl: 'https://images.unsplash.com/photo-1516339901601-2e1b62dc0c45?w=500&auto=format&fit=crop&q=80',
@@ -808,7 +698,7 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
       }
     ],
 
-    adventureWorlds: STANDARD_WORLDS_TEMPLATE.map(w => ({ ...w, availableMissions: 18, progressPct: 85 })),
+    adventureWorlds: STANDARD_WORLDS_TEMPLATE.map(w => ({ ...w, availableMissions: 18 })),
 
     pairs: [
       {
@@ -859,31 +749,8 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
           'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100',
           'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100'
         ],
-        progressPct: 86,
+        statusTag: 'Interclasses da Escola',
         xpReward: 600
-      }
-    ],
-
-    recentCelebrations: [
-      {
-        type: 'missao',
-        title: '454 MISSÕES CONCLUÍDAS!',
-        classroom: 'Toda a Escola',
-        xp: 1000,
-        coins: 500,
-        author: '4º e 5º Anos',
-        avatar: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=120'
-      }
-    ],
-
-    positiveHighlights: [
-      {
-        category: 'Super Colaboração Escolar',
-        studentName: 'Todos os Exploradores',
-        avatar: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=140',
-        description: 'Mais de 100 crianças aprendendo e descobrindo juntas!',
-        icon: Globe2,
-        badgeClass: 'text-sky-900 bg-sky-50 border-sky-200'
       }
     ],
 
@@ -913,9 +780,7 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
   const [classTimer, setClassTimer] = useState<number>(16);
   const [isAutoRotationActive, setIsAutoRotationActive] = useState<boolean>(true);
 
-  // Micro-carousels State for Rotating Cards
-  const [celebrationIdx, setCelebrationIdx] = useState<number>(0);
-  const [highlightIdx, setHighlightIdx] = useState<number>(0);
+  // Micro-carousels State for Rotating Photos (3.5s smooth transition)
   const [memoryPhotoIdx, setMemoryPhotoIdx] = useState<number>(0);
 
   const activeClass = CLASSROOM_ADVENTURES[currentClassIndex];
@@ -955,12 +820,12 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
     return () => clearInterval(quoteTimer);
   }, []);
 
-  // Classroom Memories Auto-Rotator (every 6 seconds)
+  // Classroom Memories Auto-Rotator (every 3.5 seconds for dynamic flow)
   useEffect(() => {
     if (!isAutoRotationActive) return;
     const memTimer = setInterval(() => {
       setMemoryPhotoIdx((prev) => (prev + 1) % CLASSROOM_MEMORIES.length);
-    }, 6000);
+    }, 3500);
     return () => clearInterval(memTimer);
   }, [isAutoRotationActive]);
 
@@ -981,28 +846,6 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
     return () => clearInterval(rotTimer);
   }, [isAutoRotationActive]);
 
-  useEffect(() => {
-    if (!isAutoRotationActive) return;
-
-    const hlTimer = setInterval(() => {
-      if (activeClass?.positiveHighlights?.length > 0) {
-        setHighlightIdx((prev) => (prev + 1) % activeClass.positiveHighlights.length);
-      }
-    }, 6500);
-    return () => clearInterval(hlTimer);
-  }, [isAutoRotationActive, activeClass]);
-
-  useEffect(() => {
-    if (!isAutoRotationActive) return;
-
-    const celTimer = setInterval(() => {
-      if (activeClass?.recentCelebrations?.length > 0) {
-        setCelebrationIdx((prev) => (prev + 1) % activeClass.recentCelebrations.length);
-      }
-    }, 5500);
-    return () => clearInterval(celTimer);
-  }, [isAutoRotationActive, activeClass]);
-
   const h = currentTime.getHours().toString().padStart(2, '0');
   const m = currentTime.getMinutes().toString().padStart(2, '0');
   const s = currentTime.getSeconds().toString().padStart(2, '0');
@@ -1012,8 +855,6 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
     setClassTimer(16);
   };
 
-  const currentCelebration = activeClass.recentCelebrations[celebrationIdx % activeClass.recentCelebrations.length];
-  const currentHighlight = activeClass.positiveHighlights[highlightIdx % activeClass.positiveHighlights.length];
   const currentMemory = CLASSROOM_MEMORIES[memoryPhotoIdx % CLASSROOM_MEMORIES.length];
 
   // Guaranteed 4 worlds with empty-state handling
@@ -1026,23 +867,34 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
   const marqueeExplorers = [...activeClass.explorers, ...activeClass.explorers, ...activeClass.explorers];
 
   return (
-    <div className="w-full h-screen max-h-screen bg-slate-100/85 text-slate-800 font-sans p-3.5 sm:p-4 flex flex-col justify-between overflow-hidden select-none relative bg-gradient-to-br from-slate-100 via-sky-50/40 to-slate-100 gap-3.5">
+    <div className="w-full min-h-screen lg:h-screen lg:max-h-screen text-slate-800 font-sans p-2.5 sm:p-3.5 lg:p-4 flex flex-col justify-between overflow-y-auto lg:overflow-hidden select-none relative gap-3.5 no-scrollbar">
       
-      {/* Background glow highlights */}
-      <div className="absolute top-12 left-12 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-12 right-12 w-96 h-96 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none" />
+      {/* ========================================================================= */}
+      {/* 0. BACKGROUND VIDEO IN INFINITE LOOP: ESCOLA FLORESCENDO (100% VISIBLE)   */}
+      {/* ========================================================================= */}
+      <div className="fixed lg:absolute inset-0 -z-10 overflow-hidden pointer-events-none select-none">
+        <video 
+          src="/escola_florescendo.mp4" 
+          autoPlay 
+          loop 
+          muted 
+          playsInline
+          className="w-full h-full object-cover opacity-85 filter brightness-105"
+        />
+        <div className="absolute inset-0 bg-slate-900/10 backdrop-blur-[1px]" />
+      </div>
 
       {/* ========================================================================= */}
-      {/* 1. TOP HEADER BAR: FROSTED GLASS TOPBAR                                   */}
+      {/* 1. TOP HEADER BAR: FROSTED GLASS TOPBAR (RESPONSIVE WRAP/SCROLL)          */}
       {/* ========================================================================= */}
-      <header className="flex items-center justify-between gap-3.5 px-4 py-2 bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl shrink-0 shadow-xs z-20">
+      <header className="flex flex-wrap lg:flex-nowrap items-center justify-between gap-2.5 px-3 sm:px-4 py-2 bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl shrink-0 shadow-md z-20">
         
         {/* Left: App Identity */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5 sm:gap-3">
           {onClose && (
             <button
               onClick={onClose}
-              className="px-3.5 py-1.5 rounded-2xl bg-white/90 hover:bg-white text-slate-700 text-xs font-black flex items-center gap-1.5 border border-slate-200/80 transition-all cursor-pointer shadow-2xs active:scale-95"
+              className="px-3 py-1.5 rounded-2xl bg-white/90 hover:bg-white text-slate-700 text-xs font-black flex items-center gap-1.5 border border-slate-200/80 transition-all cursor-pointer shadow-2xs active:scale-95 shrink-0"
               title="Voltar ao Painel Principal"
             >
               <Home className="w-3.5 h-3.5 text-blue-600" />
@@ -1050,33 +902,33 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
             </button>
           )}
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 sm:gap-2.5">
             <div className="w-8 h-8 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-xs shrink-0">
               <Rocket className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-sm font-black tracking-wider text-slate-900 flex items-center gap-2 leading-none">
+              <div className="text-xs sm:text-sm font-black tracking-wider text-slate-900 flex items-center gap-1.5 sm:gap-2 leading-none">
                 <span>SALA DE MISSÕES</span>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-100/90 border border-emerald-300 text-emerald-800 text-[9px] font-black uppercase flex items-center gap-1 shadow-2xs">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> TV AO VIVO
+                <span className="px-1.5 sm:px-2 py-0.5 rounded-full bg-blue-100 border border-blue-300 text-blue-800 text-[8px] sm:text-[9px] font-black uppercase flex items-center gap-1 shadow-2xs">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse" /> TV AO VIVO
                 </span>
               </div>
-              <span className="text-[10px] text-blue-600 font-black block mt-0.5">
+              <span className="text-[9px] sm:text-[10px] text-blue-600 font-black block mt-0.5">
                 Painel da Turma • Projeção Escolar
               </span>
             </div>
           </div>
         </div>
 
-        {/* Center: Classroom Tabs (Rotator) */}
-        <nav className="flex items-center gap-1.5 bg-slate-200/60 backdrop-blur-md p-1 rounded-2xl border border-white/60">
+        {/* Center: Classroom Tabs (Scrollable on Mobile) */}
+        <nav className="flex items-center gap-1.5 bg-slate-200/60 backdrop-blur-md p-1 rounded-2xl border border-white/60 overflow-x-auto max-w-full no-scrollbar order-3 lg:order-2 w-full lg:w-auto justify-start sm:justify-center">
           {CLASSROOM_ADVENTURES.map((cls, idx) => {
             const isActive = currentClassIndex === idx;
             return (
               <button
                 key={cls.id}
                 onClick={() => handleSelectClass(idx)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0 ${
                   isActive 
                     ? 'bg-blue-600 text-white font-black shadow-sm scale-102' 
                     : 'text-slate-700 hover:text-slate-900 hover:bg-white/70'
@@ -1095,33 +947,33 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
         </nav>
 
         {/* Right: Controls & Clock */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 order-2 lg:order-3 shrink-0">
           {/* Pause / Play */}
           <button
             onClick={() => setIsAutoRotationActive(!isAutoRotationActive)}
-            className={`px-3 py-1.5 rounded-2xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer border shadow-2xs ${
+            className={`px-2.5 sm:px-3 py-1.5 rounded-2xl text-xs font-bold flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer border shadow-2xs ${
               isAutoRotationActive 
-                ? 'bg-emerald-50 text-emerald-900 border-emerald-200 hover:bg-emerald-100' 
+                ? 'bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100' 
                 : 'bg-white/90 text-slate-700 border-slate-200 hover:bg-white'
             }`}
             title={isAutoRotationActive ? "Pausar Rotação Automática" : "Ativar Rotação Automática"}
           >
             {isAutoRotationActive ? (
               <>
-                <Pause className="w-3.5 h-3.5 text-emerald-600" />
-                <span className="text-[10px] font-black">Auto</span>
+                <Pause className="w-3.5 h-3.5 text-blue-600" />
+                <span className="text-[10px] font-black hidden sm:inline">Auto</span>
               </>
             ) : (
               <>
                 <PlayCircle className="w-3.5 h-3.5 text-slate-500" />
-                <span className="text-[10px] font-black">Pausa</span>
+                <span className="text-[10px] font-black hidden sm:inline">Pausa</span>
               </>
             )}
           </button>
 
           {/* Clock */}
-          <div className="flex items-baseline gap-1 font-mono text-slate-800 bg-white/90 backdrop-blur-md px-3 py-1 rounded-2xl border border-white/80 shadow-2xs">
-            <Clock className="w-3 h-3 text-blue-600 mr-1 self-center" />
+          <div className="flex items-baseline gap-1 font-mono text-slate-800 bg-white/90 backdrop-blur-md px-2.5 sm:px-3 py-1 rounded-2xl border border-white/80 shadow-2xs">
+            <Clock className="w-3 h-3 text-blue-600 mr-0.5 sm:mr-1 self-center" />
             <span className="font-black text-xs">{h}:{m}</span>
             <span className="text-blue-600 text-[10px] font-bold">:{s}</span>
           </div>
@@ -1138,16 +990,16 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
       </header>
 
       {/* ========================================================================= */}
-      {/* 2. HERO SECTION: CLASS OVERVIEW & SPECIAL MISSION WITH FALLING COINS       */}
+      {/* 2. HERO SECTION: CLASS OVERVIEW & SPECIAL MISSION (RESPONSIVE GRIDS)       */}
       {/* ========================================================================= */}
       <section className="grid grid-cols-12 gap-3.5 shrink-0">
         
-        {/* Left Hero Card: Class Summary & Big 3 Visual Stats (Harmonious Colors) */}
-        <div className="col-span-12 lg:col-span-5 bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-3 sm:p-3.5 flex flex-col justify-between shadow-xs">
-          <div className="flex items-center justify-between gap-2">
+        {/* Left Hero Card: Class Summary with TEACHER RECOGNITION */}
+        <div className="col-span-12 lg:col-span-5 bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-3 sm:p-3.5 flex flex-col justify-between shadow-md gap-3">
+          <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2">
             <div className="flex items-center gap-2.5">
               <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-lg font-black shadow-xs shrink-0">
-                {activeClass.id === 'escola' ? <Globe2 className="w-5 h-5" /> : <Sparkles className="w-5 h-5 text-sky-200" />}
+                {activeClass.id === 'escola' ? <Globe2 className="w-5 h-5" /> : <GraduationCap className="w-5 h-5 text-white" />}
               </div>
               <div>
                 <span className="text-[9px] uppercase font-black tracking-widest text-blue-600 block leading-tight">
@@ -1159,78 +1011,83 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
               </div>
             </div>
 
-            <span className="text-[10px] text-emerald-900 font-bold bg-emerald-50/90 border border-emerald-200/90 px-2.5 py-1 rounded-full truncate max-w-[190px]">
-              {activeClass.tagline}
-            </span>
+            {/* Teacher Recognition Box */}
+            <div className="flex items-center gap-2 bg-white/95 border border-slate-200/80 px-2.5 py-1 rounded-2xl shadow-2xs">
+              <img 
+                src={activeClass.teacher.avatar} 
+                alt={activeClass.teacher.name}
+                className="w-8 h-8 rounded-xl object-cover border border-white shadow-2xs ring-1 ring-blue-500 shrink-0" 
+              />
+              <div className="overflow-hidden">
+                <span className="text-[8px] font-black uppercase text-blue-700 tracking-wider block leading-tight">
+                  {activeClass.teacher.role}
+                </span>
+                <span className="text-xs font-black text-slate-900 truncate block leading-tight max-w-[150px]">
+                  {activeClass.teacher.name}
+                </span>
+              </div>
+            </div>
           </div>
 
-          {/* 3 Clear Stats for Kids with Pure Matching Palette */}
-          <div className="grid grid-cols-3 gap-2.5 mt-2">
-            {/* 1. XP (Pure Sky/Blue Theme) */}
+          {/* 3 Clear Stats with Coordinated Palette */}
+          <div className="grid grid-cols-3 gap-2 sm:gap-2.5">
+            {/* 1. XP */}
             <div className="p-2 rounded-2xl bg-sky-50/90 border border-sky-200/80 flex flex-col items-center justify-center text-center shadow-2xs">
-              <div className="flex items-center gap-1 text-sky-950 font-black text-sm">
+              <div className="flex items-center gap-1 text-sky-950 font-black text-xs sm:text-sm">
                 <Star className="w-3.5 h-3.5 fill-sky-500 text-sky-600" />
                 <span>{activeClass.totalXp.toLocaleString('pt-BR')}</span>
               </div>
-              <span className="text-[9px] font-black text-sky-700 uppercase tracking-wider mt-0.5">
+              <span className="text-[8px] sm:text-[9px] font-black text-sky-700 uppercase tracking-wider mt-0.5 truncate max-w-full">
                 XP (+{activeClass.xpToday})
               </span>
             </div>
 
-            {/* 2. Missions (Pure Indigo Theme) */}
+            {/* 2. Missions */}
             <div className="p-2 rounded-2xl bg-indigo-50/90 border border-indigo-200/80 flex flex-col items-center justify-center text-center shadow-2xs">
-              <div className="flex items-center gap-1 text-indigo-950 font-black text-sm">
+              <div className="flex items-center gap-1 text-indigo-950 font-black text-xs sm:text-sm">
                 <Target className="w-3.5 h-3.5 text-indigo-600" />
                 <span>{activeClass.completedMissions}</span>
               </div>
-              <span className="text-[9px] font-black text-indigo-700 uppercase tracking-wider mt-0.5">
+              <span className="text-[8px] sm:text-[9px] font-black text-indigo-700 uppercase tracking-wider mt-0.5 truncate max-w-full">
                 Missões Feitas
               </span>
             </div>
 
-            {/* 3. Coins (Pure Emerald Theme - Harmonious Emerald Background & Icon) */}
-            <div className="p-2 rounded-2xl bg-emerald-50/90 border border-emerald-200/80 flex flex-col items-center justify-center text-center shadow-2xs">
-              <div className="flex items-center gap-1 text-emerald-950 font-black text-sm">
-                <GlassCoin size="xs" />
+            {/* 3. Coins */}
+            <div className="p-2 rounded-2xl bg-blue-50/90 border border-blue-200/80 flex flex-col items-center justify-center text-center shadow-2xs">
+              <div className="flex items-center gap-1 text-blue-950 font-black text-xs sm:text-sm">
+                <ShinyCoin size="xs" />
                 <span>{activeClass.coinsCount.toLocaleString('pt-BR')}</span>
               </div>
-              <span className="text-[9px] font-black text-emerald-700 uppercase tracking-wider mt-0.5">
+              <span className="text-[8px] sm:text-[9px] font-black text-blue-700 uppercase tracking-wider mt-0.5 truncate max-w-full">
                 Moedas
               </span>
             </div>
           </div>
         </div>
 
-        {/* Right Hero Card: Special Mission with ANIMATED FALLING COINS & INCENTIVES */}
-        <div className="col-span-12 lg:col-span-7 bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-3 sm:p-3.5 flex items-center justify-between gap-3 shadow-xs relative overflow-hidden">
+        {/* Right Hero Card: Special Mission with BORDERLESS BLUE FALLING COINS & PROMINENT "RECOMPENSA COLETIVA" */}
+        <div className="col-span-12 lg:col-span-7 bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-3 sm:p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md relative overflow-hidden">
           
-          {/* Falling Coins Animation Effect in the Background & Mid-area */}
+          {/* Borderless Radiant Shiny Blue Coins Drifting Down */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-            <div className="absolute left-[38%] top-0 animate-coin-fall-1">
-              <div className="w-4 h-4 rounded-full bg-emerald-400/70 border border-emerald-600 flex items-center justify-center shadow-xs">
-                <Coins className="w-2.5 h-2.5 text-emerald-950" />
-              </div>
+            <div className="absolute left-[36%] top-0 animate-coin-fall-1">
+              <ShinyCoin size="md" className="drop-shadow-md opacity-90" />
             </div>
-            <div className="absolute left-[50%] top-0 animate-coin-fall-2">
-              <div className="w-3.5 h-3.5 rounded-full bg-emerald-500/80 border border-emerald-700 flex items-center justify-center shadow-xs">
-                <Coins className="w-2 h-2 text-white" />
-              </div>
+            <div className="absolute left-[48%] top-0 animate-coin-fall-2">
+              <ShinyCoin size="sm" className="drop-shadow-sm opacity-85" />
             </div>
-            <div className="absolute left-[64%] top-0 animate-coin-fall-3">
-              <div className="w-4.5 h-4.5 rounded-full bg-emerald-400/80 border border-emerald-600 flex items-center justify-center shadow-xs">
-                <Coins className="w-3 h-3 text-emerald-950" />
-              </div>
+            <div className="absolute left-[62%] top-0 animate-coin-fall-3">
+              <ShinyCoin size="lg" className="drop-shadow-lg opacity-95" />
             </div>
-            <div className="absolute left-[78%] top-0 animate-coin-fall-4">
-              <div className="w-3.5 h-3.5 rounded-full bg-emerald-500/70 border border-emerald-700 flex items-center justify-center shadow-xs">
-                <Coins className="w-2 h-2 text-white" />
-              </div>
+            <div className="absolute left-[76%] top-0 animate-coin-fall-4">
+              <ShinyCoin size="sm" className="drop-shadow-sm opacity-80" />
             </div>
           </div>
 
           {/* Left: Mission Info */}
-          <div className="flex items-center gap-3 overflow-hidden z-10">
-            <div className="relative w-18 h-18 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border border-slate-200/80 shrink-0 shadow-2xs">
+          <div className="flex items-center gap-3 overflow-hidden z-10 w-full sm:w-auto">
+            <div className="relative w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 rounded-2xl overflow-hidden border border-slate-200/80 shrink-0 shadow-2xs">
               <img 
                 src={activeClass.specialMission.coverUrl} 
                 alt={activeClass.specialMission.title}
@@ -1242,7 +1099,7 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
               </div>
             </div>
 
-            <div className="overflow-hidden space-y-0.5">
+            <div className="overflow-hidden space-y-0.5 flex-1">
               <div className="flex items-center gap-2">
                 <span className="px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-800 text-[9px] font-black uppercase tracking-wider border border-purple-200 flex items-center gap-1 shadow-2xs">
                   <Flame className="w-2.5 h-2.5 text-purple-600" /> {activeClass.specialMission.badge}
@@ -1272,14 +1129,10 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
             </div>
           </div>
 
-          {/* Center-Right: Encouraging Incentive Slogan & Coin Particle Callout */}
-          <div className="hidden md:flex flex-col items-center justify-center text-center px-3 py-1.5 rounded-2xl bg-emerald-50/80 border border-emerald-200/80 shadow-2xs z-10 shrink-0">
-            <div className="flex items-center gap-1 text-[9px] font-black text-emerald-900 uppercase">
-              <Sparkles className="w-3 h-3 text-emerald-600" />
-              <span>Recompensa Coletiva</span>
-            </div>
-            <span className="text-[10px] font-black text-emerald-700 leading-tight mt-0.5">
-              Ganhe Moedas em Dobro!
+          {/* Center: BIG BOLD EYE-CATCHING "RECOMPENSA COLETIVA" */}
+          <div className="flex sm:flex flex-col items-center justify-center text-center z-10 shrink-0 px-2 sm:px-4 self-center sm:self-auto">
+            <span className="text-xs sm:text-sm md:text-base font-black tracking-widest text-blue-700 uppercase drop-shadow-xs">
+              RECOMPENSA COLETIVA
             </span>
           </div>
 
@@ -1293,22 +1146,25 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
       </section>
 
       {/* ========================================================================= */}
-      {/* 3. BENTO GRID: 3 BALANCED FROSTED GLASS COLUMNS (TOP-ALIGNED WITH UNIFORM GAP) */}
+      {/* 3. BENTO GRID: 3 RESPONSIVE FROSTED GLASS COLUMNS                           */}
+      {/* COL 1: MUNDOS + PRÓXIMAS MISSÕES                                          */}
+      {/* COL 2 (CENTER): MOMENTOS DA TURMA (PROMINENT & FULL-HEIGHT)               */}
+      {/* COL 3 (RIGHT): GUILDAS & EQUIPES EM AÇÃO                                  */}
       {/* ========================================================================= */}
-      <section className="grid grid-cols-12 gap-3.5 flex-1 min-h-0 overflow-hidden">
+      <section className="grid grid-cols-12 gap-3.5 flex-1 min-h-0 lg:overflow-hidden">
         
         {/* ======================================================================= */}
-        {/* COLUMN 1: MUNDOS DO SABER & PRÓXIMAS MISSÕES (TOP-ALIGNED)              */}
+        {/* COLUMN 1 (LEFT): MUNDOS DO SABER & PRÓXIMAS MISSÕES                     */}
         {/* ======================================================================= */}
-        <div className="col-span-12 lg:col-span-4 flex flex-col justify-start gap-3.5 min-h-0 overflow-hidden">
+        <div className="col-span-12 lg:col-span-4 flex flex-col justify-start gap-3.5 min-h-0">
           
-          {/* Worlds (Mundos & Trilhas) */}
-          <div className="bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-3 flex flex-col justify-start gap-2 shadow-xs shrink-0">
+          {/* Worlds (Mundos & Trilhas - Clean, Modern Cards with NO Progress Bars) */}
+          <div className="bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-3 flex flex-col justify-start gap-2 shadow-md shrink-0">
             <div className="flex items-center justify-between mb-0.5 px-0.5">
               <span className="text-xs font-black text-slate-900 flex items-center gap-1.5">
                 <Compass className="w-3.5 h-3.5 text-blue-600" /> Mundos do Saber
               </span>
-              <span className="text-[9px] font-black text-blue-700 uppercase bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200/80 shadow-2xs">
+              <span className="text-[10px] font-black text-blue-700">
                 4 Trilhas Abertas
               </span>
             </div>
@@ -1317,56 +1173,53 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
               {displayWorlds.map((w) => (
                 <div 
                   key={w.id} 
-                  className={`p-2 rounded-2xl border flex flex-col justify-between transition-all shadow-2xs ${w.colorClass}`}
+                  className="p-2.5 rounded-2xl bg-white/90 border border-slate-200/80 hover:border-blue-400/80 flex flex-col justify-between transition-all shadow-2xs"
                 >
                   <div className="flex items-center justify-between">
-                    <w.icon className="w-4 h-4" />
-                    <span className={`text-[8px] font-black px-1.5 py-0.2 rounded-md ${w.badgeClass}`}>
-                      {w.availableMissions} {w.availableMissions === 1 ? 'missão' : 'missões'}
+                    <div className={`p-1.5 rounded-xl border ${w.accentColor}`}>
+                      <w.icon className="w-4 h-4" />
+                    </div>
+                    <span className="text-[9px] font-black text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">
+                      {w.availableMissions} missões
                     </span>
                   </div>
-                  <div className="mt-1">
-                    <h4 className="text-[11px] font-black leading-tight truncate">{w.name}</h4>
-                    <div className="w-full bg-white/80 h-1.5 rounded-full overflow-hidden mt-1 border border-slate-200/60">
-                      <div 
-                        className={`h-full rounded-full ${w.barColor}`} 
-                        style={{ width: `${w.progressPct}%` }}
-                      />
-                    </div>
+                  <div className="mt-2">
+                    <h4 className="text-xs font-black leading-tight text-slate-900 truncate">{w.name}</h4>
+                    <p className="text-[9px] font-bold text-slate-500 truncate mt-0.5">{w.tag}</p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Próximas Missões (Aligned to Top - No Vertical Gap Spread) */}
-          <div className="bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-3 flex flex-col justify-start gap-2 flex-1 min-h-0 shadow-xs relative overflow-hidden">
+          {/* Próximas Missões (Aligned to Top) */}
+          <div className="bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-3 flex flex-col justify-start gap-2 flex-1 min-h-0 shadow-md relative overflow-hidden">
             <div className="flex items-center justify-between mb-0.5 px-0.5 shrink-0">
               <span className="text-xs font-black text-slate-900 flex items-center gap-1.5">
                 <Rocket className="w-3.5 h-3.5 text-blue-600" /> Próximas Missões
               </span>
-              <span className="text-[8px] font-black text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
+              <span className="text-[9px] font-bold text-slate-500">
                 Missões Seguintes
               </span>
             </div>
 
-            {/* List stacked directly from the top */}
+            {/* List stacked from the top */}
             <div className="flex flex-col justify-start gap-2 overflow-hidden flex-1">
               {activeClass.upcomingMissions.slice(0, 2).map((m) => (
                 <div key={m.id} className="p-2 rounded-2xl bg-white/90 border border-slate-200/80 shadow-2xs flex items-center gap-2.5 shrink-0">
-                  <div className="relative w-13 h-13 rounded-xl overflow-hidden border border-slate-200 shrink-0 shadow-2xs">
+                  <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-slate-200 shrink-0 shadow-2xs">
                     <img src={m.coverUrl} alt={m.title} className="w-full h-full object-cover" />
                   </div>
                   <div className="overflow-hidden flex-1">
                     <div className="flex items-center justify-between gap-1">
-                      <span className={`text-[8px] font-black uppercase px-1.5 py-0.2 rounded border truncate ${m.worldBadgeClass}`}>
+                      <span className={`text-[9px] font-black uppercase px-1.5 py-0.2 rounded truncate border ${m.worldBadgeClass}`}>
                         {m.world}
                       </span>
-                      <span className="text-[8px] font-black text-blue-600 truncate">
+                      <span className="text-[9px] font-bold text-blue-600 truncate">
                         {m.availability}
                       </span>
                     </div>
-                    <h5 className="text-[11px] font-black text-slate-900 truncate leading-tight mt-0.5">
+                    <h5 className="text-xs font-black text-slate-900 truncate leading-tight mt-0.5">
                       {m.title}
                     </h5>
                     <div className="flex items-center gap-1.5 mt-1">
@@ -1381,189 +1234,182 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
         </div>
 
         {/* ======================================================================= */}
-        {/* COLUMN 2: GUILDAS E EQUIPES EM AÇÃO (TOP-ALIGNED)                        */}
+        {/* COLUMN 2 (CENTER): MOMENTOS DA TURMA (INTERACTIVE CLICKABLE DOTS & 3.5s) */}
         {/* ======================================================================= */}
-        <div className="col-span-12 lg:col-span-4 flex flex-col justify-start gap-3.5 min-h-0 overflow-hidden">
-          
-          {/* Groups & Guilds (Top-Aligned List + Teamwork Incentive Box) */}
-          <div className="bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-3 flex flex-col justify-start gap-2.5 flex-1 min-h-0 shadow-xs">
-            <div className="flex items-center justify-between mb-0.5 px-0.5 shrink-0">
+        <div className="col-span-12 lg:col-span-4 flex flex-col justify-start min-h-0">
+          <div className="bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-3 flex flex-col justify-between flex-1 min-h-0 shadow-md relative overflow-hidden">
+            
+            {/* Gallery Header with CLICKABLE INTERACTIVE DOTS */}
+            <div className="flex items-center justify-between px-0.5 mb-1 shrink-0">
+              <span className="text-xs font-black text-slate-900 flex items-center gap-1.5">
+                <Camera className="w-3.5 h-3.5 text-blue-600" /> Momentos da Turma
+              </span>
+              
+              {/* Clickable Indicator Dots */}
+              <div className="flex items-center gap-1.5">
+                {CLASSROOM_MEMORIES.map((m, i) => {
+                  const isSelected = i === (memoryPhotoIdx % CLASSROOM_MEMORIES.length);
+                  return (
+                    <button 
+                      key={i}
+                      type="button"
+                      onClick={() => setMemoryPhotoIdx(i)}
+                      className={`h-2 rounded-full transition-all cursor-pointer p-0 border-0 ${
+                        isSelected 
+                          ? 'bg-blue-600 w-4 shadow-2xs' 
+                          : 'bg-slate-300 hover:bg-slate-400 w-2'
+                      }`}
+                      title={`Ver: ${m.title}`}
+                      aria-label={`Slide ${i + 1}`}
+                    />
+                  );
+                })}
+                <span className="text-[9px] font-bold text-blue-700 ml-1">
+                  Nossa Galeria
+                </span>
+              </div>
+            </div>
+
+            {/* Big Prominent Classroom Photo with Overlay and Interactive Arrows */}
+            <div className="relative rounded-2xl overflow-hidden border border-slate-200/80 shadow-2xs h-64 sm:h-72 lg:h-auto lg:flex-1 min-h-0 group my-1">
+              <img 
+                src={currentMemory.photoUrl} 
+                alt={currentMemory.title} 
+                className="w-full h-full object-cover transition-all duration-500 animate-fade-in" 
+              />
+
+              {/* Previous Photo Button */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setMemoryPhotoIdx((prev) => (prev - 1 + CLASSROOM_MEMORIES.length) % CLASSROOM_MEMORIES.length);
+                }}
+                className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-slate-900/60 hover:bg-slate-900 text-white flex items-center justify-center backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all cursor-pointer shadow-md z-20"
+                title="Foto Anterior"
+                aria-label="Foto Anterior"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+
+              {/* Next Photo Button */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setMemoryPhotoIdx((prev) => (prev + 1) % CLASSROOM_MEMORIES.length);
+                }}
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-slate-900/60 hover:bg-slate-900 text-white flex items-center justify-center backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all cursor-pointer shadow-md z-20"
+                title="Próxima Foto"
+                aria-label="Próxima Foto"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+
+              {/* Rich Gradient Overlay with Belonging Caption */}
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent flex flex-col justify-end p-3 text-white pointer-events-none">
+                <span className="text-[9px] font-black text-emerald-300 uppercase tracking-wider block">
+                  {currentMemory.tag}
+                </span>
+                <div className="text-sm font-black leading-tight truncate mt-0.5">
+                  {currentMemory.title}
+                </div>
+                <p className="text-[10px] text-slate-200 line-clamp-2 mt-1 font-medium italic leading-snug">
+                  "{currentMemory.caption}"
+                </p>
+              </div>
+            </div>
+
+            {/* Clean Subtitle at Bottom */}
+            <div className="px-2 py-1 flex items-center justify-between text-[10px] font-bold text-slate-600 shrink-0">
+              <span className="flex items-center gap-1">
+                <Sparkle className="w-3 h-3 text-blue-600" />
+                <span>Nossa Turma em Ação</span>
+              </span>
+              <span className="text-blue-700 font-black">
+                Juntos somos mais fortes!
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* ======================================================================= */}
+        {/* COLUMN 3 (RIGHT): GUILDAS E EQUIPES EM AÇÃO (NO PROGRESS BARS)          */}
+        {/* ========================================================================= */}
+        <div className="col-span-12 lg:col-span-4 flex flex-col justify-start min-h-0">
+          <div className="bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-3 flex flex-col justify-between flex-1 min-h-0 shadow-md gap-2">
+            <div className="flex items-center justify-between mb-1 px-0.5 shrink-0">
               <span className="text-xs font-black text-slate-900 flex items-center gap-1.5">
                 <Users2 className="w-3.5 h-3.5 text-blue-600" /> Guildas & Equipes em Ação
               </span>
-              <span className="text-[9px] font-black text-indigo-800 uppercase bg-indigo-50 px-2.5 py-0.5 rounded-full border border-indigo-200/80 shadow-2xs">
+              <span className="text-[10px] font-black text-indigo-700">
                 Cooperação
               </span>
             </div>
 
-            {/* Guild Items stacked at the top */}
-            <div className="flex flex-col justify-start gap-2 overflow-hidden">
+            {/* Guild Items with Team Shield/Emblem & Status */}
+            <div className="space-y-2 overflow-hidden flex-1 my-1">
               {activeClass.groups.map((grp, i) => (
-                <div key={i} className="p-2 rounded-2xl bg-white/90 border border-slate-200/80 shadow-2xs flex flex-col justify-between shrink-0">
+                <div key={i} className="p-3 rounded-2xl bg-white/90 border border-slate-200/80 shadow-2xs flex flex-col justify-between">
                   <div className="flex items-center justify-between">
-                    <h5 className="text-[11px] font-black text-slate-900 truncate">{grp.name}</h5>
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-lg bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-700 font-black text-xs shrink-0">
+                        <Users2 className="w-3.5 h-3.5" />
+                      </div>
+                      <div>
+                        <h5 className="text-xs font-black text-slate-900 truncate leading-tight">{grp.name}</h5>
+                        <span className="text-[9px] font-bold text-indigo-700 block">{grp.statusTag}</span>
+                      </div>
+                    </div>
+
                     <div className="flex items-center -space-x-1.5">
                       {grp.avatars.map((av, idx) => (
                         <img 
                           key={idx} 
                           src={av} 
                           alt="Membro" 
-                          className="w-5 h-5 rounded-full object-cover border border-white shadow-2xs ring-1 ring-blue-500" 
+                          className="w-5.5 h-5.5 rounded-full object-cover border-2 border-white shadow-2xs ring-1 ring-blue-500" 
                         />
                       ))}
                     </div>
                   </div>
 
-                  <p className="text-[9px] text-slate-600 font-bold truncate mt-0.5">
-                    {grp.mission}
-                  </p>
-
-                  <div className="flex items-center justify-between mt-1">
-                    <div className="w-3/5 bg-slate-200/80 h-1.5 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full rounded-full bg-blue-600" 
-                        style={{ width: `${grp.progressPct}%` }}
-                      />
-                    </div>
+                  <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-slate-100">
+                    <span className="text-[9px] text-slate-600 font-bold truncate max-w-[190px]">
+                      Missão: <span className="text-slate-800">{grp.mission}</span>
+                    </span>
                     <GlassXpBadge amount={grp.xpReward} size="xs" />
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* Teamwork Incentive Footer Box */}
-            <div className="mt-auto p-2.5 rounded-2xl bg-emerald-50/90 border border-emerald-200/90 flex items-center gap-2.5 shadow-2xs shrink-0">
+            {/* Teamwork Incentive Footer */}
+            <div className="p-2.5 rounded-2xl bg-white/90 border border-emerald-200/90 flex items-center gap-2.5 shadow-2xs shrink-0 mt-auto">
               <div className="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-2xs">
                 <HeartHandshake className="w-4 h-4" />
               </div>
               <div className="overflow-hidden">
-                <div className="text-[9px] font-black uppercase text-emerald-900 flex items-center gap-1">
-                  <Sparkle className="w-2.5 h-2.5 text-emerald-600" /> Força da Turma
+                <div className="text-[9px] font-black uppercase text-emerald-800 flex items-center gap-1">
+                  <Sparkle className="w-2.5 h-2.5 text-emerald-600" /> Força da Equipe
                 </div>
                 <div className="text-[10px] font-black text-slate-800 leading-tight">
-                  Aprenda com seus amigos! Compartilhar saberes torna cada missão uma festa.
+                  Juntos, cada desafio se torna uma grande conquista!
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* ======================================================================= */}
-        {/* COLUMN 3: CONQUISTAS, DESTAQUES & MOMENTOS DA TURMA (FOTOS)              */}
-        {/* ======================================================================= */}
-        <div className="col-span-12 lg:col-span-4 flex flex-col justify-start gap-3.5 min-h-0 overflow-hidden">
-          
-          {/* Recent Celebrations (Conquistas Recentes) */}
-          <div className="bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-3 flex flex-col justify-start gap-2 shadow-xs shrink-0">
-            <div className="flex items-center justify-between mb-0.5 px-0.5">
-              <span className="text-xs font-black text-slate-900 flex items-center gap-1.5">
-                <Trophy className="w-3.5 h-3.5 text-blue-600" /> Conquistas Recentes
-              </span>
-              <span className="text-[9px] font-black text-blue-800 uppercase bg-sky-100/90 px-2.5 py-0.5 rounded-full border border-sky-200/80 shadow-2xs">
-                Parabéns!
-              </span>
-            </div>
-
-            {currentCelebration && (
-              <div className="p-2 rounded-2xl bg-white/90 border border-slate-200/80 flex items-center gap-2.5 animate-fade-in shadow-2xs">
-                <img 
-                  src={currentCelebration.avatar} 
-                  alt={currentCelebration.author}
-                  className="w-10 h-10 rounded-2xl object-cover ring-2 ring-blue-500 shadow-2xs shrink-0" 
-                />
-                <div className="overflow-hidden">
-                  <span className="text-[8px] font-black text-blue-600 uppercase tracking-wider block">
-                    {currentCelebration.title}
-                  </span>
-                  <h4 className="text-xs font-black text-slate-900 leading-tight truncate">
-                    {currentCelebration.author}
-                  </h4>
-                  <div className="flex items-center gap-1.5 mt-1">
-                    <GlassXpBadge amount={currentCelebration.xp} size="xs" />
-                    <GlassCoinBadge amount={currentCelebration.coins} size="xs" prefix="+" />
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Highlights (Destaques da Sala) */}
-          <div className="bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-3 flex flex-col justify-start gap-2 shadow-xs shrink-0">
-            <div className="flex items-center justify-between mb-0.5 px-0.5">
-              <span className="text-xs font-black text-slate-900 flex items-center gap-1.5">
-                <Star className="w-3.5 h-3.5 fill-sky-500 text-sky-600" /> Destaques da Turma
-              </span>
-              <span className="text-[9px] font-black text-purple-800 uppercase bg-purple-100/90 px-2.5 py-0.5 rounded-full border border-purple-200/80 shadow-2xs">
-                Todos Brilham
-              </span>
-            </div>
-
-            {currentHighlight && (
-              <div className="p-2 rounded-2xl bg-white/90 border border-slate-200/80 flex items-center gap-2.5 animate-fade-in shadow-2xs">
-                <img 
-                  src={currentHighlight.avatar} 
-                  alt={currentHighlight.studentName}
-                  className="w-9 h-9 rounded-2xl object-cover ring-2 ring-blue-500 shadow-2xs shrink-0" 
-                />
-                <div className="overflow-hidden">
-                  <div className="flex items-center gap-1">
-                    <currentHighlight.icon className="w-3 h-3 text-purple-600" />
-                    <span className="text-[8px] font-black uppercase text-purple-700">
-                      {currentHighlight.category}
-                    </span>
-                  </div>
-                  <h4 className="text-xs font-black text-slate-900 truncate leading-tight mt-0.5">
-                    {currentHighlight.studentName}
-                  </h4>
-                  <p className="text-[8px] text-slate-600 font-bold line-clamp-1">
-                    {currentHighlight.description}
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* MOMENTOS DA TURMA (Classroom Photo Gallery - Top Aligned) */}
-          <div className="bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-3 flex flex-col justify-start gap-2 flex-1 min-h-0 shadow-xs">
-            <div className="flex items-center justify-between px-0.5 mb-0.5 shrink-0">
-              <span className="text-xs font-black text-slate-900 flex items-center gap-1.5">
-                <Camera className="w-3.5 h-3.5 text-blue-600" /> Momentos da Turma
-              </span>
-              <span className="text-[8px] font-black text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full border border-emerald-200/80 shadow-2xs">
-                Nossa Galeria
-              </span>
-            </div>
-
-            <div className="relative rounded-2xl overflow-hidden border border-slate-200/80 shadow-2xs flex-1 min-h-0 group">
-              <img 
-                src={currentMemory.photoUrl} 
-                alt={currentMemory.title} 
-                className="w-full h-full object-cover animate-fade-in" 
-              />
-              {/* Overlay with Caption */}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent flex flex-col justify-end p-2.5 text-white">
-                <span className="text-[8px] font-black text-emerald-300 uppercase tracking-wider block">
-                  {currentMemory.tag}
-                </span>
-                <div className="text-[11px] font-black leading-tight truncate">
-                  {currentMemory.title}
-                </div>
-                <p className="text-[8px] text-slate-200 line-clamp-1 mt-0.5 font-medium">
-                  "{currentMemory.caption}"
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* ========================================================================= */}
-      {/* 4. FOOTER: COMPACT HEIGHT & TIGHT SPACING FOR DUPLAS & EXPLORADORES       */}
+      {/* 4. FOOTER: DUPLAS EM AÇÃO & EXPLORADORES DA TURMA (RESPONSIVE)           */}
       {/* ========================================================================= */}
       <footer className="grid grid-cols-1 lg:grid-cols-2 gap-3.5 shrink-0">
         
         {/* Marquee 1: Duplas em Ação (Compact Uniform Height h-[116px], Width w-[145px]) */}
-        <div className="bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-2.5 shadow-xs flex flex-col justify-between overflow-hidden">
+        <div className="bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-2.5 shadow-md flex flex-col justify-between overflow-hidden">
           <div className="flex items-center justify-between mb-1 px-1">
             <span className="text-[11px] font-black text-slate-900 flex items-center gap-1.5">
               <HeartHandshake className="w-3.5 h-3.5 text-blue-600" /> Duplas em Ação
@@ -1614,7 +1460,7 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
         </div>
 
         {/* Marquee 2: Exploradores da Turma (Compact Uniform Height h-[116px], Width w-[120px]) */}
-        <div className="bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-2.5 shadow-xs flex flex-col justify-between overflow-hidden">
+        <div className="bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-2.5 shadow-md flex flex-col justify-between overflow-hidden">
           <div className="flex items-center justify-between mb-1 px-1">
             <span className="text-[11px] font-black text-slate-900 flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-blue-600" /> Exploradores da Turma
@@ -1662,9 +1508,9 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
       </footer>
 
       {/* ========================================================================= */}
-      {/* 5. BOTTOM INSPIRATION BAR                                                 */}
+      {/* 5. BOTTOM INSPIRATION BAR (RESPONSIVE)                                    */}
       {/* ========================================================================= */}
-      <div className="px-4 py-1.5 bg-white/85 backdrop-blur-md border border-white/90 rounded-2xl flex items-center justify-between text-[10px] text-slate-600 font-medium shrink-0 shadow-2xs">
+      <div className="px-3 sm:px-4 py-1.5 bg-white/85 backdrop-blur-md border border-white/90 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 text-[10px] text-slate-600 font-medium shrink-0 shadow-2xs">
         <div className="flex items-center gap-2 overflow-hidden">
           <Smile className="w-3.5 h-3.5 text-blue-600 shrink-0" />
           <span className="text-blue-700 font-black shrink-0">Dica do Explorador:</span>
@@ -1673,7 +1519,7 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
           </span>
         </div>
 
-        <span className="hidden sm:inline text-slate-500 font-bold shrink-0 flex items-center gap-1">
+        <span className="text-slate-500 font-bold shrink-0 flex items-center gap-1 self-end sm:self-auto">
           <Sparkle className="w-2.5 h-2.5 text-emerald-600" />
           {ADVENTURE_QUOTES[quoteIdx % ADVENTURE_QUOTES.length].author}
         </span>
