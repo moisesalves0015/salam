@@ -17,6 +17,11 @@ import { DiagnosticModal } from './components/DiagnosticModal';
 import { ResourcesModal } from './components/ResourcesModal';
 import { AchievementsModal } from './components/AchievementsModal';
 import { NotificationsModal } from './components/NotificationsModal';
+import { LandingPage } from './components/LandingPage';
+import { LoginScreen } from './components/LoginScreen';
+import { ReconhecimentoView } from './components/ReconhecimentoView';
+import { LojaMoedasView } from './components/LojaMoedasView';
+import { MissionPrintView } from './components/MissionPrintView';
 import { 
   INITIAL_STUDENTS, 
   INITIAL_CARDS, 
@@ -27,7 +32,14 @@ import {
 import { UserRole, Student, CardItem, InterventionRecord } from './types';
 import confetti from 'canvas-confetti';
 
+// App-level navigation states
+type AppScreen = 'landing' | 'login' | 'app';
+
 export default function App() {
+  // Screen / Navigation
+  const [currentScreen, setCurrentScreen] = useState<AppScreen>('landing');
+  const [loginDefaultRole, setLoginDefaultRole] = useState<'aluno' | 'professor' | 'coordenacao' | undefined>(undefined);
+
   // Global States
   const [currentRole, setCurrentRole] = useState<UserRole>('professor');
   const [activeTab, setActiveTab] = useState<string>('dashboard');
@@ -40,8 +52,31 @@ export default function App() {
   const [isTvModeOpen, setIsTvModeOpen] = useState<boolean>(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
+  // Landing / Login Handlers
+  const handleEnterAsStudent = () => {
+    setLoginDefaultRole('aluno');
+    setCurrentScreen('login');
+  };
+  const handleEnterAsProfessor = () => {
+    setCurrentRole('professor');
+    setActiveTab('dashboard');
+    setCurrentScreen('app');
+  };
+  const handleEnterAsCoordenacao = () => {
+    setCurrentRole('coordenacao');
+    setActiveTab('dashboard');
+    setCurrentScreen('app');
+  };
+  const handleLoginStudent = (student: Student) => {
+    setSelectedStudent(student);
+    setCurrentRole('aluno');
+    setActiveTab('dashboard');
+    setCurrentScreen('app');
+  };
+
   // Modal States
   const [isMissionPlayerOpen, setIsMissionPlayerOpen] = useState(false);
+  const [isMissionPrintOpen, setIsMissionPrintOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isCardDetailOpen, setIsCardDetailOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState<CardItem | null>(null);
@@ -50,6 +85,7 @@ export default function App() {
   const [isResourcesModalOpen, setIsResourcesModalOpen] = useState(false);
   const [isAchievementsModalOpen, setIsAchievementsModalOpen] = useState(false);
   const [isNotificationsModalOpen, setIsNotificationsModalOpen] = useState(false);
+
 
   // Handlers
   const handleSelectStudent = (student: Student) => {
@@ -228,6 +264,31 @@ export default function App() {
     setStudents(prev => [newStudent, ...prev]);
     setSelectedStudent(newStudent);
   };
+
+  // Landing Page
+  if (currentScreen === 'landing') {
+    return (
+      <LandingPage
+        onEnterAsStudent={handleEnterAsStudent}
+        onEnterAsProfessor={handleEnterAsProfessor}
+        onEnterAsCoordenacao={handleEnterAsCoordenacao}
+      />
+    );
+  }
+
+  // Login / Profile Selection Screen
+  if (currentScreen === 'login') {
+    return (
+      <LoginScreen
+        students={students}
+        onLoginAsStudent={handleLoginStudent}
+        onLoginAsProfessor={handleEnterAsProfessor}
+        onLoginAsCoordenacao={handleEnterAsCoordenacao}
+        onBack={() => setCurrentScreen('landing')}
+        defaultRole={loginDefaultRole}
+      />
+    );
+  }
 
   // If TV Mode is active, render full-screen Presentation Panel without admin menus
   if (isTvModeOpen || activeTab === 'painel-tv') {
@@ -418,6 +479,17 @@ export default function App() {
               </div>
             </div>
           )}
+
+          {/* RECONHECIMENTO VIEW */}
+          {activeTab === 'reconhecimento' && (
+            <ReconhecimentoView students={students} />
+          )}
+
+          {/* LOJA DE MOEDAS VIEW (Aluno) */}
+          {activeTab === 'loja' && (
+            <LojaMoedasView student={selectedStudent} />
+          )}
+
         </main>
       </div>
 
@@ -494,6 +566,14 @@ export default function App() {
         onClose={() => setIsNotificationsModalOpen(false)}
         onSelectStudent={handleSelectStudent}
         students={students}
+      />
+
+      {/* 9. Mission Print View Modal */}
+      <MissionPrintView
+        mission={INITIAL_MISSION_DIVISAO}
+        student={selectedStudent}
+        isOpen={isMissionPrintOpen}
+        onClose={() => setIsMissionPrintOpen(false)}
       />
     </div>
   );

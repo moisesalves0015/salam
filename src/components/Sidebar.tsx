@@ -116,18 +116,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'trilhas', label: 'Trilhas de Aprendizagem', icon: GitBranch },
     { id: 'intervencoes', label: 'Intervenções Docentes', icon: Calendar },
     { id: 'relatorios', label: 'Relatórios & Memória', icon: BarChart3 },
+    { id: 'reconhecimento', label: 'Reconhecimento & Cert.', icon: Trophy, badge: 'Novo', badgeColor: 'bg-purple-100 text-purple-700 border border-purple-200' },
     { id: 'cards', label: 'Álbum de Cards', icon: Star },
   ];
+
 
   const alunoNavItems: NavItem[] = [
     { id: 'dashboard', label: 'Minha Jornada', icon: Compass },
     { id: 'painel-tv', label: 'Painel da Turma (TV)', icon: Tv, badge: 'Ao vivo', badgeColor: 'bg-[#FEF8EA] text-[#945E00] border border-[#FCE09D]', action: onOpenTvMode || (() => onTabChange('painel-tv')) },
     { id: 'proxima-missao', label: 'Próxima Missão', icon: Rocket, action: onOpenMission },
     { id: 'trilhas', label: 'Minhas Trilhas', icon: Map },
-    { id: 'cards', label: 'Meus Cards Colecionáveis', icon: Star, action: onOpenCards },
+    { id: 'cards', label: 'Meus Cards', icon: Star, action: onOpenCards },
     { id: 'conquistas', label: 'Conquistas & Selos', icon: Trophy },
-    { id: 'relatorios', label: 'Minha Evolução', icon: Activity },
+    { id: 'loja', label: 'Loja de Moedas', icon: Activity, badge: 'Novo', badgeColor: 'bg-amber-100 text-amber-700 border border-amber-200' },
+    { id: 'relatorios', label: 'Minha Evolução', icon: BarChart3 },
   ];
+
 
   const coordenacaoNavItems: NavItem[] = [
     { id: 'dashboard', label: 'Visão Institucional', icon: Building2 },
@@ -135,7 +139,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'alunos', label: 'Turmas & Alunos', icon: Users },
     { id: 'relatorios', label: 'Relatórios & Memória', icon: FileSpreadsheet },
     { id: 'trilhas', label: 'Matriz Curricular', icon: GitBranch },
+    { id: 'reconhecimento', label: 'Reconhecimentos', icon: Trophy, badge: 'Novo', badgeColor: 'bg-amber-100 text-amber-700 border border-amber-200' },
   ];
+
 
   const navItems = currentRole === 'aluno' 
     ? alunoNavItems 
