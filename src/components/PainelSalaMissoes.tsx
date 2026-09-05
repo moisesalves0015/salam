@@ -870,15 +870,12 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
     <div className="w-full min-h-screen lg:h-screen lg:max-h-screen text-slate-800 font-sans p-2.5 sm:p-3.5 lg:p-4 flex flex-col justify-between overflow-y-auto lg:overflow-hidden select-none relative gap-3.5 no-scrollbar">
       
       {/* ========================================================================= */}
-      {/* 0. BACKGROUND VIDEO IN INFINITE LOOP: ESCOLA FLORESCENDO (100% VISIBLE)   */}
+      {/* 0. BACKGROUND IMAGE: IMG_7784 (100% VISIBLE)                             */}
       {/* ========================================================================= */}
       <div className="fixed lg:absolute inset-0 -z-10 overflow-hidden pointer-events-none select-none">
-        <video 
-          src="/escola_florescendo.mp4" 
-          autoPlay 
-          loop 
-          muted 
-          playsInline
+        <img 
+          src="/IMG_7784.webp" 
+          alt="Fundo Sala de Missões"
           className="w-full h-full object-cover opacity-85 filter brightness-105"
         />
         <div className="absolute inset-0 bg-slate-900/10 backdrop-blur-[1px]" />
