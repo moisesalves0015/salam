@@ -870,16 +870,9 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
     <div className="w-full min-h-screen lg:h-screen lg:max-h-screen text-slate-800 font-sans p-2.5 sm:p-3.5 lg:p-4 flex flex-col justify-between overflow-y-auto lg:overflow-hidden select-none relative gap-3.5 no-scrollbar">
       
       {/* ========================================================================= */}
-      {/* 0. BACKGROUND IMAGE: IMG_7784 (100% VISIBLE)                             */}
+      {/* 0. BACKGROUND: RADIAL GRADIENT                                           */}
       {/* ========================================================================= */}
-      <div className="fixed lg:absolute inset-0 -z-10 overflow-hidden pointer-events-none select-none">
-        <img 
-          src="/IMG_7784.webp" 
-          alt="Fundo Sala de Missões"
-          className="w-full h-full object-cover opacity-85 filter brightness-105"
-        />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.5)_0%,rgba(0,0,0,0.6)_100%)] backdrop-blur-[1px]" />
-      </div>
+      <div className="fixed lg:absolute inset-0 -z-10 overflow-hidden pointer-events-none select-none bg-[radial-gradient(circle_at_center,rgba(18,60,196,1)_0%,rgba(0,6,122,1)_100%)]" />
 
       {/* ========================================================================= */}
       {/* 1. TOP HEADER BAR: FROSTED GLASS TOPBAR (RESPONSIVE WRAP/SCROLL)          */}
