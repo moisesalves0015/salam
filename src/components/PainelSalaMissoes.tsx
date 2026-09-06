@@ -1083,17 +1083,15 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
           </div>
 
           {/* Left: Mission Info */}
-          <div className="flex items-center gap-3 overflow-hidden z-10 w-full sm:w-auto pl-28 sm:pl-36 md:pl-44">
+          <div className="flex items-center gap-4 overflow-hidden z-10 w-full sm:w-auto pl-36 sm:pl-48 md:pl-56">
             
             {/* Absolute Full-Height Left Edge Image */}
-            <div className="absolute left-0 top-0 bottom-0 w-32 sm:w-40 md:w-48 z-0">
+            <div className="absolute left-0 top-0 bottom-0 w-32 sm:w-40 md:w-48 z-0 border-r border-slate-200/50">
               <img 
                 src={activeClass.specialMission.coverUrl} 
                 alt={activeClass.specialMission.title}
                 className="w-full h-full object-cover" 
               />
-              {/* Fade Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-white/85" />
               <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded-md bg-[#05148d] text-[8px] font-black text-white flex items-center gap-0.5 shadow-2xs border border-[#123cc4]/40 z-20">
                 <Star className="w-2 h-2 fill-white/80 text-white/80" />
                 <span>ÉPICO</span>
@@ -1210,13 +1208,12 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
                 <div key={m.id} className="relative rounded-2xl bg-white/90 border border-slate-200/80 shadow-2xs flex items-center shrink-0 overflow-hidden min-h-[72px]">
                   
                   {/* Absolute Full-Height Left Edge Image */}
-                  <div className="absolute left-0 top-0 bottom-0 w-24 z-0">
+                  <div className="absolute left-0 top-0 bottom-0 w-24 z-0 border-r border-slate-200/50">
                     <img src={m.coverUrl} alt={m.title} className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-white/90" />
                   </div>
                   
                   {/* Content with left padding to clear the image */}
-                  <div className="relative z-10 pl-24 pr-2 py-2 flex-1 overflow-hidden">
+                  <div className="relative z-10 pl-28 pr-2 py-2 flex-1 overflow-hidden">
                     <div className="flex items-center justify-between gap-1">
                       <span className={`text-[9px] font-black uppercase px-1.5 py-0.2 rounded truncate border ${m.worldBadgeClass}`}>
                         {m.world}
