@@ -62,14 +62,14 @@ export const ShinyCoin: React.FC<{ size?: 'xs' | 'sm' | 'md' | 'lg'; className?:
         <path d="M12 6.5L13.5 10.2H17.5L14.2 12.6L15.4 16.5L12 14.1L8.6 16.5L9.8 12.6L6.5 10.2H10.5L12 6.5Z" fill="#FFFFFF" fillOpacity="0.95" />
         <defs>
           <linearGradient id="blueCoinOuter" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#38BDF8" />
-            <stop offset="0.5" stopColor="#2563EB" />
-            <stop offset="1" stopColor="#1E40AF" />
+            <stop stopColor="#123cc4" />
+            <stop offset="0.5" stopColor="#0e2fb2" />
+            <stop offset="1" stopColor="#05148d" />
           </linearGradient>
           <linearGradient id="blueCoinBody" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#60A5FA" />
-            <stop offset="0.4" stopColor="#3B82F6" />
-            <stop offset="1" stopColor="#1D4ED8" />
+            <stop stopColor="#123cc4" />
+            <stop offset="0.4" stopColor="#09219f" />
+            <stop offset="1" stopColor="#00067a" />
           </linearGradient>
         </defs>
       </svg>
@@ -95,15 +95,15 @@ export const GlassCoinBadge: React.FC<{
   };
 
   return (
-    <span className={`inline-flex items-center font-black rounded-full bg-blue-500/10 backdrop-blur-md border border-blue-500/25 text-blue-900 shadow-2xs ${paddingMap[size]} ${className}`}>
+    <span className={`inline-flex items-center font-black rounded-full bg-[#123cc4]/10 backdrop-blur-md border border-[#123cc4]/25 text-[#00067a] shadow-2xs ${paddingMap[size]} ${className}`}>
       <ShinyCoin size={size === 'xs' ? 'xs' : 'sm'} />
       <span>{prefix}{typeof amount === 'number' ? amount.toLocaleString('pt-BR') : amount}</span>
-      <span className="text-[9px] text-blue-700 font-bold uppercase tracking-wider">Moedas</span>
+      <span className="text-[9px] text-[#0e2fb2] font-bold uppercase tracking-wider">Moedas</span>
     </span>
   );
 };
 
-// Standard Frosted Glass XP Badge - Pure Sky/Blue Theme
+// Standard Frosted Glass XP Badge - Custom Blue Palette
 export const GlassXpBadge: React.FC<{
   amount: number | string;
   size?: 'xs' | 'sm' | 'md';
@@ -122,8 +122,8 @@ export const GlassXpBadge: React.FC<{
   };
 
   return (
-    <span className={`inline-flex items-center font-black rounded-full bg-sky-500/10 backdrop-blur-md border border-sky-500/25 text-sky-900 shadow-2xs ${paddingMap[size]} ${className}`}>
-      <Star className="w-3.5 h-3.5 fill-sky-500 text-sky-600 shrink-0" />
+    <span className={`inline-flex items-center font-black rounded-full bg-[#123cc4]/10 backdrop-blur-md border border-[#123cc4]/25 text-[#00067a] shadow-2xs ${paddingMap[size]} ${className}`}>
+      <Star className="w-3.5 h-3.5 fill-[#123cc4] text-[#0e2fb2] shrink-0" />
       <span>{prefix}{typeof amount === 'number' ? amount.toLocaleString('pt-BR') : amount} XP</span>
     </span>
   );
@@ -240,13 +240,13 @@ interface ClassroomAdventureData {
   }[];
 }
 
-// 4 Standard Worlds guaranteed in ALL classrooms (No Progress Percentage Bars!)
+// 4 Standard Worlds — All use same custom blue palette
 const STANDARD_WORLDS_TEMPLATE = [
   {
     id: 'w1',
     name: 'Reino dos Números',
     icon: Calculator,
-    accentColor: 'text-sky-600 bg-sky-50 border-sky-200',
+    accentColor: 'text-[#09219f] bg-[#123cc4]/10 border-[#123cc4]/20',
     tag: 'Lógica & Cálculos',
     availableMissions: 5
   },
@@ -254,7 +254,7 @@ const STANDARD_WORLDS_TEMPLATE = [
     id: 'w2',
     name: 'Jornada da Leitura',
     icon: BookOpen,
-    accentColor: 'text-indigo-600 bg-indigo-50 border-indigo-200',
+    accentColor: 'text-[#09219f] bg-[#123cc4]/10 border-[#123cc4]/20',
     tag: 'Contos & Poesias',
     availableMissions: 4
   },
@@ -262,7 +262,7 @@ const STANDARD_WORLDS_TEMPLATE = [
     id: 'w3',
     name: 'Ilha das Ciências',
     icon: Atom,
-    accentColor: 'text-emerald-600 bg-emerald-50 border-emerald-200',
+    accentColor: 'text-[#09219f] bg-[#123cc4]/10 border-[#123cc4]/20',
     tag: 'Natureza & Espaço',
     availableMissions: 3
   },
@@ -270,7 +270,7 @@ const STANDARD_WORLDS_TEMPLATE = [
     id: 'w4',
     name: 'Mundo dos Desafios',
     icon: BrainCircuit,
-    accentColor: 'text-purple-600 bg-purple-50 border-purple-200',
+    accentColor: 'text-[#09219f] bg-[#123cc4]/10 border-[#123cc4]/20',
     tag: 'Enigmas & Robótica',
     availableMissions: 6
   }
@@ -309,7 +309,7 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
         title: 'A Batalha das Frações Coloridas',
         world: 'Reino dos Números',
         worldIcon: Calculator,
-        worldBadgeClass: 'text-sky-700 bg-sky-50 border-sky-200',
+        worldBadgeClass: 'text-[#00067a] bg-[#123cc4]/10 border-[#123cc4]/20',
         xpReward: 160,
         coinsReward: 80,
         coverUrl: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=500&auto=format&fit=crop&q=80',
@@ -320,7 +320,7 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
         title: 'Expedição ao Ecossistema da Floresta',
         world: 'Ilha das Ciências',
         worldIcon: Atom,
-        worldBadgeClass: 'text-emerald-700 bg-emerald-50 border-emerald-200',
+        worldBadgeClass: 'text-[#00067a] bg-[#123cc4]/10 border-[#123cc4]/20',
         xpReward: 220,
         coinsReward: 110,
         coverUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=80',
@@ -331,7 +331,7 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
         title: 'O Labirinto dos Códigos Secretos',
         world: 'Mundo dos Desafios',
         worldIcon: BrainCircuit,
-        worldBadgeClass: 'text-purple-700 bg-purple-50 border-purple-200',
+        worldBadgeClass: 'text-[#00067a] bg-[#123cc4]/10 border-[#123cc4]/20',
         xpReward: 250,
         coinsReward: 120,
         coverUrl: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=500&auto=format&fit=crop&q=80',
@@ -450,7 +450,7 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
         title: 'A Batalha da Energia Solar',
         world: 'Ilha das Ciências',
         worldIcon: Atom,
-        worldBadgeClass: 'text-emerald-700 bg-emerald-50 border-emerald-200',
+        worldBadgeClass: 'text-[#00067a] bg-[#123cc4]/10 border-[#123cc4]/20',
         xpReward: 190,
         coinsReward: 95,
         coverUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=80',
@@ -461,7 +461,7 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
         title: 'Poliedros e Prismas Mágicos',
         world: 'Reino dos Números',
         worldIcon: Calculator,
-        worldBadgeClass: 'text-sky-700 bg-sky-50 border-sky-200',
+        worldBadgeClass: 'text-[#00067a] bg-[#123cc4]/10 border-[#123cc4]/20',
         xpReward: 210,
         coinsReward: 105,
         coverUrl: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=500&auto=format&fit=crop&q=80',
@@ -545,7 +545,7 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
         title: 'O Segredo da Germinação da Semente',
         world: 'Ilha das Ciências',
         worldIcon: Atom,
-        worldBadgeClass: 'text-emerald-700 bg-emerald-50 border-emerald-200',
+        worldBadgeClass: 'text-[#00067a] bg-[#123cc4]/10 border-[#123cc4]/20',
         xpReward: 180,
         coinsReward: 90,
         coverUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=80',
@@ -618,7 +618,7 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
         title: 'O Ciclo Secreto da Chuva',
         world: 'Ilha das Ciências',
         worldIcon: Atom,
-        worldBadgeClass: 'text-emerald-700 bg-emerald-50 border-emerald-200',
+        worldBadgeClass: 'text-[#00067a] bg-[#123cc4]/10 border-[#123cc4]/20',
         xpReward: 190,
         coinsReward: 95,
         coverUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=80',
@@ -690,7 +690,7 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
         title: 'Festival da Leitura e das Histórias',
         world: 'Jornada da Leitura',
         worldIcon: BookOpen,
-        worldBadgeClass: 'text-indigo-700 bg-indigo-50 border-indigo-200',
+        worldBadgeClass: 'text-[#00067a] bg-[#123cc4]/10 border-[#123cc4]/20',
         xpReward: 400,
         coinsReward: 200,
         coverUrl: 'https://images.unsplash.com/photo-1516339901601-2e1b62dc0c45?w=500&auto=format&fit=crop&q=80',
@@ -894,23 +894,23 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
               className="px-3 py-1.5 rounded-2xl bg-white/90 hover:bg-white text-slate-700 text-xs font-black flex items-center gap-1.5 border border-slate-200/80 transition-all cursor-pointer shadow-2xs active:scale-95 shrink-0"
               title="Voltar ao Painel Principal"
             >
-              <Home className="w-3.5 h-3.5 text-blue-600" />
+              <Home className="w-3.5 h-3.5 text-[#123cc4]" />
               <span>Início</span>
             </button>
           )}
 
           <div className="flex items-center gap-2 sm:gap-2.5">
-            <div className="w-8 h-8 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-xs shrink-0">
+            <div className="w-8 h-8 rounded-2xl bg-gradient-to-tr from-[#123cc4] to-[#05148d] flex items-center justify-center text-white shadow-xs shrink-0">
               <Rocket className="w-4 h-4" />
             </div>
             <div>
               <div className="text-xs sm:text-sm font-black tracking-wider text-slate-900 flex items-center gap-1.5 sm:gap-2 leading-none">
                 <span>SALA DE MISSÕES</span>
-                <span className="px-1.5 sm:px-2 py-0.5 rounded-full bg-blue-100 border border-blue-300 text-blue-800 text-[8px] sm:text-[9px] font-black uppercase flex items-center gap-1 shadow-2xs">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse" /> TV AO VIVO
+                <span className="px-1.5 sm:px-2 py-0.5 rounded-full bg-[#123cc4]/15 border border-[#123cc4]/30 text-[#00067a] text-[8px] sm:text-[9px] font-black uppercase flex items-center gap-1 shadow-2xs">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#123cc4] animate-pulse" /> TV AO VIVO
                 </span>
               </div>
-              <span className="text-[9px] sm:text-[10px] text-blue-600 font-black block mt-0.5">
+              <span className="text-[9px] sm:text-[10px] text-[#0e2fb2] font-black block mt-0.5">
                 Painel da Turma • Projeção Escolar
               </span>
             </div>
@@ -927,7 +927,7 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
                 onClick={() => handleSelectClass(idx)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0 ${
                   isActive 
-                    ? 'bg-blue-600 text-white font-black shadow-sm scale-102' 
+                    ? 'bg-[#123cc4] text-white font-black shadow-sm scale-102' 
                     : 'text-slate-700 hover:text-slate-900 hover:bg-white/70'
                 }`}
               >
@@ -950,14 +950,14 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
             onClick={() => setIsAutoRotationActive(!isAutoRotationActive)}
             className={`px-2.5 sm:px-3 py-1.5 rounded-2xl text-xs font-bold flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer border shadow-2xs ${
               isAutoRotationActive 
-                ? 'bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100' 
+                ? 'bg-[#123cc4]/10 text-[#00067a] border-[#123cc4]/25 hover:bg-[#123cc4]/15' 
                 : 'bg-white/90 text-slate-700 border-slate-200 hover:bg-white'
             }`}
             title={isAutoRotationActive ? "Pausar Rotação Automática" : "Ativar Rotação Automática"}
           >
             {isAutoRotationActive ? (
               <>
-                <Pause className="w-3.5 h-3.5 text-blue-600" />
+                <Pause className="w-3.5 h-3.5 text-[#123cc4]" />
                 <span className="text-[10px] font-black hidden sm:inline">Auto</span>
               </>
             ) : (
@@ -970,9 +970,9 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
 
           {/* Clock */}
           <div className="flex items-baseline gap-1 font-mono text-slate-800 bg-white/90 backdrop-blur-md px-2.5 sm:px-3 py-1 rounded-2xl border border-white/80 shadow-2xs">
-            <Clock className="w-3 h-3 text-blue-600 mr-0.5 sm:mr-1 self-center" />
+            <Clock className="w-3 h-3 text-[#123cc4] mr-0.5 sm:mr-1 self-center" />
             <span className="font-black text-xs">{h}:{m}</span>
-            <span className="text-blue-600 text-[10px] font-bold">:{s}</span>
+            <span className="text-[#123cc4] text-[10px] font-bold">:{s}</span>
           </div>
 
           {/* Fullscreen Button */}
@@ -995,11 +995,11 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
         <div className="col-span-12 lg:col-span-5 bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-3 sm:p-3.5 flex flex-col justify-between shadow-md gap-3">
           <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2">
             <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-lg font-black shadow-xs shrink-0">
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#123cc4] to-[#05148d] flex items-center justify-center text-white text-lg font-black shadow-xs shrink-0">
                 {activeClass.id === 'escola' ? <Globe2 className="w-5 h-5" /> : <GraduationCap className="w-5 h-5 text-white" />}
               </div>
               <div>
-                <span className="text-[9px] uppercase font-black tracking-widest text-blue-600 block leading-tight">
+                <span className="text-[9px] uppercase font-black tracking-widest text-[#123cc4] block leading-tight">
                   Turma Ativa
                 </span>
                 <h2 className="text-base sm:text-lg font-black text-slate-900 leading-tight">
@@ -1013,10 +1013,10 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
               <img 
                 src={activeClass.teacher.avatar} 
                 alt={activeClass.teacher.name}
-                className="w-8 h-8 rounded-xl object-cover border border-white shadow-2xs ring-1 ring-blue-500 shrink-0" 
+                className="w-8 h-8 rounded-xl object-cover border border-white shadow-2xs ring-1 ring-[#123cc4] shrink-0" 
               />
               <div className="overflow-hidden">
-                <span className="text-[8px] font-black uppercase text-blue-700 tracking-wider block leading-tight">
+                <span className="text-[8px] font-black uppercase text-[#0e2fb2] tracking-wider block leading-tight">
                   {activeClass.teacher.role}
                 </span>
                 <span className="text-xs font-black text-slate-900 truncate block leading-tight max-w-[150px]">
@@ -1029,34 +1029,34 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
           {/* 3 Clear Stats with Coordinated Palette */}
           <div className="grid grid-cols-3 gap-2 sm:gap-2.5">
             {/* 1. XP */}
-            <div className="p-2 rounded-2xl bg-sky-50/90 border border-sky-200/80 flex flex-col items-center justify-center text-center shadow-2xs">
-              <div className="flex items-center gap-1 text-sky-950 font-black text-xs sm:text-sm">
-                <Star className="w-3.5 h-3.5 fill-sky-500 text-sky-600" />
+            <div className="p-2 rounded-2xl bg-[#123cc4]/8 border border-[#123cc4]/20 flex flex-col items-center justify-center text-center shadow-2xs">
+              <div className="flex items-center gap-1 text-[#00067a] font-black text-xs sm:text-sm">
+                <Star className="w-3.5 h-3.5 fill-[#123cc4] text-[#0e2fb2]" />
                 <span>{activeClass.totalXp.toLocaleString('pt-BR')}</span>
               </div>
-              <span className="text-[8px] sm:text-[9px] font-black text-sky-700 uppercase tracking-wider mt-0.5 truncate max-w-full">
+              <span className="text-[8px] sm:text-[9px] font-black text-[#0e2fb2] uppercase tracking-wider mt-0.5 truncate max-w-full">
                 XP (+{activeClass.xpToday})
               </span>
             </div>
 
             {/* 2. Missions */}
-            <div className="p-2 rounded-2xl bg-indigo-50/90 border border-indigo-200/80 flex flex-col items-center justify-center text-center shadow-2xs">
-              <div className="flex items-center gap-1 text-indigo-950 font-black text-xs sm:text-sm">
-                <Target className="w-3.5 h-3.5 text-indigo-600" />
+            <div className="p-2 rounded-2xl bg-[#123cc4]/8 border border-[#123cc4]/20 flex flex-col items-center justify-center text-center shadow-2xs">
+              <div className="flex items-center gap-1 text-[#00067a] font-black text-xs sm:text-sm">
+                <Target className="w-3.5 h-3.5 text-[#123cc4]" />
                 <span>{activeClass.completedMissions}</span>
               </div>
-              <span className="text-[8px] sm:text-[9px] font-black text-indigo-700 uppercase tracking-wider mt-0.5 truncate max-w-full">
+              <span className="text-[8px] sm:text-[9px] font-black text-[#0e2fb2] uppercase tracking-wider mt-0.5 truncate max-w-full">
                 Missões Feitas
               </span>
             </div>
 
             {/* 3. Coins */}
-            <div className="p-2 rounded-2xl bg-blue-50/90 border border-blue-200/80 flex flex-col items-center justify-center text-center shadow-2xs">
-              <div className="flex items-center gap-1 text-blue-950 font-black text-xs sm:text-sm">
+            <div className="p-2 rounded-2xl bg-[#123cc4]/8 border border-[#123cc4]/20 flex flex-col items-center justify-center text-center shadow-2xs">
+              <div className="flex items-center gap-1 text-[#00067a] font-black text-xs sm:text-sm">
                 <ShinyCoin size="xs" />
                 <span>{activeClass.coinsCount.toLocaleString('pt-BR')}</span>
               </div>
-              <span className="text-[8px] sm:text-[9px] font-black text-blue-700 uppercase tracking-wider mt-0.5 truncate max-w-full">
+              <span className="text-[8px] sm:text-[9px] font-black text-[#0e2fb2] uppercase tracking-wider mt-0.5 truncate max-w-full">
                 Moedas
               </span>
             </div>
@@ -1090,19 +1090,19 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
                 alt={activeClass.specialMission.title}
                 className="w-full h-full object-cover" 
               />
-              <div className="absolute top-1 left-1 px-1.5 py-0.5 rounded-md bg-purple-600 text-[8px] font-black text-white flex items-center gap-0.5 shadow-2xs">
-                <Star className="w-2 h-2 fill-current" />
+              <div className="absolute top-1 left-1 px-1.5 py-0.5 rounded-md bg-[#05148d] text-[8px] font-black text-white flex items-center gap-0.5 shadow-2xs border border-[#123cc4]/40">
+                <Star className="w-2 h-2 fill-white/80 text-white/80" />
                 <span>ÉPICO</span>
               </div>
             </div>
 
             <div className="overflow-hidden space-y-0.5 flex-1">
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-800 text-[9px] font-black uppercase tracking-wider border border-purple-200 flex items-center gap-1 shadow-2xs">
-                  <Flame className="w-2.5 h-2.5 text-purple-600" /> {activeClass.specialMission.badge}
+                <span className="px-2.5 py-0.5 rounded-full bg-[#123cc4]/10 text-[#00067a] text-[9px] font-black uppercase tracking-wider border border-[#123cc4]/20 flex items-center gap-1 shadow-2xs">
+                  <Flame className="w-2.5 h-2.5 text-[#123cc4]" /> {activeClass.specialMission.badge}
                 </span>
                 <span className="text-[9px] font-bold text-slate-500 flex items-center gap-1">
-                  <Clock className="w-2.5 h-2.5 text-blue-600" />
+                  <Clock className="w-2.5 h-2.5 text-[#123cc4]" />
                   {activeClass.specialMission.timeLeft}
                 </span>
               </div>
@@ -1112,14 +1112,14 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
               </h3>
               
               <p className="text-[10px] text-slate-600 truncate font-bold">
-                Trilha: <span className="text-blue-600 font-black">{activeClass.specialMission.theme}</span>
+                Trilha: <span className="text-[#123cc4] font-black">{activeClass.specialMission.theme}</span>
               </p>
               
               {/* Rewards */}
               <div className="flex items-center gap-2 pt-0.5">
                 <GlassXpBadge amount={activeClass.specialMission.xpReward} size="xs" />
                 <GlassCoinBadge amount={activeClass.specialMission.coinsReward} size="xs" prefix="+" />
-                <span className="text-[8px] font-black text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200">
+                <span className="text-[8px] font-black text-[#00067a] bg-[#123cc4]/10 px-2 py-0.5 rounded-lg border border-[#123cc4]/20">
                   {activeClass.specialMission.status}
                 </span>
               </div>
@@ -1128,16 +1128,16 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
 
           {/* Center: BIG BOLD EYE-CATCHING "RECOMPENSA COLETIVA" */}
           <div className="flex sm:flex flex-col items-center justify-center text-center z-10 shrink-0 px-2 sm:px-4 self-center sm:self-auto">
-            <span className="text-xs sm:text-sm md:text-base font-black tracking-widest text-blue-700 uppercase drop-shadow-xs">
+            <span className="text-xs sm:text-sm md:text-base font-black tracking-widest text-[#0e2fb2] uppercase drop-shadow-xs">
               RECOMPENSA COLETIVA
             </span>
           </div>
 
           {/* Right: Challenge Crown Tag */}
-          <div className="hidden sm:flex flex-col items-center justify-center p-2.5 rounded-2xl bg-purple-50/90 border border-purple-200/80 text-center shrink-0 min-w-[95px] shadow-2xs z-10">
-            <Crown className="w-5 h-5 text-purple-600 animate-bounce" />
-            <span className="text-[10px] font-black text-purple-900 mt-0.5">Desafio</span>
-            <span className="text-[8px] font-bold text-purple-700">Jogue em Equipe!</span>
+          <div className="hidden sm:flex flex-col items-center justify-center p-2.5 rounded-2xl bg-[#123cc4]/8 border border-[#123cc4]/20 text-center shrink-0 min-w-[95px] shadow-2xs z-10">
+            <Crown className="w-5 h-5 text-[#123cc4] animate-bounce" />
+            <span className="text-[10px] font-black text-[#00067a] mt-0.5">Desafio</span>
+            <span className="text-[8px] font-bold text-[#0e2fb2]">Jogue em Equipe!</span>
           </div>
         </div>
       </section>
@@ -1159,9 +1159,9 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
           <div className="bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-3 flex flex-col justify-start gap-2 shadow-md shrink-0">
             <div className="flex items-center justify-between mb-0.5 px-0.5">
               <span className="text-xs font-black text-slate-900 flex items-center gap-1.5">
-                <Compass className="w-3.5 h-3.5 text-blue-600" /> Mundos do Saber
+                <Compass className="w-3.5 h-3.5 text-[#123cc4]" /> Mundos do Saber
               </span>
-              <span className="text-[10px] font-black text-blue-700">
+              <span className="text-[10px] font-black text-[#0e2fb2]">
                 4 Trilhas Abertas
               </span>
             </div>
@@ -1170,7 +1170,7 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
               {displayWorlds.map((w) => (
                 <div 
                   key={w.id} 
-                  className="p-2.5 rounded-2xl bg-white/90 border border-slate-200/80 hover:border-blue-400/80 flex flex-col justify-between transition-all shadow-2xs"
+                  className="p-2.5 rounded-2xl bg-white/90 border border-slate-200/80 hover:border-[#123cc4]/60 flex flex-col justify-between transition-all shadow-2xs"
                 >
                   <div className="flex items-center justify-between">
                     <div className={`p-1.5 rounded-xl border ${w.accentColor}`}>
@@ -1193,7 +1193,7 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
           <div className="bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-3 flex flex-col justify-start gap-2 flex-1 min-h-0 shadow-md relative overflow-hidden">
             <div className="flex items-center justify-between mb-0.5 px-0.5 shrink-0">
               <span className="text-xs font-black text-slate-900 flex items-center gap-1.5">
-                <Rocket className="w-3.5 h-3.5 text-blue-600" /> Próximas Missões
+                <Rocket className="w-3.5 h-3.5 text-[#123cc4]" /> Próximas Missões
               </span>
               <span className="text-[9px] font-bold text-slate-500">
                 Missões Seguintes
@@ -1212,7 +1212,7 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
                       <span className={`text-[9px] font-black uppercase px-1.5 py-0.2 rounded truncate border ${m.worldBadgeClass}`}>
                         {m.world}
                       </span>
-                      <span className="text-[9px] font-bold text-blue-600 truncate">
+                      <span className="text-[9px] font-bold text-[#123cc4] truncate">
                         {m.availability}
                       </span>
                     </div>
@@ -1239,7 +1239,7 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
             {/* Gallery Header with CLICKABLE INTERACTIVE DOTS */}
             <div className="flex items-center justify-between px-0.5 mb-1 shrink-0">
               <span className="text-xs font-black text-slate-900 flex items-center gap-1.5">
-                <Camera className="w-3.5 h-3.5 text-blue-600" /> Momentos da Turma
+                <Camera className="w-3.5 h-3.5 text-[#123cc4]" /> Momentos da Turma
               </span>
               
               {/* Clickable Indicator Dots */}
@@ -1253,7 +1253,7 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
                       onClick={() => setMemoryPhotoIdx(i)}
                       className={`h-2 rounded-full transition-all cursor-pointer p-0 border-0 ${
                         isSelected 
-                          ? 'bg-blue-600 w-4 shadow-2xs' 
+                          ? 'bg-[#123cc4] w-4 shadow-2xs' 
                           : 'bg-slate-300 hover:bg-slate-400 w-2'
                       }`}
                       title={`Ver: ${m.title}`}
@@ -1261,7 +1261,7 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
                     />
                   );
                 })}
-                <span className="text-[9px] font-bold text-blue-700 ml-1">
+                <span className="text-[9px] font-bold text-[#0e2fb2] ml-1">
                   Nossa Galeria
                 </span>
               </div>
@@ -1305,7 +1305,7 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
 
               {/* Rich Gradient Overlay with Belonging Caption */}
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent flex flex-col justify-end p-3 text-white pointer-events-none">
-                <span className="text-[9px] font-black text-emerald-300 uppercase tracking-wider block">
+                <span className="text-[9px] font-black text-[#123cc4] uppercase tracking-wider block">
                   {currentMemory.tag}
                 </span>
                 <div className="text-sm font-black leading-tight truncate mt-0.5">
@@ -1320,10 +1320,10 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
             {/* Clean Subtitle at Bottom */}
             <div className="px-2 py-1 flex items-center justify-between text-[10px] font-bold text-slate-600 shrink-0">
               <span className="flex items-center gap-1">
-                <Sparkle className="w-3 h-3 text-blue-600" />
+                <Sparkle className="w-3 h-3 text-[#123cc4]" />
                 <span>Nossa Turma em Ação</span>
               </span>
-              <span className="text-blue-700 font-black">
+              <span className="text-[#0e2fb2] font-black">
                 Juntos somos mais fortes!
               </span>
             </div>
@@ -1337,9 +1337,9 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
           <div className="bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-3 flex flex-col justify-between flex-1 min-h-0 shadow-md gap-2">
             <div className="flex items-center justify-between mb-1 px-0.5 shrink-0">
               <span className="text-xs font-black text-slate-900 flex items-center gap-1.5">
-                <Users2 className="w-3.5 h-3.5 text-blue-600" /> Guildas & Equipes em Ação
+                <Users2 className="w-3.5 h-3.5 text-[#123cc4]" /> Guildas & Equipes em Ação
               </span>
-              <span className="text-[10px] font-black text-indigo-700">
+              <span className="text-[9px] font-black text-[#00067a] bg-[#123cc4]/10 px-2.5 py-0.5 rounded-full border border-[#123cc4]/20 shadow-2xs">
                 Cooperação
               </span>
             </div>
@@ -1350,12 +1350,12 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
                 <div key={i} className="p-3 rounded-2xl bg-white/90 border border-slate-200/80 shadow-2xs flex flex-col justify-between">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-lg bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-700 font-black text-xs shrink-0">
+                      <div className="w-7 h-7 rounded-lg bg-[#123cc4]/10 border border-[#123cc4]/20 flex items-center justify-center text-[#09219f] font-black text-xs shrink-0">
                         <Users2 className="w-3.5 h-3.5" />
                       </div>
                       <div>
                         <h5 className="text-xs font-black text-slate-900 truncate leading-tight">{grp.name}</h5>
-                        <span className="text-[9px] font-bold text-indigo-700 block">{grp.statusTag}</span>
+                        <span className="text-[9px] font-black text-[#0e2fb2] block">{grp.statusTag}</span>
                       </div>
                     </div>
 
@@ -1365,7 +1365,7 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
                           key={idx} 
                           src={av} 
                           alt="Membro" 
-                          className="w-5.5 h-5.5 rounded-full object-cover border-2 border-white shadow-2xs ring-1 ring-blue-500" 
+                          className="w-5.5 h-5.5 rounded-full object-cover border-2 border-white shadow-2xs ring-1 ring-[#123cc4]" 
                         />
                       ))}
                     </div>
@@ -1382,13 +1382,13 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
             </div>
 
             {/* Teamwork Incentive Footer */}
-            <div className="p-2.5 rounded-2xl bg-white/90 border border-emerald-200/90 flex items-center gap-2.5 shadow-2xs shrink-0 mt-auto">
-              <div className="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-2xs">
+            <div className="p-2.5 rounded-2xl bg-white/90 border border-[#123cc4]/20 flex items-center gap-2.5 shadow-2xs shrink-0 mt-auto">
+              <div className="w-8 h-8 rounded-xl bg-[#123cc4] text-white flex items-center justify-center shrink-0 shadow-2xs">
                 <HeartHandshake className="w-4 h-4" />
               </div>
               <div className="overflow-hidden">
-                <div className="text-[9px] font-black uppercase text-emerald-800 flex items-center gap-1">
-                  <Sparkle className="w-2.5 h-2.5 text-emerald-600" /> Força da Equipe
+                <div className="text-[9px] font-black uppercase text-[#00067a] flex items-center gap-1">
+                  <Sparkle className="w-2.5 h-2.5 text-[#123cc4]" /> Força da Equipe
                 </div>
                 <div className="text-[10px] font-black text-slate-800 leading-tight">
                   Juntos, cada desafio se torna uma grande conquista!
@@ -1409,9 +1409,9 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
         <div className="bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-2.5 shadow-md flex flex-col justify-between overflow-hidden">
           <div className="flex items-center justify-between mb-1 px-1">
             <span className="text-[11px] font-black text-slate-900 flex items-center gap-1.5">
-              <HeartHandshake className="w-3.5 h-3.5 text-blue-600" /> Duplas em Ação
+              <HeartHandshake className="w-3.5 h-3.5 text-[#123cc4]" /> Duplas em Ação
             </span>
-            <span className="text-[8px] text-blue-800 font-black bg-sky-100 px-2.5 py-0.5 rounded-full border border-sky-200/80 shadow-2xs">
+            <span className="text-[8px] text-[#00067a] font-black bg-[#123cc4]/10 px-2.5 py-0.5 rounded-full border border-[#123cc4]/20 shadow-2xs">
               Colaborando Juntos
             </span>
           </div>
@@ -1428,14 +1428,14 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
                     <img 
                       src={pair.avatar1} 
                       alt={pair.name1} 
-                      className="w-9 h-9 rounded-full object-cover border-2 border-white ring-2 ring-blue-500 shadow-2xs" 
+                      className="w-9 h-9 rounded-full object-cover border-2 border-white ring-2 ring-[#123cc4] shadow-2xs" 
                     />
                     <img 
                       src={pair.avatar2} 
                       alt={pair.name2} 
-                      className="w-9 h-9 rounded-full object-cover border-2 border-white ring-2 ring-blue-500 shadow-2xs" 
+                      className="w-9 h-9 rounded-full object-cover border-2 border-white ring-2 ring-[#123cc4] shadow-2xs" 
                     />
-                    <span className="absolute -bottom-0.5 right-0 w-2 h-2 rounded-full bg-emerald-500 border-2 border-white animate-pulse" />
+                    <span className="absolute -bottom-0.5 right-0 w-2 h-2 rounded-full bg-[#123cc4] border-2 border-white animate-pulse" />
                   </div>
                   
                   <div className="w-full">
@@ -1460,9 +1460,9 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
         <div className="bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-2.5 shadow-md flex flex-col justify-between overflow-hidden">
           <div className="flex items-center justify-between mb-1 px-1">
             <span className="text-[11px] font-black text-slate-900 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-blue-600" /> Exploradores da Turma
+              <Sparkles className="w-3.5 h-3.5 text-[#123cc4]" /> Exploradores da Turma
             </span>
-            <span className="text-[8px] text-purple-800 font-black bg-purple-100 px-2.5 py-0.5 rounded-full border border-purple-200/80 shadow-2xs">
+            <span className="text-[8px] text-[#00067a] font-black bg-[#123cc4]/10 px-2.5 py-0.5 rounded-full border border-[#123cc4]/20 shadow-2xs">
               Nível & Conquistas
             </span>
           </div>
@@ -1478,7 +1478,7 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
                     <img 
                       src={exp.avatar} 
                       alt={exp.name} 
-                      className="w-10 h-10 rounded-full object-cover border-2 border-white ring-2 ring-blue-500 shadow-2xs" 
+                      className="w-10 h-10 rounded-full object-cover border-2 border-white ring-2 ring-[#123cc4] shadow-2xs" 
                     />
                     <div className="absolute -bottom-1 -right-1 px-1.5 py-0.2 rounded-full bg-slate-900 text-white text-[8px] font-black shadow-2xs border border-white">
                       Nv {exp.level}
@@ -1489,14 +1489,14 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
                     <span className="text-[11px] font-black text-slate-900 truncate block leading-tight">
                       {exp.name}
                     </span>
-                    <span className="text-[8px] font-black text-blue-700 bg-sky-50 border border-sky-200 px-1.5 py-0.2 rounded-md inline-block truncate max-w-full">
+                    <span className="text-[8px] font-black text-[#00067a] bg-[#123cc4]/10 border border-[#123cc4]/20 px-1.5 py-0.2 rounded-md inline-block truncate max-w-full">
                       {exp.tag}
                     </span>
                   </div>
                   
-                  <span className="text-[9px] font-bold text-slate-500">
-                    {exp.xp.toLocaleString('pt-BR')} XP
-                  </span>
+                  <div className="w-full flex justify-center">
+                    <GlassXpBadge amount={exp.xp} size="xs" />
+                  </div>
                 </div>
               ))}
             </div>
@@ -1509,15 +1509,15 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
       {/* ========================================================================= */}
       <div className="px-3 sm:px-4 py-1.5 bg-white/85 backdrop-blur-md border border-white/90 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 text-[10px] text-slate-600 font-medium shrink-0 shadow-2xs">
         <div className="flex items-center gap-2 overflow-hidden">
-          <Smile className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-          <span className="text-blue-700 font-black shrink-0">Dica do Explorador:</span>
+          <Smile className="w-3.5 h-3.5 text-[#123cc4] shrink-0" />
+          <span className="text-[#0e2fb2] font-black shrink-0">Dica do Explorador:</span>
           <span className="text-slate-800 truncate italic font-bold">
             "{ADVENTURE_QUOTES[quoteIdx % ADVENTURE_QUOTES.length].text}"
           </span>
         </div>
 
         <span className="text-slate-500 font-bold shrink-0 flex items-center gap-1 self-end sm:self-auto">
-          <Sparkle className="w-2.5 h-2.5 text-emerald-600" />
+          <Sparkle className="w-2.5 h-2.5 text-[#123cc4]" />
           {ADVENTURE_QUOTES[quoteIdx % ADVENTURE_QUOTES.length].author}
         </span>
       </div>
