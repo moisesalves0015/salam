@@ -102,16 +102,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="space-y-4">
         
         {/* Drawer Header (Visible inside mobile drawer) */}
-        <div className="flex items-center justify-between pb-3 border-b-2 border-[#C9DDF0] lg:hidden">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-[#2676D9] to-[#19B9B0] flex items-center justify-center text-white font-black text-sm shadow-md border-2 border-white">
-              <Rocket className="w-4 h-4" />
-            </div>
-            <div>
-              <span className="text-[9px] font-black text-[#2676D9] uppercase tracking-widest leading-none block">SALA DE</span>
-              <h3 className="text-sm font-black text-[#18324A] leading-tight">MISSÕES</h3>
-            </div>
-          </div>
+        <div className="flex justify-end pb-2 lg:hidden">
           {setIsMobileMenuOpen && (
             <button
               onClick={() => setIsMobileMenuOpen(false)}
@@ -174,16 +165,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   onClick={() => handleNavClick(item)}
                   className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-black transition-all cursor-pointer group ${
                     isActive
-                      ? 'bg-[#2676D9] text-white shadow-md shadow-[#2676D9]/25'
-                      : 'text-[#18324A] hover:text-[#1652A3] hover:bg-[#EAF4FF]'
+                      ? 'bg-[#123cc4] text-white shadow-md shadow-[#123cc4]/25'
+                      : 'text-slate-700 hover:text-slate-900 hover:bg-[#123cc4]/5'
                   }`}
                 >
                   <div className="flex items-center gap-2.5 truncate">
-                    <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-[#60758A] group-hover:text-[#2676D9]'}`} />
+                    <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-slate-500 group-hover:text-[#123cc4]'}`} />
                     <span className="truncate">{item.label}</span>
                   </div>
                   {item.badge && (
-                    <span className={`text-[10px] font-black px-2 py-0.5 rounded-full shrink-0 ${item.badgeColor || (isActive ? 'bg-white/25 text-white' : 'bg-[#EAF4FF] text-[#1652A3] border border-[#C9DDF0]')}`}>
+                    <span className={`text-[10px] font-black px-2 py-0.5 rounded-full shrink-0 ${item.badgeColor || (isActive ? 'bg-white/25 text-white' : 'bg-[#123cc4]/10 text-[#123cc4] border border-[#123cc4]/20')}`}>
                       {item.badge}
                     </span>
                   )}
@@ -196,18 +187,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Mini Motivational / Status Footer Card */}
-      <div className="pt-3 border-t-2 border-[#C9DDF0]">
-        <div className="p-3 rounded-2xl bg-[#F6FAFF] border-2 border-[#C9DDF0] text-left space-y-2">
+      <div className="pt-3 border-t border-slate-200/50">
+        <div className="p-3 rounded-2xl bg-white/60 border border-slate-200/60 text-left space-y-2">
           <div className="flex justify-between items-center">
-            <span className="text-[10px] font-black text-[#60758A] uppercase tracking-widest">
+            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
               {currentRole === 'aluno' ? 'Progresso Semanal' : 'Status da Turma'}
             </span>
-            <span className="text-[11px] font-black font-mono text-[#19B9B0]">82%</span>
+            <span className="text-[11px] font-black font-mono text-[#123cc4]">82%</span>
           </div>
-          <div className="w-full bg-[#EAF4FF] rounded-full h-2 overflow-hidden border border-[#C9DDF0]">
-            <div className="bg-gradient-to-r from-[#19B9B0] to-[#139E96] h-full rounded-full w-[82%] shadow-2xs"></div>
+          <div className="w-full bg-slate-200/50 rounded-full h-2 overflow-hidden border border-slate-200">
+            <div className="bg-gradient-to-r from-[#123cc4] to-[#05148d] h-full rounded-full w-[82%] shadow-2xs"></div>
           </div>
-          <div className="text-[10px] text-[#18324A] font-bold">
+          <div className="text-[10px] text-slate-700 font-bold">
             {currentRole === 'aluno' ? '4 de 5 missões concluídas' : '28 de 32 alunos ativos hoje'}
           </div>
         </div>
@@ -218,7 +209,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <>
       {/* DESKTOP SIDEBAR (Static on screens lg+) */}
-      <aside className="hidden lg:flex w-64 bg-white border-2 border-[#C9DDF0] rounded-3xl p-4 shrink-0 flex-col justify-between shadow-2xs min-h-[calc(100vh-120px)] sticky top-20">
+      <aside className="hidden lg:flex w-64 bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-4 shrink-0 flex-col justify-between shadow-md min-h-[calc(100vh-120px)] sticky top-24">
         {sidebarContent}
       </aside>
 
@@ -232,7 +223,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           />
 
           {/* Drawer Container */}
-          <div className="fixed inset-y-0 left-0 w-[85%] max-w-sm bg-white border-r-2 border-[#C9DDF0] p-4 shadow-xl overflow-y-auto flex flex-col justify-between animate-in slide-in-from-left duration-300">
+          <div className="fixed inset-y-0 left-0 w-[85%] max-w-sm bg-white/95 backdrop-blur-xl border-r border-white/90 p-4 shadow-xl overflow-y-auto flex flex-col justify-between animate-in slide-in-from-left duration-300">
             {sidebarContent}
           </div>
         </div>

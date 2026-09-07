@@ -29,38 +29,38 @@ export const Header: React.FC<HeaderProps> = ({
   const [selectedClass, setSelectedClass] = useState('Turma 5º ano A');
 
   return (
-    <header className="sticky top-0 z-40 bg-white/98 backdrop-blur-md border-b-2 border-[#C9DDF0] px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4 transition-all shadow-2xs">
+    <header className="sticky top-2 sm:top-4 z-40 mx-2 sm:mx-4 lg:mx-8 bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl px-3 sm:px-5 py-2.5 flex items-center justify-between gap-2 sm:gap-4 transition-all shadow-md">
       {/* Left: Mobile Hamburger & Brand Logo */}
       <div className="flex items-center gap-2.5 sm:gap-4 lg:gap-6 shrink-0">
         {/* Hamburger Menu Toggle Button */}
         {setIsMobileMenuOpen && (
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-2 -ml-1 rounded-2xl bg-[#EAF4FF] hover:bg-[#D6E8FA] text-[#1652A3] border-2 border-[#C9DDF0] transition-colors lg:hidden flex items-center justify-center cursor-pointer active:scale-95"
+            className="p-1.5 sm:p-2 -ml-1 rounded-2xl bg-white/90 hover:bg-white text-slate-700 border border-slate-200/80 transition-all lg:hidden flex items-center justify-center cursor-pointer active:scale-95 shadow-2xs"
             aria-label="Abrir Menu de Navegação"
             title="Menu lateral"
           >
             {isMobileMenuOpen ? (
-              <X className="w-5 h-5 text-[#2676D9]" />
+              <X className="w-4 h-4 sm:w-5 sm:h-5 text-slate-700" />
             ) : (
-              <Menu className="w-5 h-5 text-[#2676D9]" />
+              <Menu className="w-4 h-4 sm:w-5 sm:h-5 text-slate-700" />
             )}
           </button>
         )}
 
         <div className="flex items-center gap-2 sm:gap-3 group">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-tr from-[#2676D9] to-[#19B9B0] rounded-2xl flex items-center justify-center font-bold text-sm text-white shadow-md shadow-[#2676D9]/25 border-2 border-white">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-tr from-[#123cc4] to-[#05148d] rounded-full flex items-center justify-center font-bold text-sm text-white shadow-xs shrink-0">
             {currentRole === 'aluno' ? (
-              <Compass className="w-5 h-5 text-white" />
+              <Compass className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             ) : (
-              <Rocket className="w-5 h-5 text-white" />
+              <Rocket className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             )}
           </div>
-          <div className="hidden xs:block">
+          <div>
             <div className="flex items-center gap-1.5">
-              <span className="text-[9px] sm:text-[10px] font-black tracking-widest text-[#2676D9] uppercase">SALA DE</span>
+              <span className="text-[9px] sm:text-[10px] font-black tracking-widest text-[#123cc4] uppercase">SALA DE</span>
             </div>
-            <h1 className="text-base sm:text-lg font-black tracking-tight text-[#18324A] leading-tight">
+            <h1 className="text-base sm:text-lg font-black tracking-tight text-[#00067a] leading-tight">
               MISSÕES
             </h1>
           </div>
@@ -110,39 +110,41 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Notifications Icon */}
         <button
           onClick={onOpenNotifications}
-          className="relative p-2 rounded-2xl bg-[#EAF4FF] hover:bg-[#D6E8FA] text-[#1652A3] border-2 border-[#C9DDF0] transition-colors cursor-pointer"
+          className="relative p-1.5 sm:p-2 rounded-2xl bg-white/90 hover:bg-white text-slate-700 border border-slate-200/80 transition-all cursor-pointer shadow-2xs active:scale-95"
           title="Notificações e Alertas Pedagógicos"
         >
-          <Bell className="w-4 h-4" />
+          <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
           <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#E85D63] text-white text-[10px] font-black flex items-center justify-center shadow-xs">
             3
           </span>
         </button>
 
         {/* Static User Profile View */}
-        <div className="flex items-center gap-2 bg-[#EAF4FF] px-2 sm:px-3 py-1.5 rounded-2xl border-2 border-[#C9DDF0]">
+        <div className="flex items-center gap-2.5 bg-white/60 px-2 sm:px-3 py-1.5 rounded-3xl border border-white/90 shadow-2xs">
           {currentRole === 'aluno' ? (
             selectedStudent?.avatarUrl ? (
-              <img src={selectedStudent.avatarUrl} alt={selectedStudent.name || 'Aluno'} className="w-7 h-7 rounded-xl object-cover border-2 border-[#F6B928] shadow-xs" />
+              <img src={selectedStudent.avatarUrl} alt={selectedStudent.name || 'Aluno'} className="w-8 h-8 rounded-full object-cover border-2 border-white ring-2 ring-[#123cc4] shadow-2xs" />
             ) : (
-              <div className="w-7 h-7 rounded-xl bg-[#FEF8EA] border-2 border-[#FCE09D] flex items-center justify-center text-[#945E00] shadow-xs font-black text-xs">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center text-amber-700 font-black text-[10px] border-2 border-white ring-2 ring-amber-400 shadow-2xs">
                 {selectedStudent?.avatar || '🌟'}
               </div>
             )
           ) : currentRole === 'coordenacao' ? (
-            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="Coordenação" className="w-7 h-7 rounded-xl object-cover border-2 border-[#8059D9] shadow-xs" />
+            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="Coordenação" className="w-8 h-8 rounded-full object-cover border-2 border-white ring-2 ring-[#8059D9] shadow-2xs" />
           ) : (
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" alt="Professora" className="w-7 h-7 rounded-xl object-cover border-2 border-[#2676D9] shadow-xs" />
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" alt="Professora" className="w-8 h-8 rounded-full object-cover border-2 border-white ring-2 ring-[#123cc4] shadow-2xs" />
           )}
 
           <div className="text-left hidden md:block">
-            <div className="text-xs font-black text-[#18324A] leading-tight">
+            <div className="text-xs font-black text-slate-900 leading-tight">
               {currentRole === 'aluno' ? (selectedStudent?.name || 'Estudante') : currentRole === 'coordenacao' ? 'Coord. Paula' : 'Prof. Carla'}
             </div>
-            <div className="text-[10px] text-[#60758A] font-bold leading-none mt-0.5">
+            <div className="text-[10px] text-slate-500 font-bold leading-none mt-0.5">
               {currentRole === 'aluno' ? `Aluno • Nível ${selectedStudent?.level || 1}` : currentRole === 'coordenacao' ? 'Coordenação' : 'Professora'}
             </div>
           </div>
+          
+          <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-0.5 hidden sm:block" />
         </div>
 
       </div>

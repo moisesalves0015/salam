@@ -37,6 +37,32 @@ interface StoreItem {
   note?: string;
 }
 
+const ShinyCoin: React.FC<{ size?: 'xs' | 'sm' | 'md' | 'lg' | 'tv', className?: string }> = ({ size = 'md', className = '' }) => {
+  const sizeMap = { xs: 'w-3 h-3', sm: 'w-4 h-4', md: 'w-5 h-5', lg: 'w-6 h-6', tv: 'w-8 h-8' };
+  return (
+    <div className={`relative inline-flex items-center justify-center shrink-0 select-none ${sizeMap[size]} ${className}`}>
+      <svg viewBox="0 0 24 24" fill="none" className="w-full h-full drop-shadow-xs">
+        <circle cx="12" cy="12" r="11" fill="url(#blueCoinOuter)" />
+        <circle cx="12" cy="12" r="9.5" fill="url(#blueCoinBody)" />
+        <circle cx="12" cy="12" r="7.5" stroke="#FFFFFF" strokeWidth="1.2" strokeOpacity="0.85" fill="none" />
+        <path d="M12 6.5L13.5 10.2H17.5L14.2 12.6L15.4 16.5L12 14.1L8.6 16.5L9.8 12.6L6.5 10.2H10.5L12 6.5Z" fill="#FFFFFF" fillOpacity="0.95" />
+        <defs>
+          <linearGradient id="blueCoinOuter" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#123cc4" />
+            <stop offset="0.5" stopColor="#0e2fb2" />
+            <stop offset="1" stopColor="#05148d" />
+          </linearGradient>
+          <linearGradient id="blueCoinBody" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#123cc4" />
+            <stop offset="0.4" stopColor="#09219f" />
+            <stop offset="1" stopColor="#00067a" />
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  );
+};
+
 const STORE_ITEMS: StoreItem[] = [
   // Escola
   { id: 'lapis', name: 'Kit de Lápis Coloridos', desc: 'Conjunto de 12 lápis de cor para suas criações artísticas', cost: 50, category: 'escola', icon: Palette, emoji: '✏️', availability: 'disponivel', popular: true },
@@ -97,7 +123,7 @@ export const LojaMoedasView: React.FC<LojaMoedasViewProps> = ({ student }) => {
       return;
     }
     setRedeemed(prev => [...prev, item.id]);
-    showToast(`${item.emoji} ${item.name} resgatado! Mostre o comprovante ao seu professor.`);
+    showToast(`O item "${item.name}" foi resgatado! Mostre o comprovante ao seu professor.`);
   };
 
   const categoryTotal: Record<Category, number> = {
@@ -112,46 +138,48 @@ export const LojaMoedasView: React.FC<LojaMoedasViewProps> = ({ student }) => {
     <div className="space-y-6 pb-12 animate-in fade-in duration-300">
       {/* Toast */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 px-4 py-3 rounded-2xl bg-slate-900 border border-amber-500/50 text-white text-xs font-bold shadow-2xl flex items-center gap-2 animate-in slide-in-from-bottom-2 max-w-xs">
-          <Coins className="w-4 h-4 text-amber-400 shrink-0" />
+        <div className="fixed bottom-6 right-6 z-50 px-4 py-3 rounded-2xl bg-[#00067a] border border-[#123cc4]/50 text-white text-xs font-bold shadow-2xl flex items-center gap-2 animate-in slide-in-from-bottom-2 max-w-xs">
+          <ShinyCoin size="sm" />
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* Header */}
-      <div className="bg-gradient-to-br from-amber-50 to-orange-50 p-6 rounded-3xl border-2 border-amber-200">
+      <div className="bg-white/85 backdrop-blur-xl border border-white/90 shadow-md p-5 sm:p-6 rounded-3xl">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 text-xs font-black text-amber-700 uppercase tracking-widest mb-1">
-              <ShoppingBag className="w-4 h-4" />
+            <div className="text-[10px] font-black text-[#123cc4] uppercase tracking-widest flex items-center gap-1.5 mb-1.5">
+              <ShoppingBag className="w-3.5 h-3.5" />
               Loja de Recompensas
             </div>
-            <h2 className="text-2xl font-black text-slate-900">Troque suas Moedas!</h2>
-            <p className="text-xs text-amber-700 mt-1 font-medium max-w-lg leading-relaxed">
+            <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+              Troque suas Moedas!
+            </h1>
+            <p className="text-xs text-slate-500 font-bold leading-relaxed mt-1 max-w-lg">
               Cada moeda representa uma conquista real de aprendizagem. Troque por recompensas reais ou experiências especiais.
             </p>
           </div>
 
           {/* Coin Balance */}
           <div className="flex flex-col items-center sm:items-end gap-2">
-            <div className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 shadow-lg text-white">
-              <span className="text-2xl">🪙</span>
+            <div className="flex items-center gap-3 px-5 py-3 rounded-2xl bg-gradient-to-tr from-[#123cc4] to-[#05148d] shadow-lg text-white">
+              <ShinyCoin size="lg" />
               <div>
-                <div className="text-2xl font-black">{studentCoins}</div>
-                <div className="text-[10px] font-bold opacity-80">Suas Moedas</div>
+                <div className="text-2xl font-black leading-tight">{studentCoins}</div>
+                <div className="text-[10px] font-black uppercase tracking-widest text-[#123cc4] mix-blend-screen opacity-90">Suas Moedas</div>
               </div>
             </div>
-            <div className="text-xs text-amber-700 font-medium">
-              {redeemed.length} resgatado{redeemed.length !== 1 ? 's' : ''} nesta sessão
+            <div className="text-xs text-slate-500 font-black tracking-wide">
+              {redeemed.length} resgatado{redeemed.length !== 1 ? 's' : ''} hoje
             </div>
           </div>
         </div>
       </div>
 
       {/* Info Banner */}
-      <div className="flex items-start gap-3 p-4 rounded-2xl bg-blue-50 border border-blue-200">
-        <Info className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
-        <div className="text-xs text-blue-700 leading-relaxed font-medium">
+      <div className="flex items-start gap-3 p-4 rounded-2xl bg-[#123cc4]/5 border border-[#123cc4]/20">
+        <Info className="w-5 h-5 text-[#123cc4] shrink-0 mt-0.5" />
+        <div className="text-xs text-[#0e2fb2] leading-relaxed font-bold">
           <strong>Como funciona:</strong> Escolha um item, clique em "Resgatar", mostre o comprovante ao seu professor. Recompensas físicas têm baixo custo e são organizadas pela escola. Pergunte ao professor quais estão disponíveis hoje!
         </div>
       </div>
@@ -162,16 +190,16 @@ export const LojaMoedasView: React.FC<LojaMoedasViewProps> = ({ student }) => {
           <button
             key={tab.id}
             onClick={() => setActiveCategory(tab.id)}
-            className={`px-3.5 py-2 rounded-xl text-xs font-black flex items-center gap-1.5 transition-all cursor-pointer border-2 ${
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-2xl text-xs sm:text-sm font-black flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs active:scale-95 border ${
               activeCategory === tab.id
-                ? 'bg-amber-500 text-white border-amber-600 shadow-md shadow-amber-500/20'
-                : 'bg-white text-slate-600 border-slate-200 hover:border-amber-300 hover:text-amber-700'
+                ? 'bg-[#123cc4] text-white border-[#123cc4]/50 shadow-sm scale-102'
+                : 'bg-white/90 text-slate-700 hover:text-[#123cc4] border-white/90 hover:bg-white shadow-2xs'
             }`}
           >
-            <tab.icon className="w-3.5 h-3.5" />
-            {tab.label}
+            <tab.icon className="w-4 h-4" />
+            <span>{tab.label}</span>
             <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-black ${
-              activeCategory === tab.id ? 'bg-white/20' : 'bg-slate-100'
+              activeCategory === tab.id ? 'bg-white/20' : 'bg-slate-200 text-slate-600'
             }`}>
               {categoryTotal[tab.id]}
             </span>
@@ -180,7 +208,7 @@ export const LojaMoedasView: React.FC<LojaMoedasViewProps> = ({ student }) => {
       </div>
 
       {/* Store Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 gap-4 sm:gap-6">
         {filteredItems.map(item => {
           const isRedeemed = redeemed.includes(item.id);
           const canAfford = studentCoins >= item.cost;
@@ -188,81 +216,92 @@ export const LojaMoedasView: React.FC<LojaMoedasViewProps> = ({ student }) => {
           return (
             <div
               key={item.id}
-              className={`relative rounded-3xl border-2 overflow-hidden transition-all ${
-                isRedeemed ? 'border-emerald-400 bg-emerald-50' :
-                item.availability === 'esgotado' ? 'border-slate-200 bg-slate-50 opacity-70' :
-                item.availability === 'reservado' ? 'border-blue-300 bg-blue-50' :
-                canAfford ? 'border-slate-200 bg-white hover:border-amber-300 hover:shadow-md hover:shadow-amber-500/10' :
-                'border-slate-200 bg-white opacity-75'
+              className={`relative flex flex-col h-full rounded-2xl border transition-all overflow-hidden group ${
+                isRedeemed ? 'border-emerald-200 bg-emerald-50/80' :
+                item.availability === 'esgotado' ? 'border-slate-200 bg-slate-50/50 opacity-70' :
+                item.availability === 'reservado' ? 'border-[#123cc4]/20 bg-[#123cc4]/5' :
+                canAfford ? 'border-slate-200 bg-white/90 backdrop-blur-xl hover:border-[#123cc4]/30 hover:shadow-lg hover:shadow-[#123cc4]/5 hover:-translate-y-0.5' :
+                'border-slate-200 bg-white/60 backdrop-blur-sm opacity-90'
               }`}
             >
-              {/* Popular Badge */}
-              {item.popular && !isRedeemed && (
-                <div className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[9px] font-black shadow-sm">
-                  ⭐ Popular
-                </div>
-              )}
-              {isRedeemed && (
-                <div className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[9px] font-black shadow-sm">
-                  ✅ Resgatado
-                </div>
-              )}
-              {item.availability === 'esgotado' && (
-                <div className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-slate-400 text-white text-[9px] font-black">
-                  Esgotado
-                </div>
-              )}
-
-              <div className="p-5">
-                {/* Item emoji & icon */}
-                <div className="text-3xl mb-3">{item.emoji}</div>
-
-                <h3 className="text-sm font-black text-slate-900 mb-1">{item.name}</h3>
-                <p className="text-xs text-slate-500 font-medium leading-snug mb-3">{item.desc}</p>
-
-                {item.note && (
-                  <div className="text-[10px] text-slate-500 italic mb-3 flex items-center gap-1">
-                    <Info className="w-3 h-3 shrink-0" />
-                    {item.note}
+              {/* Badges Flutuantes (Absolutos) */}
+              <div className="absolute top-2.5 left-2.5 flex flex-col gap-1.5 z-10">
+                {item.popular && !isRedeemed && (
+                  <div className="px-2 py-0.5 rounded-full bg-gradient-to-r from-[#123cc4] to-[#05148d] text-white text-[8px] font-bold uppercase tracking-wider shadow-sm flex items-center gap-1 w-fit">
+                    <Star className="w-2.5 h-2.5 fill-white" /> Destaque
                   </div>
                 )}
+                {isRedeemed && (
+                  <div className="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[8px] font-bold uppercase tracking-wider shadow-sm flex items-center gap-1 w-fit">
+                    <CheckCircle2 className="w-2.5 h-2.5" /> Adquirido
+                  </div>
+                )}
+                {item.availability === 'esgotado' && (
+                  <div className="px-2 py-0.5 rounded-full bg-slate-500 text-white text-[8px] font-bold uppercase tracking-wider shadow-sm flex items-center gap-1 w-fit">
+                    <Clock className="w-2.5 h-2.5" /> Esgotado
+                  </div>
+                )}
+              </div>
 
-                <div className="flex items-center justify-between">
-                  {/* Cost */}
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-lg">🪙</span>
-                    <span className={`text-lg font-black ${canAfford ? 'text-amber-600' : 'text-slate-400'}`}>
+              {/* Área de Imagem Compacta */}
+              <div className="w-full h-24 sm:h-28 bg-gradient-to-br from-[#123cc4]/5 to-[#05148d]/5 flex items-center justify-center border-b border-slate-100 relative shrink-0">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white shadow-sm flex items-center justify-center border border-[#123cc4]/10 group-hover:scale-110 transition-transform duration-300">
+                  <item.icon className="w-6 h-6 text-[#123cc4]" />
+                </div>
+              </div>
+
+              {/* Corpo do Card */}
+              <div className="p-3 sm:p-4 flex flex-col flex-1">
+                <div className="flex-1">
+                  <h3 className="text-sm font-black text-slate-800 leading-tight line-clamp-1 mb-1">
+                    {item.name}
+                  </h3>
+                  
+                  <p className="text-[10px] text-slate-500 font-medium leading-relaxed line-clamp-2 mb-3">
+                    {item.desc}
+                  </p>
+
+                  {item.note && (
+                    <div className="inline-flex items-center gap-1 text-[8px] text-[#0e2fb2] font-bold uppercase bg-[#123cc4]/5 px-2 py-1 rounded-lg border border-[#123cc4]/10 max-w-full">
+                      <Info className="w-2.5 h-2.5 shrink-0" />
+                      <span className="truncate">{item.note}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Rodapé: Preço e Ação */}
+                <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-1">
+                    <ShinyCoin size="xs" />
+                    <span className={`text-sm sm:text-base font-black ${canAfford ? 'text-[#00067a]' : 'text-slate-400'}`}>
                       {item.cost}
                     </span>
-                    {!canAfford && !isRedeemed && (
-                      <span className="text-[10px] text-red-500 font-bold">
-                        (faltam {item.cost - studentCoins})
-                      </span>
-                    )}
                   </div>
 
-                  {/* Redeem Button */}
+                  {/* Botão de Ação */}
                   {isRedeemed ? (
-                    <div className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-emerald-100 text-emerald-700 text-xs font-black">
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      Resgatado
+                    <div className="px-3 py-1.5 rounded-lg bg-emerald-100 text-emerald-700 text-[9px] font-black uppercase flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3" /> Feito
                     </div>
                   ) : item.availability === 'esgotado' ? (
-                    <div className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-200 text-slate-500 text-xs font-bold">
-                      <Clock className="w-3 h-3" />
-                      Indisponível
+                    <div className="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-500 text-[9px] font-black uppercase flex items-center gap-1">
+                      <Clock className="w-3 h-3" /> Faltou
                     </div>
                   ) : (
                     <button
                       onClick={() => handleRedeem(item)}
                       disabled={!canAfford}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                      className={`px-3 sm:px-4 py-1.5 rounded-lg text-[9px] sm:text-[10px] font-black uppercase tracking-wider transition-all shadow-sm flex items-center gap-1.5 ${
                         canAfford
-                          ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:opacity-90 shadow-sm'
-                          : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                          ? 'bg-[#123cc4] text-white hover:bg-[#0e2fb2] active:scale-95'
+                          : 'bg-slate-100 text-slate-400 cursor-not-allowed'
                       }`}
                     >
-                      Resgatar
+                      {canAfford ? (
+                        <>Resgatar</>
+                      ) : (
+                        <span className="text-[8px]">- {item.cost - studentCoins} Moedas</span>
+                      )}
                     </button>
                   )}
                 </div>
@@ -273,26 +312,31 @@ export const LojaMoedasView: React.FC<LojaMoedasViewProps> = ({ student }) => {
       </div>
 
       {/* How to earn more coins */}
-      <div className="p-5 rounded-3xl bg-slate-900 text-white">
-        <h3 className="text-sm font-black mb-3 flex items-center gap-2">
-          <Coins className="w-4 h-4 text-amber-400" />
+      <div className="p-5 rounded-3xl bg-white/85 backdrop-blur-xl border border-white/90 shadow-md">
+        <h3 className="text-sm font-black text-slate-900 mb-3 flex items-center gap-2">
+          <ShinyCoin size="sm" />
           Como ganhar mais moedas?
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {[
-            { emoji: '✅', action: 'Completar uma missão', coins: '+25 a +50' },
-            { emoji: '🎯', action: 'Dominar uma habilidade', coins: '+30 a +75' },
-            { emoji: '🔥', action: 'Manter sequência de dias', coins: '+10 por dia' },
-            { emoji: '🤝', action: 'Missão em dupla concluída', coins: '+35' },
-            { emoji: '🏆', action: 'Conquistar medalha especial', coins: '+50 a +100' },
-            { emoji: '📄', action: 'Entregar atividade impressa', coins: '+20' },
+            { icon: CheckCircle2, action: 'Completar uma missão', coins: '+25 a +50' },
+            { icon: Trophy, action: 'Dominar uma habilidade', coins: '+30 a +75' },
+            { icon: Zap, action: 'Manter sequência de dias', coins: '+10 por dia' },
+            { icon: Star, action: 'Missão em dupla concluída', coins: '+35' },
+            { icon: Gift, action: 'Conquistar medalha especial', coins: '+50 a +100' },
+            { icon: Printer, action: 'Entregar atividade impressa', coins: '+20' },
           ].map((tip, i) => (
-            <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
-              <span className="text-xl">{tip.emoji}</span>
-              <div className="flex-1">
-                <div className="text-xs text-slate-300 font-medium">{tip.action}</div>
+            <div key={i} className="flex items-center justify-between p-3 rounded-2xl bg-[#123cc4]/5 border border-[#123cc4]/10 shadow-2xs">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-white shadow-sm flex items-center justify-center border border-[#123cc4]/20 shrink-0">
+                  <tip.icon className="w-4 h-4 text-[#123cc4]" />
+                </div>
+                <div className="text-[10px] text-[#0e2fb2] font-black uppercase tracking-wide">{tip.action}</div>
               </div>
-              <span className="text-xs font-black text-amber-400 shrink-0">{tip.coins} 🪙</span>
+              <div className="flex items-center gap-1 bg-white px-2 py-0.5 rounded-full border border-slate-200 shadow-2xs">
+                <span className="text-[10px] font-black text-[#00067a]">{tip.coins}</span>
+                <ShinyCoin size="xs" />
+              </div>
             </div>
           ))}
         </div>

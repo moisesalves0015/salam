@@ -134,10 +134,10 @@ export const AlunosView: React.FC<AlunosViewProps> = ({
                     <img 
                       src={s.avatarUrl} 
                       alt={s.name} 
-                      className="w-12 h-12 rounded-2xl object-cover border border-slate-200 group-hover:scale-105 transition-transform" 
+                      className="w-12 h-12 rounded-full object-cover border-2 border-white ring-2 ring-[#123cc4] shadow-2xs group-hover:scale-105 transition-transform" 
                     />
                   ) : (
-                    <div className="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-700 group-hover:scale-105 transition-transform">
+                    <div className="w-12 h-12 rounded-full bg-indigo-50 border-2 border-white ring-2 ring-[#123cc4] flex items-center justify-center text-indigo-700 group-hover:scale-105 transition-transform">
                       <User className="w-6 h-6" />
                     </div>
                   )}

@@ -312,7 +312,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans selection:bg-indigo-600 selection:text-white relative">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_center,#ffffff_0%,#e0e7ff_100%)] text-slate-800 flex flex-col font-sans selection:bg-[#123cc4] selection:text-white relative">
       
       {/* Dev Assistant (Floating Developer Tools) */}
       <DevAssistant

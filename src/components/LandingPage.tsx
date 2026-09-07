@@ -272,26 +272,26 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white font-sans overflow-x-hidden">
+    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans overflow-x-hidden relative">
 
       {/* ========== NAV ========== */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-white/5">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/60 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#123cc4] to-[#05148d] flex items-center justify-center shadow-md">
               <Rocket className="w-4 h-4 text-white" />
             </div>
             <div>
-              <span className="text-sm font-black tracking-wider text-white">SALA DE MISSÕES</span>
-              <span className="block text-[9px] text-blue-400 font-bold tracking-widest uppercase -mt-0.5">Ecossistema Pedagógico</span>
+              <span className="text-sm font-black tracking-wider text-slate-900">SALA DE MISSÕES</span>
+              <span className="block text-[9px] text-[#0e2fb2] font-bold tracking-widest uppercase -mt-0.5">Ecossistema Pedagógico</span>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <a href="#como-funciona" className="hidden sm:block text-xs text-slate-400 hover:text-white transition-colors font-medium">Como funciona</a>
-            <a href="#trilhas" className="hidden sm:block text-xs text-slate-400 hover:text-white transition-colors font-medium">Trilhas</a>
+            <a href="#como-funciona" className="hidden sm:block text-xs text-slate-500 hover:text-[#123cc4] transition-colors font-bold">Como funciona</a>
+            <a href="#trilhas" className="hidden sm:block text-xs text-slate-500 hover:text-[#123cc4] transition-colors font-bold">Trilhas</a>
             <button
               onClick={onEnterAsStudent}
-              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-black transition-all shadow-lg shadow-blue-600/20 cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-[#123cc4] hover:bg-[#0e2fb2] text-white text-xs font-black transition-all shadow-md hover:shadow-lg cursor-pointer"
             >
               Entrar
             </button>
@@ -301,38 +301,38 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
       {/* ========== HERO ========== */}
       <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 pt-16 overflow-hidden">
-        {/* Background orbs */}
-        <FloatingOrb className="w-[600px] h-[600px] bg-blue-600 -top-40 -left-40" />
-        <FloatingOrb className="w-[500px] h-[500px] bg-purple-600 -bottom-20 -right-20" />
-        <FloatingOrb className="w-[300px] h-[300px] bg-emerald-600 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+        {/* Background orbs (TV Style) */}
+        <FloatingOrb className="w-[600px] h-[600px] bg-[#123cc4]/20 -top-40 -left-40 blur-3xl" />
+        <FloatingOrb className="w-[500px] h-[500px] bg-[#05148d]/10 -bottom-20 -right-20 blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/40 to-transparent pointer-events-none" />
 
         <div className="relative z-10 max-w-5xl mx-auto">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-bold mb-8 backdrop-blur-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#123cc4]/10 border border-[#123cc4]/20 text-[#00067a] text-xs font-bold mb-8 backdrop-blur-sm shadow-sm">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Ecossistema Pedagógico para 4º e 5º Ano do Ensino Fundamental</span>
           </div>
 
           {/* Main Title */}
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-tight mb-6">
-            <span className="text-white">A Escola que</span>
+            <span className="text-slate-900">A Escola que</span>
             <br />
-            <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#123cc4] via-[#0e2fb2] to-[#00067a] bg-clip-text text-transparent">
               transforma vidas
             </span>
             <br />
-            <span className="text-white">em jornadas.</span>
+            <span className="text-slate-900">em jornadas.</span>
           </h1>
 
-          <p className="text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed mb-10 font-medium">
-            A <strong className="text-white">Sala de Missões</strong> é um ecossistema pedagógico gamificado que transforma o processo de nivelamento das aprendizagens em uma jornada de descoberta, colaboração e conquista — dentro e fora da escola pública.
+          <p className="text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed mb-10 font-medium">
+            A <strong className="text-slate-900">Sala de Missões</strong> é um ecossistema pedagógico gamificado que transforma o processo de nivelamento das aprendizagens em uma jornada de descoberta, colaboração e conquista — dentro e fora da escola pública.
           </p>
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <button
               onClick={onEnterAsStudent}
-              className="group px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-sm shadow-2xl shadow-blue-600/30 transition-all hover:scale-105 cursor-pointer flex items-center justify-center gap-2"
+              className="group px-8 py-4 rounded-2xl bg-gradient-to-r from-[#123cc4] to-[#05148d] text-white font-black text-sm shadow-xl shadow-[#123cc4]/20 transition-all hover:scale-105 cursor-pointer flex items-center justify-center gap-2"
             >
               <Play className="w-4 h-4 fill-current" />
               Iniciar Minha Jornada
@@ -340,7 +340,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </button>
             <button
               onClick={onEnterAsProfessor}
-              className="px-8 py-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-black text-sm transition-all hover:scale-105 cursor-pointer backdrop-blur-sm"
+              className="px-8 py-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-black text-sm transition-all hover:scale-105 cursor-pointer shadow-sm"
             >
               Área do Professor
             </button>
@@ -351,16 +351,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             {STATS.map((stat, i) => (
               <div
                 key={i}
-                className={`p-4 rounded-2xl border backdrop-blur-sm transition-all duration-500 ${
+                className={`p-4 rounded-2xl border backdrop-blur-xl transition-all duration-500 shadow-sm ${
                   i === activeSection
-                    ? 'bg-white/10 border-white/20 scale-105'
-                    : 'bg-white/5 border-white/5'
+                    ? 'bg-white/95 border-[#123cc4]/30 scale-105 shadow-[#123cc4]/10'
+                    : 'bg-white/70 border-slate-200'
                 }`}
               >
-                <div className={`text-2xl font-black ${i === activeSection ? 'text-white' : 'text-slate-300'}`}>
+                <div className={`text-2xl font-black ${i === activeSection ? 'text-[#00067a]' : 'text-slate-700'}`}>
                   {stat.value}
                 </div>
-                <div className="text-xs text-slate-400 font-medium mt-0.5">{stat.label}</div>
+                <div className="text-xs text-slate-500 font-bold mt-0.5">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -368,22 +368,22 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
-          <span className="text-xs text-slate-500 font-medium">Conheça o projeto</span>
-          <ChevronDown className="w-5 h-5 text-slate-500" />
+          <span className="text-xs text-slate-500 font-bold uppercase tracking-wider">Conheça o projeto</span>
+          <ChevronDown className="w-5 h-5 text-slate-400" />
         </div>
       </section>
 
       {/* ========== O PROBLEMA ========== */}
-      <section className="py-24 px-4 bg-slate-900 relative overflow-hidden">
-        <FloatingOrb className="w-[400px] h-[400px] bg-red-700 -right-40 top-10" />
+      <section className="py-24 px-4 bg-transparent relative overflow-hidden">
+        <FloatingOrb className="w-[400px] h-[400px] bg-[#123cc4]/10 -right-40 top-10 blur-3xl" />
         <div className="max-w-5xl mx-auto relative z-10">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-300 text-xs font-bold mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#123cc4]/10 border border-[#123cc4]/20 text-[#0e2fb2] text-xs font-bold mb-4 shadow-sm">
               <Target className="w-3.5 h-3.5" />
               O Desafio
             </div>
-            <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">Por que a Sala de Missões existe?</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto leading-relaxed">
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mb-4">Por que a Sala de Missões existe?</h2>
+            <p className="text-slate-600 max-w-2xl mx-auto leading-relaxed">
               Nas escolas públicas brasileiras, estudantes chegam ao 4º e 5º ano com defasagens de aprendizagem significativas — mas cada um está em um ponto diferente. As abordagens coletivas não conseguem atender a essa diversidade de percursos.
             </p>
           </div>
@@ -406,10 +406,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 desc: 'Atividades descontextualizadas e sem significado desmotivam os estudantes. A aprendizagem precisa ser uma aventura.'
               }
             ].map((item, i) => (
-              <div key={i} className="p-6 rounded-3xl bg-white/5 border border-white/10 hover:border-red-500/30 transition-all">
+              <div key={i} className="p-6 rounded-3xl bg-white/80 backdrop-blur-xl border border-slate-200 hover:border-[#123cc4]/30 hover:shadow-md hover:-translate-y-0.5 transition-all shadow-sm">
                 <div className="text-4xl mb-4">{item.icon}</div>
-                <h3 className="text-base font-black text-white mb-2">{item.title}</h3>
-                <p className="text-sm text-slate-400 leading-relaxed">{item.desc}</p>
+                <h3 className="text-base font-black text-slate-900 mb-2">{item.title}</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -417,36 +417,36 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* ========== COMO FUNCIONA ========== */}
-      <section id="como-funciona" className="py-24 px-4 bg-slate-950 relative overflow-hidden">
-        <FloatingOrb className="w-[500px] h-[500px] bg-blue-700 -left-40 top-0" />
+      <section id="como-funciona" className="py-24 px-4 bg-white/40 relative overflow-hidden">
+        <FloatingOrb className="w-[500px] h-[500px] bg-[#05148d]/5 -left-40 top-0 blur-3xl" />
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-bold mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#123cc4]/10 border border-[#123cc4]/20 text-[#0e2fb2] text-xs font-bold mb-4 shadow-sm">
               <Map className="w-3.5 h-3.5" />
               A Jornada
             </div>
-            <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">Como funciona a jornada do estudante</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mb-4">Como funciona a jornada do estudante</h2>
+            <p className="text-slate-600 max-w-2xl mx-auto">
               Cada estudante percorre um caminho único — do diagnóstico à autonomia — com missões, revisões e conquistas que fazem sentido pedagógico real.
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {HOW_IT_WORKS.map((item, i) => (
-              <div key={i} className={`relative p-6 rounded-3xl bg-white/5 border border-white/10 hover:border-white/20 transition-all group`}>
-                <div className={`absolute top-4 right-4 text-6xl font-black opacity-5 text-white`}>{item.step}</div>
-                <div className={`w-12 h-12 rounded-2xl ${item.color} flex items-center justify-center mb-4 shadow-lg`}>
+              <div key={i} className={`relative p-6 rounded-3xl bg-white/90 backdrop-blur-xl border border-slate-200 hover:border-[#123cc4]/20 hover:shadow-lg hover:-translate-y-1 transition-all group shadow-sm`}>
+                <div className={`absolute top-4 right-4 text-6xl font-black text-slate-100`}>{item.step}</div>
+                <div className={`relative z-10 w-12 h-12 rounded-2xl ${item.color} flex items-center justify-center mb-4 shadow-md`}>
                   <item.icon className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-base font-black text-white mb-2">{item.title}</h3>
-                <p className="text-sm text-slate-400 leading-relaxed">{item.desc}</p>
+                <h3 className="relative z-10 text-base font-black text-slate-900 mb-2">{item.title}</h3>
+                <p className="relative z-10 text-sm text-slate-600 leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
 
           {/* Flow Arrow */}
-          <div className="mt-12 p-6 rounded-3xl bg-gradient-to-r from-blue-900/50 to-purple-900/50 border border-blue-500/20 text-center">
-            <p className="text-sm font-black text-slate-300 tracking-wide">
+          <div className="mt-12 p-6 rounded-3xl bg-white/80 backdrop-blur-xl border border-slate-200 shadow-sm text-center">
+            <p className="text-sm font-black text-[#123cc4] tracking-wider">
               ENTRAR → DIAGNOSTICAR → TRILHA → MISSÃO → TENTAR → ERRAR → REVISAR → DOMINAR → CONQUISTAR → AVANÇAR → AUTONOMIA
             </p>
           </div>
@@ -454,16 +454,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* ========== TRILHAS ========== */}
-      <section id="trilhas" className="py-24 px-4 bg-slate-900 relative overflow-hidden">
-        <FloatingOrb className="w-[400px] h-[400px] bg-emerald-700 -right-20 top-20" />
+      <section id="trilhas" className="py-24 px-4 bg-transparent relative overflow-hidden">
+        <FloatingOrb className="w-[400px] h-[400px] bg-emerald-500/10 -right-20 top-20 blur-3xl" />
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs font-bold mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 text-xs font-bold mb-4 shadow-sm">
               <Rocket className="w-3.5 h-3.5" />
               Trilhas de Aprendizagem
             </div>
-            <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">4 Trilhas de Exploração</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mb-4">4 Trilhas de Exploração</h2>
+            <p className="text-slate-600 max-w-2xl mx-auto">
               Cada trilha organiza o percurso pedagógico em missões sequenciais, do nível mais fundamental até a transferência e aplicação criativa do conhecimento.
             </p>
           </div>
@@ -472,20 +472,20 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             {TRAILS.map((trail, i) => (
               <div
                 key={i}
-                className="group relative p-7 rounded-3xl bg-white/5 border border-white/10 hover:border-white/20 transition-all overflow-hidden"
+                className="group relative p-7 rounded-3xl bg-white/80 backdrop-blur-xl border border-slate-200 hover:shadow-md hover:-translate-y-1 transition-all overflow-hidden shadow-sm"
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${trail.color} opacity-0 group-hover:opacity-5 transition-opacity`} />
                 <div className="relative z-10">
-                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${trail.color} flex items-center justify-center mb-5 shadow-lg`}>
+                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${trail.color} flex items-center justify-center mb-5 shadow-sm`}>
                     <trail.icon className="w-7 h-7 text-white" />
                   </div>
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-lg font-black text-white">{trail.name}</h3>
-                    <span className={`text-xs font-black px-2.5 py-1 rounded-full border ${trail.badge}`}>
+                    <h3 className="text-lg font-black text-slate-900">{trail.name}</h3>
+                    <span className={`text-xs font-black px-2.5 py-1 rounded-full border shadow-sm ${trail.badge}`}>
                       {trail.missions}
                     </span>
                   </div>
-                  <p className="text-sm text-slate-400 leading-relaxed">{trail.desc}</p>
+                  <p className="text-sm text-slate-600 leading-relaxed">{trail.desc}</p>
                 </div>
               </div>
             ))}
@@ -494,16 +494,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* ========== TIPOS DE MISSÃO ========== */}
-      <section className="py-24 px-4 bg-slate-950 relative overflow-hidden">
-        <FloatingOrb className="w-[400px] h-[400px] bg-purple-700 -left-20 bottom-0" />
+      <section className="py-24 px-4 bg-white/40 relative overflow-hidden">
+        <FloatingOrb className="w-[400px] h-[400px] bg-purple-500/10 -left-20 bottom-0 blur-3xl" />
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-bold mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-700 text-xs font-bold mb-4 shadow-sm">
               <Zap className="w-3.5 h-3.5" />
               Missões
             </div>
-            <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">Missões para todos os momentos</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mb-4">Missões para todos os momentos</h2>
+            <p className="text-slate-600 max-w-2xl mx-auto">
               As missões são o coração da Sala de Missões. Cada uma representa um objetivo pedagógico real — e pode acontecer de diferentes formas.
             </p>
           </div>
@@ -512,9 +512,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             {MISSION_TYPES.map((type, i) => (
               <div
                 key={i}
-                className={`p-6 rounded-3xl bg-gradient-to-br ${type.bg} border ${type.border} hover:scale-[1.02] transition-all`}
+                className={`p-6 rounded-3xl bg-white/90 backdrop-blur-xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all`}
               >
-                <div className={`w-12 h-12 rounded-2xl bg-white flex items-center justify-center mb-4 shadow-sm`}>
+                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${type.bg} flex items-center justify-center mb-4 shadow-sm border ${type.border}`}>
                   <type.icon className={`w-6 h-6 ${type.color}`} />
                 </div>
                 <h3 className="text-sm font-black text-slate-900 mb-2">{type.title}</h3>
@@ -524,14 +524,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
 
           {/* Printed activities highlight */}
-          <div className="mt-8 p-6 rounded-3xl bg-orange-50 border border-orange-200">
+          <div className="mt-8 p-6 rounded-3xl bg-orange-50 border border-orange-200 shadow-sm">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-orange-500 flex items-center justify-center shrink-0">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center shrink-0 shadow-sm">
                 <Printer className="w-7 h-7 text-white" />
               </div>
               <div>
                 <h3 className="text-base font-black text-orange-900 mb-1">Sem internet? Sem problema.</h3>
-                <p className="text-sm text-orange-700 leading-relaxed">
+                <p className="text-sm text-orange-800 leading-relaxed">
                   Toda missão possui uma versão para impressão. O estudante realiza a atividade no papel e o professor registra os resultados no sistema depois. A Sala de Missões foi pensada para a realidade da escola pública brasileira.
                 </p>
               </div>
@@ -541,24 +541,24 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* ========== GAMIFICAÇÃO ========== */}
-      <section className="py-24 px-4 bg-slate-900 relative overflow-hidden">
-        <FloatingOrb className="w-[400px] h-[400px] bg-amber-700 -right-20 top-20" />
+      <section className="py-24 px-4 bg-transparent relative overflow-hidden">
+        <FloatingOrb className="w-[400px] h-[400px] bg-amber-500/10 -right-20 top-20 blur-3xl" />
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-bold mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-600 text-xs font-bold mb-4 shadow-sm">
               <Star className="w-3.5 h-3.5" />
               Gamificação Pedagógica
             </div>
-            <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">Recompensas que incentivam a aprendizagem</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mb-4">Recompensas que incentivam a aprendizagem</h2>
+            <p className="text-slate-600 max-w-2xl mx-auto">
               A gamificação existe para incentivar — não substituir — a aprendizagem. Valorizamos evolução, persistência, colaboração e domínio, não apenas quem acerta mais.
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {GAMIFICATION_ITEMS.map((item, i) => (
-              <div key={i} className={`p-6 rounded-3xl ${item.bg} border ${item.border} hover:scale-[1.02] transition-all`}>
-                <div className={`w-12 h-12 rounded-2xl bg-white flex items-center justify-center mb-4 shadow-sm`}>
+              <div key={i} className={`p-6 rounded-3xl bg-white/80 backdrop-blur-xl border border-slate-200 hover:shadow-md hover:-translate-y-1 transition-all shadow-sm`}>
+                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br from-white to-slate-100 flex items-center justify-center mb-4 shadow-sm border border-slate-200`}>
                   <item.icon className={`w-6 h-6 ${item.color}`} />
                 </div>
                 <h3 className="text-sm font-black text-slate-900 mb-2">{item.title}</h3>
@@ -570,32 +570,32 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* ========== CULTURA ========== */}
-      <section className="py-24 px-4 bg-slate-950 relative overflow-hidden">
-        <FloatingOrb className="w-[500px] h-[500px] bg-pink-700 -left-40 bottom-0" />
+      <section className="py-24 px-4 bg-white/40 relative overflow-hidden">
+        <FloatingOrb className="w-[500px] h-[500px] bg-pink-500/10 -left-40 bottom-0 blur-3xl" />
         <div className="max-w-5xl mx-auto relative z-10">
           <div className="flex flex-col lg:flex-row items-center gap-12">
             <div className="flex-1">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/20 text-pink-300 text-xs font-bold mb-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/20 text-pink-600 text-xs font-bold mb-6 shadow-sm">
                 <Palette className="w-3.5 h-3.5" />
                 Cultura & Cidadania
               </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-white mb-4 leading-tight">
+              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mb-4 leading-tight">
                 Mais do que conteúdo:<br />
-                <span className="text-pink-400">formação de sujeitos</span>
+                <span className="bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent">formação de sujeitos</span>
               </h2>
-              <p className="text-slate-400 leading-relaxed mb-6">
+              <p className="text-slate-600 leading-relaxed mb-6">
                 A Trilha Cultural não é uma seção secundária. Ela é componente essencial do ecossistema. Através de missões de literatura, música, teatro, artes e cidadania, o estudante não apenas recupera conteúdos — mas amplia seu repertório cultural e se forma como sujeito crítico e participativo.
               </p>
-              <p className="text-slate-400 leading-relaxed">
+              <p className="text-slate-600 leading-relaxed">
                 O objetivo é que cada criança conheça a diversidade do Brasil, desenvolva pensamento crítico, argumente com base em evidências e reconheça o valor do patrimônio cultural coletivo.
               </p>
             </div>
 
             <div className="flex-1 grid grid-cols-4 gap-3">
               {CULTURE_ITEMS.map((item, i) => (
-                <div key={i} className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-pink-500/30 transition-all text-center">
-                  <item.icon className="w-6 h-6 text-pink-400" />
-                  <span className="text-xs text-slate-400 font-bold">{item.label}</span>
+                <div key={i} className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/80 backdrop-blur-xl border border-slate-200 hover:border-pink-500/30 transition-all text-center shadow-sm hover:shadow-md">
+                  <item.icon className="w-6 h-6 text-pink-500" />
+                  <span className="text-xs text-slate-700 font-bold">{item.label}</span>
                 </div>
               ))}
             </div>
@@ -604,31 +604,31 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* ========== PARA QUEM ========== */}
-      <section className="py-24 px-4 bg-slate-900 relative overflow-hidden">
+      <section className="py-24 px-4 bg-transparent relative overflow-hidden">
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">Para toda a comunidade escolar</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mb-4">Para toda a comunidade escolar</h2>
+            <p className="text-slate-600 max-w-2xl mx-auto">
               A Sala de Missões conecta estudante, professor e coordenação em um único ecossistema pedagógico.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {ROLES.map((role, i) => (
-              <div key={i} className="flex flex-col p-7 rounded-3xl bg-white/5 border border-white/10 hover:border-white/20 transition-all">
-                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${role.color} flex items-center justify-center mb-5 shadow-lg`}>
+              <div key={i} className="flex flex-col p-7 rounded-3xl bg-white/80 backdrop-blur-xl border border-slate-200 hover:shadow-lg transition-all shadow-sm">
+                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${role.color} flex items-center justify-center mb-5 shadow-sm`}>
                   <role.icon className="w-7 h-7 text-white" />
                 </div>
-                <span className={`text-xs font-black mb-2 px-2.5 py-1 rounded-full border self-start`}
-                  style={{ color: 'rgb(148,163,184)', backgroundColor: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)' }}
+                <span className={`text-xs font-black mb-2 px-2.5 py-1 rounded-full border self-start shadow-sm`}
+                  style={{ color: '#00067a', backgroundColor: '#123cc40A', borderColor: '#123cc420' }}
                 >
                   {role.badge}
                 </span>
-                <h3 className="text-lg font-black text-white mb-2">{role.role}</h3>
-                <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-1">{role.desc}</p>
+                <h3 className="text-lg font-black text-slate-900 mb-2">{role.role}</h3>
+                <p className="text-sm text-slate-600 leading-relaxed mb-6 flex-1">{role.desc}</p>
                 <button
                   onClick={() => handleRoleAction(role.action)}
-                  className={`w-full py-3 rounded-2xl bg-gradient-to-r ${role.color} text-white text-sm font-black transition-all hover:opacity-90 hover:scale-[1.02] cursor-pointer flex items-center justify-center gap-2`}
+                  className={`w-full py-3 rounded-2xl bg-gradient-to-r ${role.color} text-white text-sm font-black transition-all hover:opacity-90 hover:scale-[1.02] cursor-pointer flex items-center justify-center gap-2 shadow-sm`}
                 >
                   {role.label}
                   <ArrowRight className="w-4 h-4" />
@@ -640,38 +640,38 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* ========== TV DA SALA ========== */}
-      <section className="py-24 px-4 bg-slate-950 relative overflow-hidden">
-        <FloatingOrb className="w-[400px] h-[400px] bg-cyan-700 -right-20 top-20" />
+      <section className="py-24 px-4 bg-white/40 relative overflow-hidden">
+        <FloatingOrb className="w-[400px] h-[400px] bg-cyan-500/10 -right-20 top-20 blur-3xl" />
         <div className="max-w-5xl mx-auto relative z-10">
           <div className="flex flex-col lg:flex-row items-center gap-12">
             <div className="flex-shrink-0 w-full lg:w-auto">
-              <div className="w-full lg:w-80 h-48 lg:h-56 rounded-3xl bg-slate-800 border-4 border-slate-700 flex flex-col items-center justify-center gap-4 shadow-2xl relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 to-purple-900/40" />
-                <Monitor className="w-16 h-16 text-blue-400 relative z-10" />
+              <div className="w-full lg:w-80 h-48 lg:h-56 rounded-3xl bg-white/90 border-4 border-[#123cc4]/20 flex flex-col items-center justify-center gap-4 shadow-xl relative overflow-hidden backdrop-blur-2xl">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-100/40 to-purple-100/40" />
+                <Monitor className="w-16 h-16 text-[#123cc4] relative z-10" />
                 <div className="text-center relative z-10">
-                  <div className="text-xs text-blue-300 font-black uppercase tracking-widest">TV DA SALA</div>
-                  <div className="text-lg font-black text-white">Painel ao Vivo</div>
+                  <div className="text-xs text-[#0e2fb2] font-black uppercase tracking-widest">TV DA SALA</div>
+                  <div className="text-lg font-black text-slate-900">Painel ao Vivo</div>
                 </div>
                 <div className="absolute top-3 right-3 flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                  <span className="text-[9px] text-red-300 font-bold">AO VIVO</span>
+                  <span className="text-[9px] text-red-600 font-bold">AO VIVO</span>
                 </div>
               </div>
             </div>
 
             <div className="flex-1">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-bold mb-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-700 text-xs font-bold mb-6 shadow-sm">
                 <Monitor className="w-3.5 h-3.5" />
                 Painel TV da Sala
               </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-white mb-4 leading-tight">
+              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mb-4 leading-tight">
                 A TV da sala como<br />
-                <span className="text-cyan-400">central motivacional</span>
+                <span className="bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">central motivacional</span>
               </h2>
-              <p className="text-slate-400 leading-relaxed mb-4">
+              <p className="text-slate-600 leading-relaxed mb-4">
                 O Painel TV da Sala de Missões é projetado na TV da sala de aula e funciona automaticamente — sem interação do professor. Ele exibe de forma visual e envolvente: missões em andamento, duplas trabalhando, desafios coletivos, conquistas desbloqueadas e metas da turma.
               </p>
-              <p className="text-slate-400 leading-relaxed">
+              <p className="text-slate-600 leading-relaxed">
                 A interface é pensada para crianças: rápida, colorida, gamificada — e nunca expõe dificuldades individuais ou constrange nenhum estudante.
               </p>
             </div>
@@ -680,15 +680,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* ========== ESCOLA PÚBLICA ========== */}
-      <section className="py-24 px-4 bg-slate-900 relative overflow-hidden">
+      <section className="py-24 px-4 bg-transparent relative overflow-hidden">
         <div className="max-w-5xl mx-auto relative z-10">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/20 text-green-300 text-xs font-bold mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 text-xs font-bold mb-4 shadow-sm">
               <Heart className="w-3.5 h-3.5" />
               Compromisso Social
             </div>
-            <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">Feito para a realidade da escola pública</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mb-4">Feito para a realidade da escola pública</h2>
+            <p className="text-slate-600 max-w-2xl mx-auto">
               A Sala de Missões foi projetada respeitando as condições reais das escolas públicas brasileiras.
             </p>
           </div>
@@ -702,10 +702,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               { icon: '🎒', title: 'Contexto Familiar', desc: 'Pensado para os contextos familiares reais — sem exigir participação digital dos responsáveis.' },
               { icon: '🌱', title: 'Sustentável', desc: 'Soluções sustentáveis que a escola possa manter no longo prazo sem dependência de financiamento externo.' },
             ].map((item, i) => (
-              <div key={i} className="p-6 rounded-3xl bg-white/5 border border-white/10 hover:border-green-500/20 transition-all">
+              <div key={i} className="p-6 rounded-3xl bg-white/80 backdrop-blur-xl border border-slate-200 hover:shadow-md hover:-translate-y-0.5 transition-all shadow-sm">
                 <div className="text-3xl mb-4">{item.icon}</div>
-                <h3 className="text-sm font-black text-white mb-2">{item.title}</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">{item.desc}</p>
+                <h3 className="text-sm font-black text-slate-900 mb-2">{item.title}</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -713,27 +713,27 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* ========== CTA FINAL ========== */}
-      <section className="py-24 px-4 bg-slate-950 relative overflow-hidden">
-        <FloatingOrb className="w-[600px] h-[600px] bg-blue-700 left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2" />
+      <section className="py-24 px-4 bg-white/40 relative overflow-hidden">
+        <FloatingOrb className="w-[600px] h-[600px] bg-[#123cc4]/10 left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 blur-3xl" />
         <div className="max-w-3xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-bold mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#123cc4]/10 border border-[#123cc4]/20 text-[#0e2fb2] text-xs font-bold mb-6 shadow-sm">
             <Sparkles className="w-3.5 h-3.5" />
             Pronto para começar?
           </div>
-          <h2 className="text-4xl sm:text-5xl font-black text-white mb-6 leading-tight">
+          <h2 className="text-4xl sm:text-5xl font-black text-slate-900 mb-6 leading-tight">
             Cada criança tem<br />
-            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#123cc4] to-[#00067a] bg-clip-text text-transparent">
               uma história para contar.
             </span>
           </h2>
-          <p className="text-slate-400 text-lg mb-10 leading-relaxed">
+          <p className="text-slate-600 text-lg mb-10 leading-relaxed">
             A Sala de Missões transforma esse processo em uma jornada de descoberta, cooperação e conquista — onde cada estudante sabe onde está, para onde vai e o que já conquistou.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={onEnterAsStudent}
-              className="group px-10 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-base shadow-2xl shadow-blue-600/30 transition-all hover:scale-105 cursor-pointer flex items-center justify-center gap-2"
+              className="group px-10 py-4 rounded-2xl bg-gradient-to-r from-[#123cc4] to-[#05148d] hover:opacity-95 text-white font-black text-base shadow-xl shadow-[#123cc4]/20 transition-all hover:scale-105 cursor-pointer flex items-center justify-center gap-2"
             >
               <Rocket className="w-5 h-5" />
               Iniciar Jornada
@@ -741,7 +741,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </button>
             <button
               onClick={onEnterAsProfessor}
-              className="px-10 py-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-black text-base transition-all hover:scale-105 cursor-pointer backdrop-blur-sm"
+              className="px-10 py-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-black text-base transition-all hover:scale-105 cursor-pointer shadow-sm"
             >
               Área Docente
             </button>
@@ -750,19 +750,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* ========== FOOTER ========== */}
-      <footer className="py-8 px-4 border-t border-white/5 bg-slate-950">
+      <footer className="py-8 px-4 border-t border-slate-200 bg-white/60 backdrop-blur-xl">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-xl bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center">
+            <div className="w-7 h-7 rounded-xl bg-gradient-to-tr from-[#123cc4] to-[#05148d] flex items-center justify-center shadow-sm">
               <Rocket className="w-3.5 h-3.5 text-white" />
             </div>
-            <span className="text-sm font-black text-white">SALA DE MISSÕES</span>
+            <span className="text-sm font-black text-slate-900">SALA DE MISSÕES</span>
           </div>
-          <p className="text-xs text-slate-500 text-center">
+          <p className="text-xs text-slate-500 font-medium text-center">
             Ecossistema Pedagógico Gamificado • Escola Municipal Monte das Águas • 4º e 5º Anos
           </p>
-          <div className="flex items-center gap-1.5 text-xs text-slate-500">
-            <Heart className="w-3.5 h-3.5 text-red-400" />
+          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-600">
+            <Heart className="w-3.5 h-3.5 text-emerald-500" />
             <span>Feito para a escola pública brasileira</span>
           </div>
         </div>

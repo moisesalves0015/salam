@@ -870,9 +870,9 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
     <div className="w-full min-h-screen lg:h-screen lg:max-h-screen text-slate-800 font-sans p-2.5 sm:p-3.5 lg:p-4 flex flex-col justify-between overflow-y-auto lg:overflow-hidden select-none relative gap-3.5 no-scrollbar">
       
       {/* ========================================================================= */}
-      {/* 0. BACKGROUND: RADIAL GRADIENT                                           */}
+      {/* 0. BACKGROUND: LIGHT RADIAL GRADIENT                                      */}
       {/* ========================================================================= */}
-      <div className="fixed lg:absolute inset-0 -z-10 overflow-hidden pointer-events-none select-none bg-[radial-gradient(circle_at_center,rgba(18,60,196,1)_0%,rgba(0,6,122,1)_100%)]" />
+      <div className="fixed lg:absolute inset-0 -z-10 overflow-hidden pointer-events-none select-none bg-[radial-gradient(circle_at_center,#ffffff_0%,#e0e7ff_100%)]" />
 
       {/* ========================================================================= */}
       {/* 1. TOP HEADER BAR: FROSTED GLASS TOPBAR (RESPONSIVE WRAP/SCROLL)          */}
@@ -893,7 +893,7 @@ export const PainelSalaMissoes: React.FC<PainelSalaMissoesProps> = ({
           )}
 
           <div className="flex items-center gap-2 sm:gap-2.5">
-            <div className="w-8 h-8 rounded-2xl bg-gradient-to-tr from-[#123cc4] to-[#05148d] flex items-center justify-center text-white shadow-xs shrink-0">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#123cc4] to-[#05148d] flex items-center justify-center text-white shadow-xs shrink-0">
               <Rocket className="w-4 h-4" />
             </div>
             <div>
