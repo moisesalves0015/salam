@@ -179,3 +179,188 @@ export interface ClassMetrics {
   classWeeklyGoalPercent: number;
   progressByWeek: { week: string; averageProgress: number }[];
 }
+
+
+// --- NEW MATH FORMAT TYPES ---
+
+export type SubjectId = 
+  | 'matematica' 
+  | 'portugues' 
+  | 'ciencias' 
+  | 'historia' 
+  | 'geografia' 
+  | 'artes' 
+  | 'financeira';
+
+export interface MathSubject {
+  id: SubjectId;
+  name: string;
+  grade: string;
+  icon: string;
+  color: string;
+  available: boolean;
+  totalTracks: number;
+}
+
+export type StepType = 
+  | 'objective'              // 1. Objetivo de aprendizagem
+  | 'explanation'            // 2. Explicação curta e visual
+  | 'worked_example'         // 3. Exemplo resolvido passo a passo
+  | 'notebook_demo'          // 4. Demonstração no caderno / registro
+  | 'guided_practice'        // 5. Exercícios guiados
+  | 'independent_exercise'   // 6. Exercícios independentes
+  | 'contextualized_problem' // 7. Problemas contextualizados
+  | 'final_challenge'        // 8. Desafio final
+  | 'recovery_mission';      // 9. Revisão dos erros
+
+export interface PlaceValueBlock {
+  thousands: number;
+  hundreds: number;
+  tens: number;
+  units: number;
+}
+
+export interface ArmedOperationStep {
+  stepIndex: number;
+  instruction: string;
+  focusColumn: 'U' | 'D' | 'C' | 'UM' | 'quotient' | 'all';
+  expectedCarry?: { [key in 'D' | 'C' | 'UM']?: number };
+  expectedBorrow?: { [key in 'D' | 'C' | 'UM']?: { scratched: number; newValue: number } };
+  expectedResultDigit?: number;
+  hint: string;
+  errorExplanation: string;
+}
+
+export interface ArmedCalculationData {
+  op1: number;
+  op2: number;
+  operator: '+' | '-' | '×' | '÷';
+  steps: ArmedOperationStep[];
+  alignmentTarget: {
+    op1Columns: { UM?: number; C?: number; D?: number; U?: number };
+    op2Columns: { UM?: number; C?: number; D?: number; U?: number };
+  };
+  totalResult: number;
+  remainder?: number;
+}
+
+export interface ReadingPassage {
+  title: string;
+  genre?: string;
+  author?: string;
+  text: string;
+  glossary?: { word: string; meaning: string }[];
+}
+
+export interface ConceptCard {
+  title: string;
+  subtitle?: string;
+  points: { label: string; text: string; iconEmoji?: string }[];
+}
+
+export interface WrittenPrompt {
+  question: string;
+  linesNeeded: number;
+  suggestedAnswer: string;
+  guideline: string;
+}
+
+export interface LessonStep {
+  id: string;
+  type: StepType;
+  title: string;
+  subtitle?: string;
+  content: string; // Explicação ou enunciado
+  mascotTip?: string;
+  
+  // Reading passage for Português, História, Ciências
+  readingPassage?: ReadingPassage;
+
+  // Visual concept summary for Ciências, História, Geografia, Artes
+  conceptCard?: ConceptCard;
+
+  // Written prompt with lined notebook simulation
+  writtenPrompt?: WrittenPrompt;
+
+  // Specific interactive payloads
+  placeValueExample?: {
+    number: number;
+    decomposition: string;
+    blocks: PlaceValueBlock;
+    explanation: string;
+  };
+
+  notebookGuide?: {
+    title: string;
+    tips: string[];
+    operation: ArmedCalculationData;
+  };
+
+  quiz?: {
+    question: string;
+    options: string[];
+    correctIndex: number;
+    explanationOnSuccess: string;
+    explanationOnError: string;
+    hint: string;
+  };
+
+  interactiveNotebook?: {
+    operation: ArmedCalculationData;
+    allowAlignmentCheck?: boolean;
+    requireCarryInputs?: boolean;
+    requireBorrowInputs?: boolean;
+  };
+
+  dragDropDecomposition?: {
+    targetNumber: number;
+    pieces: { label: string; value: number }[];
+    correctPieces: number[];
+  };
+
+  wordProblem?: {
+    story: string;
+    question: string;
+    suggestedStrategy: string;
+    operationType: '+' | '-' | '×' | '÷';
+    op1: number;
+    op2: number;
+    expectedAnswer: number;
+    unitName: string; // ex: "figurinhas", "reais", "alunos"
+    stepExplanation: string;
+  };
+}
+
+export interface Unit {
+  id: string;
+  trackId: string;
+  number: number;
+  title: string;
+  shortDesc: string;
+  icon: string;
+  steps: LessonStep[];
+  xpReward: number;
+  prerequisiteUnitId?: string;
+}
+
+export interface Track {
+  id: string;
+  subjectId: SubjectId;
+  number: number;
+  title: string;
+  description: string;
+  objective?: string;
+  bnccSkills?: string[];
+  color: string;
+  badgeName: string;
+  badgeIcon: string;
+  units: Unit[];
+  trackChallenge: {
+    id: string;
+    title: string;
+    description: string;
+    steps: LessonStep[];
+    xpReward: number;
+  };
+}
+

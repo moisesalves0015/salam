@@ -24,13 +24,17 @@ import {
   Globe,
   Filter,
   Info,
-  Coins
+  Coins,
+  X,
+  Target
 } from 'lucide-react';
+import { GameWorldTrack } from './game-ui/GameWorldTrack';
+import { track1 } from '../data/mathData';
 import { Student } from '../types';
 import { GameButton, CoinBadge } from './game-ui/GameComponents';
 
 interface TrilhasViewProps {
-  onStartMission: (missionId?: string) => void;
+  onStartMission: (missionNode?: any) => void;
   selectedStudent: Student;
 }
 
@@ -95,16 +99,25 @@ interface TrailNode {
   habilidades: string[];
   criterioAvanco: string;
   cultural?: string;
+  unitData?: any;
 }
 
 const MATH_NODES: TrailNode[] = [
+  { id: 'mat-01', title: 'Vila dos Números', sub: 'Sistema decimal: unidades, dezenas e centenas', status: 'concluido', xp: 50, coins: 25, modalidade: ['individual', 'impresso'], habilidades: ['Compor e decompor números', 'Reconhecer valor posicional'], criterioAvanco: 'Compor e decompor corretamente números de até 3 ordens em 8 de 10 tentativas', unitData: track1.units[0] },
+  { id: 'mat-02', title: 'O Desafio da Centena', sub: 'Composição e cálculo com reagrupamento', status: 'concluido', xp: 60, coins: 30, modalidade: ['individual', 'dupla', 'impresso'], habilidades: ['Adição com reagrupamento', 'Cálculo mental'], criterioAvanco: 'Calcular adições com reagrupamento com autonomia', unitData: track1.units[1] },
+  { id: 'mat-03', title: 'A Unidade de Milhar', sub: 'Retirar, comparar e achar a diferença', status: 'concluido', xp: 60, coins: 30, modalidade: ['individual', 'dupla', 'impresso'], habilidades: ['Subtração com e sem reagrupamento', 'Ideia de diferença'], criterioAvanco: 'Resolver subtrações identificando a ideia adequada', unitData: track1.units[2] },
+  { id: 'mat-04', title: 'Compondo e Decompondo', sub: 'Agrupamentos e parcelas iguais', status: 'concluido', xp: 70, coins: 35, modalidade: ['individual', 'grupo', 'impresso'], habilidades: ['Multiplicação por agrupamento', 'Tabuada'], criterioAvanco: 'Multiplicar usando estratégias variadas com autonomia', unitData: track1.units[3] },
+  { id: 'mat-05', title: 'O Desafio da Divisão', sub: 'Grupos iguais e repartição (Missão Atual)', status: 'ativo', xp: 75, coins: 40, modalidade: ['individual', 'dupla', 'grupo', 'impresso'], habilidades: ['Divisão por agrupamento', 'Repartição equitativa', 'Relação divisão-multiplicação'], criterioAvanco: 'Resolver divisões compreendendo o processo de repartição', unitData: track1.units[0] },
+  { id: 'mat-06', title: 'Situações-Problema', sub: 'Aplicação das 4 operações no cotidiano', status: 'bloqueado', xp: 100, coins: 50, modalidade: ['individual', 'grupo', 'impresso'], habilidades: ['Interpretação de problemas', 'Escolha da operação adequada', 'Resolução de problemas complexos'], criterioAvanco: 'Resolver problemas com múltiplas etapas identificando as operações corretas', unitData: track1.units[1] },
+];
+/*
   { id: 'mat-01', title: 'Vila dos Números', sub: 'Sistema decimal: unidades, dezenas e centenas', status: 'concluido', xp: 50, coins: 25, modalidade: ['individual', 'impresso'], habilidades: ['Compor e decompor números', 'Reconhecer valor posicional'], criterioAvanco: 'Compor e decompor corretamente números de até 3 ordens em 8 de 10 tentativas' },
   { id: 'mat-02', title: 'O Desafio da Adição', sub: 'Composição e cálculo com reagrupamento', status: 'concluido', xp: 60, coins: 30, modalidade: ['individual', 'dupla', 'impresso'], habilidades: ['Adição com reagrupamento', 'Cálculo mental'], criterioAvanco: 'Calcular adições com reagrupamento com autonomia' },
   { id: 'mat-03', title: 'O Mistério da Subtração', sub: 'Retirar, comparar e achar a diferença', status: 'concluido', xp: 60, coins: 30, modalidade: ['individual', 'dupla', 'impresso'], habilidades: ['Subtração com e sem reagrupamento', 'Ideia de diferença'], criterioAvanco: 'Resolver subtrações identificando a ideia adequada' },
   { id: 'mat-04', title: 'A Fábrica da Multiplicação', sub: 'Agrupamentos e parcelas iguais', status: 'concluido', xp: 70, coins: 35, modalidade: ['individual', 'grupo', 'impresso'], habilidades: ['Multiplicação por agrupamento', 'Tabuada'], criterioAvanco: 'Multiplicar usando estratégias variadas com autonomia' },
   { id: 'mat-05', title: 'O Desafio da Divisão', sub: 'Grupos iguais e repartição (Missão Atual)', status: 'ativo', xp: 75, coins: 40, modalidade: ['individual', 'dupla', 'grupo', 'impresso'], habilidades: ['Divisão por agrupamento', 'Repartição equitativa', 'Relação divisão-multiplicação'], criterioAvanco: 'Resolver divisões compreendendo o processo de repartição' },
   { id: 'mat-06', title: 'Situações-Problema', sub: 'Aplicação das 4 operações no cotidiano', status: 'bloqueado', xp: 100, coins: 50, modalidade: ['individual', 'grupo', 'impresso'], habilidades: ['Interpretação de problemas', 'Escolha da operação adequada', 'Resolução de problemas complexos'], criterioAvanco: 'Resolver problemas com múltiplas etapas identificando as operações corretas' },
-];
+];*/
 
 const PORTUGUESE_NODES: TrailNode[] = [
   { id: 'por-01', title: 'Território das Palavras', sub: 'Relação fonema-grafema e ortografia', status: 'concluido', xp: 50, coins: 25, modalidade: ['individual', 'impresso'], habilidades: ['Sons e letras do português', 'Regras ortográficas básicas'], criterioAvanco: 'Aplicar regras ortográficas estudadas com consistência' },
@@ -151,6 +164,7 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
   const [activeModalFilter, setActiveModalFilter] = useState<ModalFilter>('all');
   const [showBncc, setShowBncc] = useState(false);
   const [expandedNode, setExpandedNode] = useState<string | null>(null);
+  const [stageModal, setStageModal] = useState<TrailNode | null>(null);
 
   const currentDisc = DISCIPLINES.find(d => d.id === selectedDiscipline)!;
   const allNodes = TRAIL_DATA[selectedDiscipline];
@@ -277,161 +291,12 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
           </div>
         </div>
 
-        {/* Nodes Grid / Timeline */}
-        <div className="relative space-y-4 before:absolute before:left-[22px] sm:before:left-[24px] before:top-4 before:bottom-4 before:w-1.5 before:bg-gradient-to-b before:from-emerald-400 before:via-[#123cc4] before:to-slate-200 before:rounded-full">
-          {filteredNodes.length === 0 ? (
-            <div className="text-center py-10 text-slate-400">
-              <Filter className="w-8 h-8 mx-auto mb-2 opacity-40" />
-              <p className="text-sm font-medium">Nenhuma missão nessa modalidade</p>
-              <p className="text-xs mt-1">Tente outro filtro de modalidade</p>
-            </div>
-          ) : filteredNodes.map((node) => {
-            const isCompleted = node.status === 'concluido';
-            const isActive = node.status === 'ativo';
-            const isExpanded = expandedNode === node.id;
-
-            return (
-              <div key={node.id} className="relative flex items-start gap-3 sm:gap-4 pl-1 group">
-                
-                {/* Node Timeline Icon */}
-                <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center shadow-lg shrink-0 z-10 transition-all ${
-                  isCompleted
-                    ? 'bg-emerald-500 text-white ring-4 ring-emerald-50'
-                    : isActive
-                      ? `bg-gradient-to-br ${currentDisc.gradient} text-white ring-4 ring-[#123cc4]/10 animate-pulse`
-                      : 'bg-slate-200 text-slate-400 ring-4 ring-white'
-                }`}>
-                  {isCompleted ? <Check className="w-5 h-5 sm:w-6 sm:h-6 stroke-[3]" /> : isActive ? <Play className="w-4 h-4 sm:w-5 sm:h-5 fill-white" /> : <Lock className="w-4 h-4 sm:w-5 sm:h-5" />}
-                </div>
-
-                {/* Node Card */}
-                <div className={`flex-1 rounded-2xl border transition-all overflow-hidden ${
-                  isActive
-                    ? 'bg-white/95 backdrop-blur-xl border-slate-200/80 shadow-md ring-1 ring-[#123cc4]/10'
-                    : isCompleted
-                      ? 'bg-white/80 backdrop-blur-md border-slate-200 shadow-2xs hover:bg-white/90 hover:shadow-sm'
-                      : 'bg-slate-50/80 backdrop-blur-sm border-slate-200 text-slate-500 shadow-2xs'
-                }`}>
-                  <div
-                    className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 ${!isActive && 'cursor-pointer'}`}
-                    onClick={() => setExpandedNode(isExpanded ? null : node.id)}
-                  >
-                    <div className="flex-1">
-                      {/* Tags row */}
-                      <div className="flex flex-wrap items-center gap-1.5 mb-2">
-                        <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase flex items-center gap-1 shadow-2xs border bg-[#123cc4]/10 text-[#00067a] border-[#123cc4]/20">
-                          {isCompleted ? (
-                            <><Check className="w-2.5 h-2.5" /> Dominada</>
-                          ) : isActive ? (
-                            <><Flame className="w-2.5 h-2.5 text-[#123cc4]" /> Missão Atual</>
-                          ) : (
-                            <><Lock className="w-2.5 h-2.5" /> Em breve</>
-                          )}
-                        </span>
-
-                        {/* Modalidade badges */}
-                        {node.modalidade.map((mod) => (
-                          <span key={mod} className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase flex items-center gap-1 shadow-2xs border bg-[#123cc4]/10 text-[#00067a] border-[#123cc4]/20">
-                            {mod === 'individual' ? <User className="w-2.5 h-2.5" /> : mod === 'dupla' ? <Users className="w-2.5 h-2.5" /> : mod === 'grupo' ? <Users className="w-2.5 h-2.5" /> : <Printer className="w-2.5 h-2.5" />} {mod}
-                          </span>
-                        ))}
-
-                        {/* Cultural badge */}
-                        {node.cultural && (
-                          <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase flex items-center gap-1 shadow-2xs border bg-[#123cc4]/10 text-[#00067a] border-[#123cc4]/20">
-                            {node.cultural}
-                          </span>
-                        )}
-                      </div>
-
-                      <h3 className={`text-sm sm:text-base font-black leading-tight ${isActive ? 'text-slate-900' : isCompleted ? 'text-slate-900' : 'text-slate-500'}`}>
-                        {node.title}
-                      </h3>
-                      <p className={`text-[10px] sm:text-xs font-bold mt-1 ${isActive ? 'text-slate-500' : 'text-slate-400'}`}>
-                        {node.sub}
-                      </p>
-                    </div>
-
-                    <div className="flex items-center gap-3 self-end sm:self-auto shrink-0">
-                      <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1.5 sm:gap-2">
-                        {/* GlassXP Badge identical to TV */}
-                        <span className="inline-flex items-center font-black rounded-full bg-[#123cc4]/10 backdrop-blur-md border border-[#123cc4]/25 text-[#00067a] shadow-2xs px-2.5 py-1 text-xs gap-1.5">
-                          <Star className="w-3.5 h-3.5 fill-[#123cc4] text-[#0e2fb2] shrink-0" />
-                          <span>+{node.xp} XP</span>
-                        </span>
-                        
-                        {/* GlassCoin Badge identical to TV */}
-                        <span className="inline-flex items-center font-black rounded-full bg-[#123cc4]/10 backdrop-blur-md border border-[#123cc4]/25 text-[#00067a] shadow-2xs px-2.5 py-1 text-xs gap-1.5">
-                          <div className="relative inline-flex items-center justify-center shrink-0 select-none w-3.5 h-3.5">
-                            <svg viewBox="0 0 24 24" fill="none" className="w-full h-full drop-shadow-xs">
-                              <circle cx="12" cy="12" r="11" fill="url(#blueCoinOuterTrilha)" />
-                              <circle cx="12" cy="12" r="9.5" fill="url(#blueCoinBodyTrilha)" />
-                              <circle cx="12" cy="12" r="7.5" stroke="#FFFFFF" strokeWidth="1.2" strokeOpacity="0.85" fill="none" />
-                              <path d="M12 6.5L13.5 10.2H17.5L14.2 12.6L15.4 16.5L12 14.1L8.6 16.5L9.8 12.6L6.5 10.2H10.5L12 6.5Z" fill="#FFFFFF" fillOpacity="0.95" />
-                              <defs>
-                                <linearGradient id="blueCoinOuterTrilha" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                                  <stop stopColor="#123cc4" />
-                                  <stop offset="0.5" stopColor="#0e2fb2" />
-                                  <stop offset="1" stopColor="#05148d" />
-                                </linearGradient>
-                                <linearGradient id="blueCoinBodyTrilha" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
-                                  <stop stopColor="#123cc4" />
-                                  <stop offset="0.4" stopColor="#09219f" />
-                                  <stop offset="1" stopColor="#00067a" />
-                                </linearGradient>
-                              </defs>
-                            </svg>
-                          </div>
-                          <span>{node.coins}</span>
-                          <span className="text-[9px] text-[#0e2fb2] font-bold uppercase tracking-wider">Moedas</span>
-                        </span>
-                      </div>
-                      {isActive && (
-                        <GameButton
-                          variant="reward"
-                          size="md"
-                          onClick={(e) => { e.stopPropagation(); onStartMission(node.id); }}
-                          icon={<Play className="w-3.5 h-3.5 fill-current" />}
-                        >
-                          Jogar
-                        </GameButton>
-                      )}
-                      {!isActive && (
-                        <ChevronRight className={`w-4 h-4 text-slate-400 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Expanded Details */}
-                  {isExpanded && (
-                    <div className="px-4 pb-4 border-t border-slate-100 pt-3 space-y-2">
-                      <div>
-                        <div className="text-xs font-black text-slate-700 mb-1 flex items-center gap-1">
-                          <Star className="w-3 h-3 text-amber-500" />
-                          Habilidades trabalhadas:
-                        </div>
-                        <div className="flex flex-wrap gap-1.5">
-                          {node.habilidades.map((h, i) => (
-                            <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 font-medium">
-                              {h}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-xs font-black text-slate-700 mb-1 flex items-center gap-1">
-                          <Award className="w-3 h-3 text-purple-500" />
-                          Critério de avanço:
-                        </div>
-                        <p className="text-xs text-slate-600 font-medium leading-snug">{node.criterioAvanco}</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        {/* GameWorld Track Replacement */}
+        <GameWorldTrack 
+          trackId={selectedDiscipline} 
+          nodes={filteredNodes as any} 
+          onNodeClick={(node) => setStageModal(node)} 
+        />
       </div>
 
       {/* Cultural Trail Highlight */}
@@ -468,6 +333,103 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
           </div>
         </div>
       </div>
+      {/* Modal da Fase */}
+      {stageModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fadeIn">
+          <div 
+            className="bg-white rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl border-4 border-slate-800 relative animate-scaleUp overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setStageModal(null)}
+              className="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition active:scale-90 z-20 border border-slate-200"
+              title="Fechar"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xs font-bold uppercase tracking-wider font-fredoka bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded-full border border-slate-200">
+                {currentDisc.label}
+              </span>
+              <span className="text-xs font-bold text-[#0e2fb2] font-fredoka bg-[#123cc4]/10 px-2.5 py-0.5 rounded-full border border-[#123cc4]/20 flex items-center gap-1">
+                <Star className="w-3 h-3 text-[#123cc4] fill-[#123cc4]" />
+                +{stageModal.xp} XP
+              </span>
+              <span className="text-xs font-bold text-[#0e2fb2] font-fredoka bg-[#123cc4]/10 px-2.5 py-0.5 rounded-full border border-[#123cc4]/20 flex items-center gap-1">
+                <Coins className="w-3 h-3 text-[#123cc4] fill-[#123cc4]" />
+                {stageModal.coins} Moedas
+              </span>
+            </div>
+
+            <div className="flex items-center gap-4 mb-4">
+              <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shadow-md border-3 flex-shrink-0 ${stageModal.status === 'concluido' ? 'bg-gradient-to-tr from-amber-400 to-yellow-300 border-amber-500 text-amber-950' : stageModal.status === 'ativo' ? 'bg-gradient-to-tr from-emerald-400 to-green-500 border-emerald-600 text-white' : 'bg-slate-200 border-slate-300 text-slate-400'}`}>
+                {stageModal.status === 'concluido' ? (
+                  <Check className="w-8 h-8 text-amber-950 stroke-[3]" />
+                ) : stageModal.status === 'ativo' ? (
+                  <Star className="w-8 h-8 fill-white text-white" />
+                ) : (
+                  <Lock className="w-7 h-7 text-slate-400" />
+                )}
+              </div>
+              <div>
+                <div className="flex flex-wrap gap-1 mb-1">
+                  {stageModal.modalidade.map((mod: any) => (
+                    <span key={mod} className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase flex items-center gap-1 shadow-2xs border bg-[#123cc4]/10 text-[#00067a] border-[#123cc4]/20">
+                      {mod === 'individual' ? <User className="w-2.5 h-2.5" /> : mod === 'impresso' ? <Printer className="w-2.5 h-2.5" /> : <Users className="w-2.5 h-2.5" />} {mod}
+                    </span>
+                  ))}
+                </div>
+                <h3 className="font-fredoka text-xl font-bold text-slate-900 leading-tight">
+                  {stageModal.title}
+                </h3>
+              </div>
+            </div>
+
+            <div className="bg-amber-50/80 p-3.5 rounded-2xl border border-amber-200 mb-4">
+              <div className="text-[11px] font-fredoka font-bold uppercase tracking-wider text-amber-900 mb-1 flex items-center gap-1.5">
+                <Target className="w-3.5 h-3.5 text-amber-800" />
+                <span>Objetivo da Fase:</span>
+              </div>
+              <p className="text-sm text-slate-700 font-sans leading-relaxed">
+                {stageModal.sub}
+              </p>
+            </div>
+
+            <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200 mb-5 text-xs text-slate-600 space-y-1.5">
+              <div className="flex items-center justify-between font-fredoka font-bold text-slate-700">
+                <span className="flex items-center gap-1.5">
+                  <BookOpen className="w-3.5 h-3.5 text-blue-600" />
+                  Critério de Avanço:
+                </span>
+              </div>
+              <div className="text-[11px] text-slate-500">
+                {stageModal.criterioAvanco}
+              </div>
+            </div>
+
+            {stageModal.status !== 'bloqueado' ? (
+              <button
+                onClick={() => { setStageModal(null); onStartMission(stageModal); }}
+                className={`w-full py-3.5 px-6 rounded-2xl text-white font-fredoka font-bold text-base flex items-center justify-center gap-2 shadow-md transition active:scale-95 ${stageModal.status === 'concluido' ? 'bg-amber-500 hover:bg-amber-600' : 'bg-emerald-500 hover:bg-emerald-600'}`}
+              >
+                <Play className="w-5 h-5 fill-white" />
+                <span>{stageModal.status === 'concluido' ? 'JOGAR NOVAMENTE' : 'COMEÇAR FASE AGORA'}</span>
+              </button>
+            ) : (
+              <div className="bg-slate-100 p-4 rounded-2xl border border-slate-200 text-center text-slate-500 space-y-2">
+                <div className="flex items-center justify-center gap-1.5 text-xs font-fredoka font-bold text-slate-600">
+                  <Lock className="w-4 h-4 text-slate-400" />
+                  <span>Esta fase está bloqueada</span>
+                </div>
+                <p className="text-xs">
+                  Conclua as fases anteriores para liberar esta missão!
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -10,6 +10,7 @@ import { RelatoriosView } from './components/RelatoriosView';
 import { CoordenacaoDashboard } from './components/CoordenacaoDashboard';
 import { PainelSalaMissoes } from './components/PainelSalaMissoes';
 import { MissionPlayerModal } from './components/MissionPlayerModal';
+import { LessonRunner } from './components/game-ui/LessonRunner';
 import { StudentProfileModal } from './components/StudentProfileModal';
 import { CardDetailModal } from './components/CardDetailModal';
 import { InterventionModal } from './components/InterventionModal';
@@ -79,6 +80,7 @@ export default function App() {
 
   // Modal States
   const [isMissionPlayerOpen, setIsMissionPlayerOpen] = useState(false);
+  const [activeMissionData, setActiveMissionData] = useState<any>(null);
   const [isMissionPrintOpen, setIsMissionPrintOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isCardDetailOpen, setIsCardDetailOpen] = useState(false);
@@ -96,7 +98,10 @@ export default function App() {
     setIsProfileModalOpen(true);
   };
 
-  const handleStartMission = (missionId?: string) => {
+  const handleStartMission = (missionNode?: any) => {
+    if (missionNode && missionNode.unitData) {
+      setActiveMissionData(missionNode.unitData);
+    }
     setIsMissionPlayerOpen(true);
   };
 
@@ -450,13 +455,38 @@ export default function App() {
 
       {/* MODALS */}
       {/* 1. Interactive 5-Step Mission Player Modal */}
-      <MissionPlayerModal
-        mission={INITIAL_MISSION_DIVISAO}
-        student={selectedStudent}
-        isOpen={isMissionPlayerOpen}
-        onClose={() => setIsMissionPlayerOpen(false)}
-        onCompleteMission={handleCompleteMission}
-      />
+      {isMissionPlayerOpen && activeMissionData ? (
+        <div className="fixed inset-0 z-[100] bg-white overflow-y-auto animate-fadeIn">
+          <LessonRunner
+            unit={activeMissionData}
+            userStats={{
+              xp: selectedStudent.currentXp,
+              level: selectedStudent.level,
+              streakDays: selectedStudent.streakDays,
+              hearts: 5,
+              maxHearts: 5,
+              completedUnits: [],
+              completedTracks: [],
+              masteredSkills: [],
+              mistakeHistory: [],
+              earnedBadges: []
+            }}
+            onFinishLesson={(unitId, earnedXp) => {
+              handleCompleteMission(earnedXp, activeMissionData.title);
+            }}
+            onClose={() => setIsMissionPlayerOpen(false)}
+            onRecordMistake={() => {}}
+          />
+        </div>
+      ) : (
+        <MissionPlayerModal
+          mission={INITIAL_MISSION_DIVISAO}
+          student={selectedStudent}
+          isOpen={isMissionPlayerOpen}
+          onClose={() => setIsMissionPlayerOpen(false)}
+          onCompleteMission={handleCompleteMission}
+        />
+      )}
 
       {/* 2. Prontuário Pedagógico Evolutivo Modal */}
       <StudentProfileModal

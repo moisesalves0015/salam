@@ -1,0 +1,218 @@
+/**
+ * firestore.rules
+ * 
+ * Regras de segurança do Firestore.
+ * 
+ * IMPORTANTE: Como o backend usa Firebase Admin SDK, ele BYPASSA estas regras.
+ * A autorização real está nos middlewares Express (auth.ts + requireRole.ts).
+ * 
+ * Estas regras são uma segunda camada de defesa para acesso direto ao Firestore
+ * (ex: se alguém tentar usar o SDK Web do lado do cliente para acessar diretamente).
+ * 
+ * Estratégia: Nega tudo por padrão. Abre apenas o necessário.
+ */
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Funções auxiliares ────────────────────────────────────────────────────
+
+    // Verifica se o usuário está autenticado
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Obtém o papel do usuário no Firestore
+    function getUserRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    // Verifica se é professor
+    function isProfessor() {
+      return isAuthenticated() && getUserRole() == 'professor';
+    }
+
+    // Verifica se é coordenação
+    function isCoordenacao() {
+      return isAuthenticated() && getUserRole() == 'coordenacao';
+    }
+
+    // Verifica se é administrador
+    function isAdmin() {
+      return isAuthenticated() && getUserRole() == 'admin';
+    }
+
+    // Verifica se o usuário é o próprio aluno
+    function isOwnStudent(studentId) {
+      return isAuthenticated() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.studentId == studentId;
+    }
+
+    // Professor tem acesso à turma
+    function isProfessorInClassroom(classroomId) {
+      return isProfessor() && 
+        classroomId in get(/databases/$(database)/documents/users/$(request.auth.uid)).data.classroomIds;
+    }
+
+    // ── Regras por coleção ────────────────────────────────────────────────────
+
+    // SCHOOLS — somente leitura autenticada
+    match /schools/{schoolId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // USERS — lê o próprio perfil, coordenação lê todos
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isCoordenacao() || isAdmin());
+      allow write: if isAdmin();
+    }
+
+    // CLASSROOMS — professores e coordenação leem
+    match /classrooms/{classroomId} {
+      allow read: if isAuthenticated();
+      allow write: if isCoordenacao() || isAdmin();
+    }
+
+    // STUDENTS — aluno lê a si mesmo; professor/coord leem e escrevem
+    match /students/{studentId} {
+      allow read: if isOwnStudent(studentId) || isProfessor() || isCoordenacao() || isAdmin();
+      // ALUNO NÃO PODE alterar XP, moedas ou conquistas diretamente
+      // Apenas o Admin SDK (backend) pode fazer isso
+      allow write: if false; // Toda escrita é feita pelo backend via Admin SDK
+    }
+
+    // ABILITIES — leitura pública autenticada
+    match /abilities/{abilityId} {
+      allow read: if isAuthenticated();
+      allow write: if isCoordenacao() || isAdmin();
+    }
+
+    // STUDENT ABILITIES — aluno lê as próprias
+    match /studentAbilities/{docId} {
+      allow read: if isAuthenticated() && (
+        isOwnStudent(resource.data.studentId) || isProfessor() || isCoordenacao() || isAdmin()
+      );
+      allow write: if false; // Somente Admin SDK
+    }
+
+    // TRAILS — leitura pública autenticada
+    match /trails/{trailId} {
+      allow read: if isAuthenticated();
+      allow write: if isCoordenacao() || isAdmin();
+    }
+
+    // MISSIONS — leitura pública autenticada
+    match /missions/{missionId} {
+      allow read: if isAuthenticated();
+      allow write: if isCoordenacao() || isAdmin();
+    }
+
+    // STUDENT MISSIONS — aluno lê as próprias
+    match /studentMissions/{docId} {
+      allow read: if isAuthenticated() && (
+        isOwnStudent(resource.data.studentId) || isProfessor() || isCoordenacao() || isAdmin()
+      );
+      allow write: if false; // Somente Admin SDK
+    }
+
+    // MISSION ATTEMPTS — aluno lê as próprias
+    match /missionAttempts/{attemptId} {
+      allow read: if isAuthenticated() && (
+        isOwnStudent(resource.data.studentId) || isProfessor() || isCoordenacao() || isAdmin()
+      );
+      allow write: if false; // Somente Admin SDK
+    }
+
+    // INTERVENTIONS — aluno não acessa; professor acessa da turma
+    match /interventions/{interventionId} {
+      allow read: if isProfessor() || isCoordenacao() || isAdmin();
+      allow write: if false; // Somente Admin SDK
+    }
+
+    // CARDS — catálogo público autenticado
+    match /cards/{cardId} {
+      allow read: if isAuthenticated();
+      allow write: if isCoordenacao() || isAdmin();
+    }
+
+    // STUDENT CARDS — aluno lê os próprios
+    match /studentCards/{docId} {
+      allow read: if isAuthenticated() && (
+        isOwnStudent(resource.data.studentId) || isProfessor() || isCoordenacao() || isAdmin()
+      );
+      allow write: if false; // Somente Admin SDK
+    }
+
+    // ACHIEVEMENTS — catálogo público autenticado
+    match /achievements/{achievementId} {
+      allow read: if isAuthenticated();
+      allow write: if isCoordenacao() || isAdmin();
+    }
+
+    // STUDENT ACHIEVEMENTS — aluno lê as próprias
+    match /studentAchievements/{docId} {
+      allow read: if isAuthenticated() && (
+        isOwnStudent(resource.data.studentId) || isProfessor() || isCoordenacao() || isAdmin()
+      );
+      allow write: if false; // Somente Admin SDK
+    }
+
+    // DIAGNOSTICS — protegido
+    match /diagnostics/{docId} {
+      allow read: if isAuthenticated() && (
+        isOwnStudent(resource.data.studentId) || isProfessor() || isCoordenacao() || isAdmin()
+      );
+      allow write: if false; // Somente Admin SDK
+    }
+
+    // RECOGNITION EVENTS — professores e coordenação
+    match /recognitionEvents/{docId} {
+      allow read: if isProfessor() || isCoordenacao() || isAdmin();
+      allow write: if false; // Somente Admin SDK
+    }
+
+    // COIN TRANSACTIONS — aluno lê as próprias
+    match /coinTransactions/{docId} {
+      allow read: if isAuthenticated() && (
+        isOwnStudent(resource.data.studentId) || isProfessor() || isCoordenacao() || isAdmin()
+      );
+      allow write: if false; // Somente Admin SDK
+    }
+
+    // REWARDS — catálogo público autenticado
+    match /rewards/{rewardId} {
+      allow read: if isAuthenticated();
+      allow write: if isCoordenacao() || isAdmin();
+    }
+
+    // REDEMPTIONS — aluno lê as próprias
+    match /redemptions/{docId} {
+      allow read: if isAuthenticated() && (
+        isOwnStudent(resource.data.studentId) || isProfessor() || isCoordenacao() || isAdmin()
+      );
+      allow write: if false; // Somente Admin SDK
+    }
+
+    // HISTORY LOGS — aluno lê os próprios
+    match /historyLogs/{docId} {
+      allow read: if isAuthenticated() && (
+        isOwnStudent(resource.data.studentId) || isProfessor() || isCoordenacao() || isAdmin()
+      );
+      allow write: if false; // Somente Admin SDK
+    }
+
+    // MIGRATION RUNS — somente coordenação e admin
+    match /migrationRuns/{runId} {
+      allow read: if isCoordenacao() || isAdmin();
+      allow write: if false; // Somente Admin SDK
+    }
+
+    // NEGAR TUDO QUE NÃO FOI EXPLICITAMENTE AUTORIZADO
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
