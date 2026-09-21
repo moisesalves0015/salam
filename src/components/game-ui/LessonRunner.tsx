@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Unit, LessonStep } from '../../types';
 import { NotebookGrid } from './NotebookGrid';
-import { PlaceValueManipulative } from './PlaceValueManipulative';
+import { PlaceValue3D } from './PlaceValue3D';
+import { VideoModal } from './VideoModal';
 import confetti from 'canvas-confetti';
 import { 
   ArrowLeft, 
@@ -13,7 +14,8 @@ import {
   Heart, 
   ArrowRight,
   BookOpen,
-  HelpCircle
+  HelpCircle,
+  PlayCircle
 } from 'lucide-react';
 
 interface LessonRunnerProps {
@@ -32,6 +34,7 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
   onRecordMistake
 }) => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [userWordProblemAnswer, setUserWordProblemAnswer] = useState('');
   const [stepFeedback, setStepFeedback] = useState<{
@@ -210,10 +213,21 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
             />
           </div>
 
-          {/* Hearts / Vidas */}
-          <div className="flex items-center gap-1.5 px-3 py-1 bg-rose-50 border border-rose-200 rounded-full text-rose-600 font-bold text-sm">
-            <Heart className="w-4 h-4 fill-rose-500 text-rose-500" />
-            <span>{userStats.hearts}</span>
+          {/* Action Buttons */}
+          <div className="flex items-center gap-2">
+            {/* Videos Button */}
+            <button
+              onClick={() => setIsVideoModalOpen(true)}
+              className="flex items-center gap-1.5 px-3 py-1 bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded-full text-purple-600 font-bold text-sm transition shadow-sm"
+            >
+              <PlayCircle className="w-4 h-4" />
+              <span className="hidden sm:inline">Vídeos</span>
+            </button>
+            {/* Hearts / Vidas */}
+            <div className="flex items-center gap-1.5 px-3 py-1 bg-rose-50 border border-rose-200 rounded-full text-rose-600 font-bold text-sm shadow-sm">
+              <Heart className="w-4 h-4 fill-rose-500 text-rose-500" />
+              <span>{userStats.hearts}</span>
+            </div>
           </div>
         </div>
 
@@ -349,8 +363,10 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
         {/* Place Value / Base 10 Example */}
         {currentStep.placeValueExample && (
           <div className="my-3">
-            <PlaceValueManipulative
-              initialBlocks={currentStep.placeValueExample.blocks}
+            <PlaceValue3D
+              units={currentStep.placeValueExample.blocks.units}
+              tens={currentStep.placeValueExample.blocks.tens}
+              hundreds={currentStep.placeValueExample.blocks.hundreds}
               interactive={true}
             />
           </div>
@@ -526,6 +542,12 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
           </button>
         )}
       </div>
+      {/* Modal de Vídeos */}
+      <VideoModal
+        isOpen={isVideoModalOpen}
+        onClose={() => setIsVideoModalOpen(false)}
+        unitTitle={unit.title}
+      />
     </div>
   );
 };
