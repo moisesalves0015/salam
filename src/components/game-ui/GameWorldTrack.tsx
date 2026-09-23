@@ -273,7 +273,7 @@ export const GameWorldTrack: React.FC<GameWorldTrackProps> = ({
 
         {/* Decorative Scenery Element (One Chest + Revision per Track/Unit) */}
         {nodePositions.length > 0 && (() => {
-          const i = nodePositions.length - 1;
+          const i = 0; // Place right after the first phase / start of section
           const pos = nodePositions[i];
           const chestId = `chest_${trackId}_unit`;
           const revId = `rev_${trackId}_unit`;
@@ -307,7 +307,12 @@ export const GameWorldTrack: React.FC<GameWorldTrackProps> = ({
                     </span>
                   )}
                 </div>
-                {/* Text was here but removed per user request */}
+                {isRevDone && (
+                  <span className="text-[11px] font-black mt-0.5 drop-shadow-md flex items-center gap-1 text-emerald-400">
+                    <CheckCircle className="w-3.5 h-3.5" />
+                    <span>Revisado</span>
+                  </span>
+                )}
               </button>
 
               {/* 2. Treasure Chest */}
@@ -328,16 +333,12 @@ export const GameWorldTrack: React.FC<GameWorldTrackProps> = ({
                     </span>
                   )}
                 </div>
-                <span className={`text-[11px] font-black mt-0.5 drop-shadow-md flex items-center gap-1 ${isChestOpened ? 'text-emerald-400' : 'text-amber-300'}`}>
-                  {isChestOpened ? (
-                    <>
-                      <CheckCircle className="w-3.5 h-3.5" />
-                      <span>Explorado</span>
-                    </>
-                  ) : (
-                    <span>Tesouro Secreto</span>
-                  )}
-                </span>
+                {isChestOpened && (
+                  <span className="text-[11px] font-black mt-0.5 drop-shadow-md flex items-center gap-1 text-emerald-400">
+                    <CheckCircle className="w-3.5 h-3.5" />
+                    <span>Explorado</span>
+                  </span>
+                )}
               </button>
             </div>
           );
