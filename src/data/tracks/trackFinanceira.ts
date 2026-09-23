@@ -64,6 +64,18 @@ export const trackFinanceira: Track = {
             explanationOnError: 'Faça por etapas: 2 notas de 20 dá 40. Com mais 10 dá 50. Agora some as 3 moedas de 1 real: 50 + 3 = 53!',
             hint: 'Some primeiro as cédulas: 20 + 20 + 10 = 50. Depois as moedas: 1 + 1 + 1 = 3.'
           }
+        },
+        {
+          id: 'fin-u1-s4',
+          type: 'guided_practice',
+          title: 'Hora de Pagar na Cantina',
+          content: 'Você comprou um lanche que custou R$ 45,50. Você pode pagar colocando as notas na mesa ou fazer um PIX para a cantina!',
+          moneyExample: {
+            targetAmount: 45.50,
+            description: 'Pague o lanche escolhendo as notas ou fazendo um PIX.',
+            allowPix: true,
+            pixKeyName: 'Cantina Escolar'
+          }
         }
       ]
     },

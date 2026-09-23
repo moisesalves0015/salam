@@ -38,7 +38,7 @@ interface TrilhasViewProps {
   selectedStudent: Student;
 }
 
-type Discipline = 'mat' | 'por' | 'cie' | 'cul';
+type Discipline = 'mat' | 'por' | 'cie' | 'cul' | 'fin';
 type ModalFilter = 'all' | 'individual' | 'dupla' | 'grupo' | 'impresso';
 
 const DISCIPLINES = [
@@ -85,6 +85,17 @@ const DISCIPLINES = [
     badge: 'text-purple-700 bg-purple-50 border-purple-200',
     gradient: 'from-purple-500 to-pink-600',
     bncc: 'Arte, Literatura, Música, Cidadania e Diversidade Cultural'
+  },
+  {
+    id: 'fin' as Discipline,
+    label: 'Educação Financeira',
+    icon: Coins,
+    activeColor: 'bg-yellow-500 text-slate-900 border-yellow-500/50 shadow-sm scale-102',
+    inactiveColor: 'bg-white/90 text-slate-700 hover:text-yellow-700 border-white/90 hover:bg-white shadow-2xs',
+    dotColor: 'bg-yellow-500',
+    badge: 'text-yellow-700 bg-yellow-50 border-yellow-200',
+    gradient: 'from-yellow-400 to-amber-500',
+    bncc: 'Educação Financeira - Consumo consciente e planejamento'
   },
 ];
 
@@ -146,6 +157,7 @@ const TRAIL_DATA: Record<Discipline, TrailNode[]> = {
   por: PORTUGUESE_NODES,
   cie: SCIENCE_NODES,
   cul: CULTURE_NODES,
+  fin: [],
 };
 
 const MODAL_FILTER_LABELS: Record<ModalFilter, { label: string; icon: React.ComponentType<{ className?: string }> }> = {
@@ -173,13 +185,14 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
     ? allNodes 
     : allNodes.filter(n => n.modalidade.includes(activeModalFilter));
 
-  const completedCount = allNodes.filter(n => n.status === 'concluido').length;
-  const progressPercent = Math.round((completedCount / allNodes.length) * 100);
+  const completedCount = allNodes.length > 0 ? allNodes.filter(n => n.status === 'concluido').length : 0;
+  const progressPercent = allNodes.length > 0 ? Math.round((completedCount / allNodes.length) * 100) : 0;
 
   // Pegar as trilhas da disciplina ativa
   const subjectIdStr = selectedDiscipline === 'mat' ? 'matematica' : 
                        selectedDiscipline === 'por' ? 'portugues' : 
-                       selectedDiscipline === 'cie' ? 'ciencias' : 'artes';
+                       selectedDiscipline === 'cie' ? 'ciencias' : 
+                       selectedDiscipline === 'cul' ? 'artes' : 'financeira';
   const activeTracks = subjectTracksMap[subjectIdStr] || [];
 
   return (

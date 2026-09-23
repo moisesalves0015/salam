@@ -213,6 +213,13 @@ export type StepType =
   | 'final_challenge'        // 8. Desafio final
   | 'recovery_mission';      // 9. Revisão dos erros
 
+export interface MoneyChallengeData {
+  targetAmount: number;
+  description: string;
+  allowPix?: boolean;
+  pixKeyName?: string;
+}
+
 export interface PlaceValueBlock {
   thousands: number;
   hundreds: number;
@@ -283,6 +290,8 @@ export interface LessonStep {
   writtenPrompt?: WrittenPrompt;
 
   // Specific interactive payloads
+  moneyExample?: MoneyChallengeData;
+
   placeValueExample?: {
     number: number;
     decomposition: string;
