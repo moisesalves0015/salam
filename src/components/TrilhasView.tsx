@@ -29,7 +29,7 @@ import {
   Target
 } from 'lucide-react';
 import { GameWorldTrack } from './game-ui/GameWorldTrack';
-import { track1 } from '../data/mathData';
+import { subjectTracksMap } from '../data/curriculum';
 import { Student } from '../types';
 import { GameButton, CoinBadge } from './game-ui/GameComponents';
 
@@ -103,12 +103,12 @@ interface TrailNode {
 }
 
 const MATH_NODES: TrailNode[] = [
-  { id: 'mat-01', title: 'Vila dos Números', sub: 'Sistema decimal: unidades, dezenas e centenas', status: 'concluido', xp: 50, coins: 25, modalidade: ['individual', 'impresso'], habilidades: ['Compor e decompor números', 'Reconhecer valor posicional'], criterioAvanco: 'Compor e decompor corretamente números de até 3 ordens em 8 de 10 tentativas', unitData: track1.units[0] },
-  { id: 'mat-02', title: 'O Desafio da Centena', sub: 'Composição e cálculo com reagrupamento', status: 'concluido', xp: 60, coins: 30, modalidade: ['individual', 'dupla', 'impresso'], habilidades: ['Adição com reagrupamento', 'Cálculo mental'], criterioAvanco: 'Calcular adições com reagrupamento com autonomia', unitData: track1.units[1] },
-  { id: 'mat-03', title: 'A Unidade de Milhar', sub: 'Retirar, comparar e achar a diferença', status: 'concluido', xp: 60, coins: 30, modalidade: ['individual', 'dupla', 'impresso'], habilidades: ['Subtração com e sem reagrupamento', 'Ideia de diferença'], criterioAvanco: 'Resolver subtrações identificando a ideia adequada', unitData: track1.units[2] },
-  { id: 'mat-04', title: 'Compondo e Decompondo', sub: 'Agrupamentos e parcelas iguais', status: 'concluido', xp: 70, coins: 35, modalidade: ['individual', 'grupo', 'impresso'], habilidades: ['Multiplicação por agrupamento', 'Tabuada'], criterioAvanco: 'Multiplicar usando estratégias variadas com autonomia', unitData: track1.units[3] },
-  { id: 'mat-05', title: 'O Desafio da Divisão', sub: 'Grupos iguais e repartição (Missão Atual)', status: 'ativo', xp: 75, coins: 40, modalidade: ['individual', 'dupla', 'grupo', 'impresso'], habilidades: ['Divisão por agrupamento', 'Repartição equitativa', 'Relação divisão-multiplicação'], criterioAvanco: 'Resolver divisões compreendendo o processo de repartição', unitData: track1.units[0] },
-  { id: 'mat-06', title: 'Situações-Problema', sub: 'Aplicação das 4 operações no cotidiano', status: 'bloqueado', xp: 100, coins: 50, modalidade: ['individual', 'grupo', 'impresso'], habilidades: ['Interpretação de problemas', 'Escolha da operação adequada', 'Resolução de problemas complexos'], criterioAvanco: 'Resolver problemas com múltiplas etapas identificando as operações corretas', unitData: track1.units[1] },
+  { id: 'mat-01', title: 'Vila dos Números', sub: 'Sistema decimal: unidades, dezenas e centenas', status: 'concluido', xp: 50, coins: 25, modalidade: ['individual', 'impresso'], habilidades: ['Compor e decompor números', 'Reconhecer valor posicional'], criterioAvanco: 'Compor e decompor corretamente números de até 3 ordens em 8 de 10 tentativas', unitData: undefined },
+  { id: 'mat-02', title: 'O Desafio da Centena', sub: 'Composição e cálculo com reagrupamento', status: 'concluido', xp: 60, coins: 30, modalidade: ['individual', 'dupla', 'impresso'], habilidades: ['Adição com reagrupamento', 'Cálculo mental'], criterioAvanco: 'Calcular adições com reagrupamento com autonomia', unitData: undefined },
+  { id: 'mat-03', title: 'A Unidade de Milhar', sub: 'Retirar, comparar e achar a diferença', status: 'concluido', xp: 60, coins: 30, modalidade: ['individual', 'dupla', 'impresso'], habilidades: ['Subtração com e sem reagrupamento', 'Ideia de diferença'], criterioAvanco: 'Resolver subtrações identificando a ideia adequada', unitData: undefined },
+  { id: 'mat-04', title: 'Compondo e Decompondo', sub: 'Agrupamentos e parcelas iguais', status: 'concluido', xp: 70, coins: 35, modalidade: ['individual', 'grupo', 'impresso'], habilidades: ['Multiplicação por agrupamento', 'Tabuada'], criterioAvanco: 'Multiplicar usando estratégias variadas com autonomia', unitData: undefined },
+  { id: 'mat-05', title: 'O Desafio da Divisão', sub: 'Grupos iguais e repartição (Missão Atual)', status: 'ativo', xp: 75, coins: 40, modalidade: ['individual', 'dupla', 'grupo', 'impresso'], habilidades: ['Divisão por agrupamento', 'Repartição equitativa', 'Relação divisão-multiplicação'], criterioAvanco: 'Resolver divisões compreendendo o processo de repartição', unitData: undefined },
+  { id: 'mat-06', title: 'Situações-Problema', sub: 'Aplicação das 4 operações no cotidiano', status: 'bloqueado', xp: 100, coins: 50, modalidade: ['individual', 'grupo', 'impresso'], habilidades: ['Interpretação de problemas', 'Escolha da operação adequada', 'Resolução de problemas complexos'], criterioAvanco: 'Resolver problemas com múltiplas etapas identificando as operações corretas', unitData: undefined },
 ];
 /*
   { id: 'mat-01', title: 'Vila dos Números', sub: 'Sistema decimal: unidades, dezenas e centenas', status: 'concluido', xp: 50, coins: 25, modalidade: ['individual', 'impresso'], habilidades: ['Compor e decompor números', 'Reconhecer valor posicional'], criterioAvanco: 'Compor e decompor corretamente números de até 3 ordens em 8 de 10 tentativas' },
@@ -175,6 +175,12 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
 
   const completedCount = allNodes.filter(n => n.status === 'concluido').length;
   const progressPercent = Math.round((completedCount / allNodes.length) * 100);
+
+  // Pegar as trilhas da disciplina ativa
+  const subjectIdStr = selectedDiscipline === 'mat' ? 'matematica' : 
+                       selectedDiscipline === 'por' ? 'portugues' : 
+                       selectedDiscipline === 'cie' ? 'ciencias' : 'artes';
+  const activeTracks = subjectTracksMap[subjectIdStr] || [];
 
   return (
     <div className="space-y-6 pb-12 animate-in fade-in duration-300">
@@ -292,11 +298,32 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
         </div>
 
         {/* GameWorld Track Replacement */}
-        <GameWorldTrack 
-          trackId={selectedDiscipline} 
-          nodes={filteredNodes as any} 
-          onNodeClick={(node) => setStageModal(node)} 
-        />
+        <div className="w-full flex flex-col gap-12">
+          {activeTracks.map(track => {
+            const trackNodes = track.units.map((unit, idx) => ({
+              id: unit.id,
+              title: unit.title,
+              sub: unit.shortDesc,
+              status: (idx === 0 ? 'concluido' : idx === 1 ? 'ativo' : 'bloqueado') as 'concluido' | 'ativo' | 'bloqueado',
+              xp: unit.xpReward || 50,
+              coins: 30,
+              modalidade: ['individual'],
+              habilidades: [],
+              criterioAvanco: '',
+              unitData: unit
+            }));
+            return (
+              <div key={track.id} className="space-y-4">
+                <h3 className="text-2xl font-fredoka font-bold text-slate-800 ml-4">{track.title}</h3>
+                <GameWorldTrack 
+                  trackId={track.id}
+                  nodes={trackNodes as any} 
+                  onNodeClick={(node) => onStartMission(node)} 
+                />
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* Cultural Trail Highlight */}

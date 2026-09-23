@@ -4,6 +4,13 @@ import { NotebookGrid } from './NotebookGrid';
 import { PlaceValue3D } from './PlaceValue3D';
 import { VideoModal } from './VideoModal';
 import confetti from 'canvas-confetti';
+
+class ErrorBoundary extends React.Component<any, any> {
+  state: { hasError: boolean; error: any } = { hasError: false, error: null };
+  constructor(props: any) { super(props); this.state = { hasError: false, error: null }; }
+  static getDerivedStateFromError(error: any) { return { hasError: true, error }; }
+  render() { if (this.state.hasError) { return <div className="p-4 bg-red-100 text-red-900">Erro no 3D: {this.state.error?.message}</div>; } return this.props.children; }
+}
 import { 
   ArrowLeft, 
   Sparkles, 
@@ -363,12 +370,14 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
         {/* Place Value / Base 10 Example */}
         {currentStep.placeValueExample && (
           <div className="my-3">
-            <PlaceValue3D
-              units={currentStep.placeValueExample.blocks.units}
-              tens={currentStep.placeValueExample.blocks.tens}
-              hundreds={currentStep.placeValueExample.blocks.hundreds}
-              interactive={true}
-            />
+            <ErrorBoundary>
+              <PlaceValue3D
+                units={currentStep.placeValueExample.blocks.units}
+                tens={currentStep.placeValueExample.blocks.tens}
+                hundreds={currentStep.placeValueExample.blocks.hundreds}
+                interactive={true}
+              />
+            </ErrorBoundary>
           </div>
         )}
 
