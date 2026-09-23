@@ -20,7 +20,7 @@ interface WorldSelectorProps {
 export const WorldSelector: React.FC<WorldSelectorProps> = ({ disciplines, selectedId, onChange }) => {
   return (
     <div role="radiogroup" aria-label="Mundos de aprendizagem" className="w-full">
-      <div className="flex gap-3 overflow-x-auto pb-3 pt-1 -mx-4 sm:-mx-5 px-4 sm:px-5 snap-x snap-mandatory scrollbar-none after:content-[''] after:w-1 after:shrink-0 sm:after:w-2">
+      <div className="flex gap-3 overflow-x-auto pb-3 pt-1 px-4 sm:px-6 snap-x snap-mandatory scrollbar-none after:content-[''] after:w-4 after:shrink-0">
         {disciplines.map((disc) => {
           const Icon = disc.icon;
           const isSelected = disc.id === selectedId;

@@ -271,122 +271,86 @@ export const GameWorldTrack: React.FC<GameWorldTrackProps> = ({
           ))}
         </svg>
 
-        {/* Decorative Scenery Elements Placed at Road Bends */}
-        {nodePositions.map((pos, i) => {
-          const isRight = pos.x > 220;
-          const isLeft = pos.x < 220;
-          const chestId = `chest_${trackId}_${i}`;
+        {/* Decorative Scenery Element (One Chest + Revision per Track/Unit) */}
+        {nodePositions.length > 0 && (() => {
+          const i = nodePositions.length - 1;
+          const pos = nodePositions[i];
+          const chestId = `chest_${trackId}_unit`;
+          const revId = `rev_${trackId}_unit`;
           const isChestOpened = openedChests.includes(chestId);
+          const isRevDone = completedRevisions.includes(revId);
+          const side = pos.x > 220 ? 'left' : pos.x < 220 ? 'right' : 'left';
 
           return (
-            <React.Fragment key={`decor-${i}`}>
-              {/* If node curves right, place scenery on the left */}
-              {isRight && (
-                <div
-                  className="absolute z-10 pointer-events-auto flex items-center gap-2"
-                  style={{
-                    left: '8%',
-                    top: `${pos.y - 25}px`,
-                  }}
-                >
-                  {/* Alternating: Treasure Chest or Campfire/Trees */}
-                  {i % 2 !== 0 ? (
-                    <button
-                      onClick={() => handleOpenChest(chestId, getChestFact(i))}
-                      className="group flex flex-col items-center cursor-pointer transition transform hover:scale-110 active:scale-95"
-                      title="Baú Secreto da Trilha! Clique para abrir"
-                    >
-                      <div className={`relative w-14 h-14 sm:w-16 sm:h-16 transition-transform duration-500 ${isChestOpened ? 'scale-110' : 'animate-[bounce_3s_infinite]'}`}>
-                        <img 
-                          src={isChestOpened ? "/assets/trilhas/bau-aberto.png" : "/assets/trilhas/bau-fechado.png"} 
-                          alt={isChestOpened ? "Baú aberto" : "Baú fechado"}
-                          className={`w-full h-full object-contain drop-shadow-xl transition-all duration-300 ${isChestOpened ? 'brightness-110 drop-shadow-2xl' : 'drop-shadow-md'}`}
-                        />
-                        {!isChestOpened && (
-                          <span className="absolute -top-1 -right-3 bg-gradient-to-br from-yellow-400 to-amber-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full border-2 border-white z-10 shadow-md">
-                            +15 XP
-                          </span>
-                        )}
-                      </div>
-                      <span className="text-[10px] font-black text-amber-900 mt-1 bg-white/90 px-2 py-0.5 rounded-full border border-amber-200 shadow-2xs flex items-center gap-1">
-                        {isChestOpened ? (
-                          <>
-                            <CheckCircle className="w-3 h-3 text-emerald-600" />
-                            <span>Explorado</span>
-                          </>
-                        ) : (
-                          <span>Tesouro Secreto</span>
-                        )}
-                      </span>
-                    </button>
-                  ) : (
-                    <div className="flex items-end gap-1.5 opacity-90 select-none bg-emerald-50/80 p-1.5 rounded-2xl border border-emerald-200/70 shadow-xs backdrop-blur-xs">
-                      <div className="flex flex-col items-center">
-                        <TreePine className="w-6 h-6 text-emerald-700 fill-emerald-600/30" />
-                      </div>
-                      <div className="flex flex-col items-center -ml-1">
-                        <Trees className="w-6 h-6 text-emerald-800 fill-emerald-700/30" />
-                      </div>
-                      <Sprout className="w-4 h-4 text-emerald-600" />
-                    </div>
+            <div
+              className={`absolute z-10 pointer-events-auto flex flex-col gap-4 ${side === 'left' ? 'items-start' : 'items-end'}`}
+              style={{
+                [side === 'left' ? 'left' : 'right']: '8%',
+                top: `${pos.y - 40}px`,
+              }}
+            >
+              {/* 1. Revision Challenge */}
+              <button
+                onClick={() => handleOpenRevision(revId)}
+                className="group flex flex-col items-center cursor-pointer transition transform hover:scale-110 active:scale-95"
+                title="Desafio de Revisão! Clique para resolver"
+              >
+                <div className={`relative w-12 h-12 sm:w-14 sm:h-14 transition-transform duration-500 ${isRevDone ? 'scale-110' : 'animate-[bounce_3s_infinite]'}`}>
+                  <img 
+                    src={isRevDone ? "/assets/trilhas/revisao-feita.png" : "/assets/trilhas/revisao-pronta.png"} 
+                    alt="Desafio de Revisão"
+                    className={`w-full h-full object-contain drop-shadow-xl transition-all duration-300 ${isRevDone ? 'brightness-110 drop-shadow-2xl' : 'drop-shadow-md'}`}
+                  />
+                  {!isRevDone && (
+                    <span className="absolute -top-2 -right-3 text-purple-400 text-[11px] font-black z-10 drop-shadow-md">
+                      +20XP
+                    </span>
                   )}
                 </div>
-              )}
+                <span className={`text-[11px] font-black mt-0.5 drop-shadow-md flex items-center gap-1 ${isRevDone ? 'text-emerald-400' : 'text-purple-300'}`}>
+                  {isRevDone ? (
+                    <>
+                      <CheckCircle className="w-3.5 h-3.5" />
+                      <span>Revisado</span>
+                    </>
+                  ) : (
+                    <span>Super Revisão</span>
+                  )}
+                </span>
+              </button>
 
-              {/* If node curves left, place revision challenge */}
-              {isLeft && (
-                <div
-                  className="absolute z-10 pointer-events-auto flex items-center gap-2"
-                  style={{
-                    right: '8%',
-                    top: `${pos.y - 25}px`,
-                  }}
-                >
-                  {i % 2 === 0 ? (
-                    <button
-                      onClick={() => handleOpenRevision(`rev_${trackId}_${i}`)}
-                      className="group flex flex-col items-center cursor-pointer transition transform hover:scale-110 active:scale-95"
-                      title="Desafio de Revisão! Clique para resolver"
-                    >
-                      <div className={`relative w-14 h-14 sm:w-16 sm:h-16 transition-transform duration-500 ${completedRevisions.includes(`rev_${trackId}_${i}`) ? 'scale-110' : 'animate-[pulse_3s_infinite]'}`}>
-                        <img 
-                          src={completedRevisions.includes(`rev_${trackId}_${i}`) ? "/assets/trilhas/revisao-feita.png" : "/assets/trilhas/revisao-pronta.png"} 
-                          alt="Desafio de Revisão"
-                          className={`w-full h-full object-contain drop-shadow-xl transition-all duration-300 ${completedRevisions.includes(`rev_${trackId}_${i}`) ? 'brightness-110 drop-shadow-2xl' : 'drop-shadow-md'}`}
-                        />
-                        {!completedRevisions.includes(`rev_${trackId}_${i}`) && (
-                          <span className="absolute -top-1 -left-3 bg-gradient-to-br from-purple-500 to-pink-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full border-2 border-white z-10 shadow-md">
-                            +20 XP
-                          </span>
-                        )}
-                      </div>
-                      <span className="text-[10px] font-black text-purple-900 mt-1 bg-white/90 px-2 py-0.5 rounded-full border border-purple-200 shadow-2xs flex items-center gap-1">
-                        {completedRevisions.includes(`rev_${trackId}_${i}`) ? (
-                          <>
-                            <CheckCircle className="w-3 h-3 text-emerald-600" />
-                            <span>Revisado</span>
-                          </>
-                        ) : (
-                          <span>Super Revisão</span>
-                        )}
-                      </span>
-                    </button>
-                  ) : (
-                    <div className="flex items-center gap-2 bg-amber-50/90 px-2.5 py-1.5 rounded-2xl border border-amber-200/90 shadow-xs">
-                      <div className="flex flex-col items-center">
-                        <Flame className="w-4 h-4 text-amber-500 fill-amber-400 animate-pulse" />
-                        <span className="text-[9px] font-bold text-amber-900 uppercase">
-                          Descanso
-                        </span>
-                      </div>
-                      <Tent className="w-5 h-5 text-amber-800" />
-                    </div>
+              {/* 2. Treasure Chest */}
+              <button
+                onClick={() => handleOpenChest(chestId, getChestFact(0))}
+                className="group flex flex-col items-center cursor-pointer transition transform hover:scale-110 active:scale-95"
+                title="Baú Secreto da Trilha! Clique para abrir"
+              >
+                <div className={`relative w-12 h-12 sm:w-14 sm:h-14 transition-transform duration-500 ${isChestOpened ? 'scale-110' : 'animate-[bounce_3s_infinite]'}`} style={{ animationDelay: '0.5s' }}>
+                  <img 
+                    src={isChestOpened ? "/assets/trilhas/bau-aberto.png" : "/assets/trilhas/bau-fechado.png"} 
+                    alt={isChestOpened ? "Baú aberto" : "Baú fechado"}
+                    className={`w-full h-full object-contain drop-shadow-xl transition-all duration-300 ${isChestOpened ? 'brightness-110 drop-shadow-2xl' : 'drop-shadow-md'}`}
+                  />
+                  {!isChestOpened && (
+                    <span className="absolute -top-2 -right-3 text-amber-400 text-[11px] font-black z-10 drop-shadow-md">
+                      +15XP
+                    </span>
                   )}
                 </div>
-              )}
-            </React.Fragment>
+                <span className={`text-[11px] font-black mt-0.5 drop-shadow-md flex items-center gap-1 ${isChestOpened ? 'text-emerald-400' : 'text-amber-300'}`}>
+                  {isChestOpened ? (
+                    <>
+                      <CheckCircle className="w-3.5 h-3.5" />
+                      <span>Explorado</span>
+                    </>
+                  ) : (
+                    <span>Tesouro Secreto</span>
+                  )}
+                </span>
+              </button>
+            </div>
           );
-        })}
+        })()}
 
         {/* =================================================================== */}
         {/* INTERACTIVE LEVEL NODES */}
