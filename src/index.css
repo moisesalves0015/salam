@@ -221,3 +221,101 @@
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.6);
 }
+
+/* ===== MODO TRILHEIRO ===== */
+
+@keyframes trailEnter {
+  from { opacity: 0; transform: scale(0.97) translateY(8px); }
+  to   { opacity: 1; transform: scale(1)   translateY(0); }
+}
+
+@keyframes nodeCurrentPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(52,211,153,0.7); }
+  60%     { box-shadow: 0 0 0 12px rgba(52,211,153,0); }
+}
+
+@keyframes pathReveal {
+  from { stroke-dashoffset: 2000; }
+  to   { stroke-dashoffset: 0; }
+}
+
+@keyframes hudSlideDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes checkDraw {
+  from { stroke-dashoffset: 80; }
+  to   { stroke-dashoffset: 0; }
+}
+
+@keyframes xpFlyUp {
+  0%   { opacity: 0; transform: translateY(12px) scale(0.8); }
+  30%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-28px) scale(1); }
+}
+
+.animate-trail-enter {
+  animation: trailEnter 0.4s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+.animate-hud-in {
+  animation: hudSlideDown 0.35s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+.animate-node-pulse {
+  animation: nodeCurrentPulse 1.8s ease-in-out 3;
+}
+
+.animate-xp-fly {
+  animation: xpFlyUp 1.4s ease-out forwards;
+}
+
+/* Trail game shell hides app chrome */
+.trail-game-active .app-sidebar,
+.trail-game-active .app-header {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* Scrim layer for text legibility over background image */
+.trail-scrim {
+  background: linear-gradient(
+    to bottom,
+    rgba(15,23,42,0.55) 0%,
+    rgba(15,23,42,0.35) 40%,
+    rgba(15,23,42,0.45) 100%
+  );
+}
+
+/* Focus ring for trail game elements */
+.trail-focus:focus-visible {
+  outline: 3px solid #fde047;
+  outline-offset: 3px;
+  border-radius: 12px;
+}
+
+/* Reduced motion overrides */
+@media (prefers-reduced-motion: reduce) {
+  .animate-trail-enter,
+  .animate-hud-in,
+  .animate-node-pulse,
+  .animate-xp-fly,
+  .animate-float,
+  .animate-bounce {
+    animation: none !important;
+  }
+  .trail-game-active .app-sidebar,
+  .trail-game-active .app-header {
+    transition: none;
+  }
+}
+
+.motion-reduced .animate-trail-enter,
+.motion-reduced .animate-hud-in,
+.motion-reduced .animate-node-pulse,
+.motion-reduced .animate-float,
+.motion-reduced .animate-bounce {
+  animation: none !important;
+}

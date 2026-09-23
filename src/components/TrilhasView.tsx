@@ -1,41 +1,22 @@
-import React, { useState } from 'react';
-import { 
-  GitBranch, 
-  Lock, 
-  Play, 
-  BookOpen, 
-  Calculator, 
-  FlaskConical, 
-  Check,
-  Sparkles,
-  Zap,
-  MapPin,
-  Flame,
-  Award,
-  Palette,
-  Music,
-  Landmark,
-  Heart,
-  Users,
-  Printer,
-  User,
-  ChevronRight,
-  Star,
-  Globe,
-  Filter,
-  Info,
-  Coins,
-  X,
-  Target
+import React, { useState, useRef, useCallback, useMemo } from 'react';
+import {
+  Lock, Play, BookOpen, Calculator, FlaskConical, Check,
+  Sparkles, Printer, User, Users, Globe, Filter, Coins,
+  X, Target, Star, Palette, CheckCircle2, Info
 } from 'lucide-react';
 import { GameWorldTrack } from './game-ui/GameWorldTrack';
 import { subjectTracksMap } from '../data/curriculum';
 import { Student } from '../types';
-import { GameButton, CoinBadge } from './game-ui/GameComponents';
+import { TrailGameShell } from './trail-game/TrailGameShell';
+import { WorldSelector } from './trail-game/WorldSelector';
+import { TrailProgressCard } from './trail-game/TrailProgressCard';
+import { TrailFilterBar } from './trail-game/TrailFilterBar';
 
 interface TrilhasViewProps {
   onStartMission: (missionNode?: any) => void;
   selectedStudent: Student;
+  /** Ref to the sidebar/menu button that opened Trilhas, for focus restoration */
+  triggerRef?: React.RefObject<HTMLElement | null>;
 }
 
 type Discipline = 'mat' | 'por' | 'cie' | 'cul' | 'fin';
@@ -46,56 +27,41 @@ const DISCIPLINES = [
     id: 'mat' as Discipline,
     label: 'Reino da Matemática',
     icon: Calculator,
-    activeColor: 'bg-emerald-500 text-white border-emerald-500/50 shadow-sm scale-102',
-    inactiveColor: 'bg-white/90 text-slate-700 hover:text-emerald-700 border-white/90 hover:bg-white shadow-2xs',
-    dotColor: 'bg-emerald-500',
-    badge: 'text-emerald-700 bg-emerald-50 border-emerald-200',
     gradient: 'from-emerald-500 to-teal-600',
-    bncc: 'EF05MA - Operações, geometria e resolução de problemas'
+    bncc: 'EF05MA - Operações, geometria e resolução de problemas',
+    isNew: false,
   },
   {
     id: 'por' as Discipline,
     label: 'Jornada da Língua',
     icon: BookOpen,
-    activeColor: 'bg-blue-600 text-white border-blue-600/50 shadow-sm scale-102',
-    inactiveColor: 'bg-white/90 text-slate-700 hover:text-blue-700 border-white/90 hover:bg-white shadow-2xs',
-    dotColor: 'bg-blue-600',
-    badge: 'text-blue-700 bg-blue-50 border-blue-200',
     gradient: 'from-blue-500 to-indigo-600',
-    bncc: 'EF05LP - Leitura, produção textual e oralidade'
+    bncc: 'EF05LP - Leitura, produção textual e oralidade',
+    isNew: false,
   },
   {
     id: 'cie' as Discipline,
     label: 'Ilha das Ciências',
     icon: FlaskConical,
-    activeColor: 'bg-amber-500 text-slate-900 border-amber-500/50 shadow-sm scale-102',
-    inactiveColor: 'bg-white/90 text-slate-700 hover:text-amber-700 border-white/90 hover:bg-white shadow-2xs',
-    dotColor: 'bg-amber-500',
-    badge: 'text-amber-700 bg-amber-50 border-amber-200',
     gradient: 'from-amber-500 to-orange-600',
-    bncc: 'EF05CI - Vida, ambiente, matéria e energia'
+    bncc: 'EF05CI - Vida, ambiente, matéria e energia',
+    isNew: false,
   },
   {
     id: 'cul' as Discipline,
     label: 'Mundo da Cultura',
     icon: Palette,
-    activeColor: 'bg-purple-600 text-white border-purple-600/50 shadow-sm scale-102',
-    inactiveColor: 'bg-white/90 text-slate-700 hover:text-purple-700 border-white/90 hover:bg-white shadow-2xs',
-    dotColor: 'bg-purple-600',
-    badge: 'text-purple-700 bg-purple-50 border-purple-200',
     gradient: 'from-purple-500 to-pink-600',
-    bncc: 'Arte, Literatura, Música, Cidadania e Diversidade Cultural'
+    bncc: 'Arte, Literatura, Música, Cidadania e Diversidade Cultural',
+    isNew: true,
   },
   {
     id: 'fin' as Discipline,
     label: 'Educação Financeira',
     icon: Coins,
-    activeColor: 'bg-yellow-500 text-slate-900 border-yellow-500/50 shadow-sm scale-102',
-    inactiveColor: 'bg-white/90 text-slate-700 hover:text-yellow-700 border-white/90 hover:bg-white shadow-2xs',
-    dotColor: 'bg-yellow-500',
-    badge: 'text-yellow-700 bg-yellow-50 border-yellow-200',
     gradient: 'from-yellow-400 to-amber-500',
-    bncc: 'Educação Financeira - Consumo consciente e planejamento'
+    bncc: 'Educação Financeira - Consumo consciente e planejamento',
+    isNew: false,
   },
 ];
 
@@ -113,22 +79,15 @@ interface TrailNode {
   unitData?: any;
 }
 
+// ── Static trail data (preservado integralmente) ──────────────────────────────
 const MATH_NODES: TrailNode[] = [
-  { id: 'mat-01', title: 'Vila dos Números', sub: 'Sistema decimal: unidades, dezenas e centenas', status: 'concluido', xp: 50, coins: 25, modalidade: ['individual', 'impresso'], habilidades: ['Compor e decompor números', 'Reconhecer valor posicional'], criterioAvanco: 'Compor e decompor corretamente números de até 3 ordens em 8 de 10 tentativas', unitData: undefined },
-  { id: 'mat-02', title: 'O Desafio da Centena', sub: 'Composição e cálculo com reagrupamento', status: 'concluido', xp: 60, coins: 30, modalidade: ['individual', 'dupla', 'impresso'], habilidades: ['Adição com reagrupamento', 'Cálculo mental'], criterioAvanco: 'Calcular adições com reagrupamento com autonomia', unitData: undefined },
-  { id: 'mat-03', title: 'A Unidade de Milhar', sub: 'Retirar, comparar e achar a diferença', status: 'concluido', xp: 60, coins: 30, modalidade: ['individual', 'dupla', 'impresso'], habilidades: ['Subtração com e sem reagrupamento', 'Ideia de diferença'], criterioAvanco: 'Resolver subtrações identificando a ideia adequada', unitData: undefined },
-  { id: 'mat-04', title: 'Compondo e Decompondo', sub: 'Agrupamentos e parcelas iguais', status: 'concluido', xp: 70, coins: 35, modalidade: ['individual', 'grupo', 'impresso'], habilidades: ['Multiplicação por agrupamento', 'Tabuada'], criterioAvanco: 'Multiplicar usando estratégias variadas com autonomia', unitData: undefined },
-  { id: 'mat-05', title: 'O Desafio da Divisão', sub: 'Grupos iguais e repartição (Missão Atual)', status: 'ativo', xp: 75, coins: 40, modalidade: ['individual', 'dupla', 'grupo', 'impresso'], habilidades: ['Divisão por agrupamento', 'Repartição equitativa', 'Relação divisão-multiplicação'], criterioAvanco: 'Resolver divisões compreendendo o processo de repartição', unitData: undefined },
-  { id: 'mat-06', title: 'Situações-Problema', sub: 'Aplicação das 4 operações no cotidiano', status: 'bloqueado', xp: 100, coins: 50, modalidade: ['individual', 'grupo', 'impresso'], habilidades: ['Interpretação de problemas', 'Escolha da operação adequada', 'Resolução de problemas complexos'], criterioAvanco: 'Resolver problemas com múltiplas etapas identificando as operações corretas', unitData: undefined },
-];
-/*
   { id: 'mat-01', title: 'Vila dos Números', sub: 'Sistema decimal: unidades, dezenas e centenas', status: 'concluido', xp: 50, coins: 25, modalidade: ['individual', 'impresso'], habilidades: ['Compor e decompor números', 'Reconhecer valor posicional'], criterioAvanco: 'Compor e decompor corretamente números de até 3 ordens em 8 de 10 tentativas' },
-  { id: 'mat-02', title: 'O Desafio da Adição', sub: 'Composição e cálculo com reagrupamento', status: 'concluido', xp: 60, coins: 30, modalidade: ['individual', 'dupla', 'impresso'], habilidades: ['Adição com reagrupamento', 'Cálculo mental'], criterioAvanco: 'Calcular adições com reagrupamento com autonomia' },
-  { id: 'mat-03', title: 'O Mistério da Subtração', sub: 'Retirar, comparar e achar a diferença', status: 'concluido', xp: 60, coins: 30, modalidade: ['individual', 'dupla', 'impresso'], habilidades: ['Subtração com e sem reagrupamento', 'Ideia de diferença'], criterioAvanco: 'Resolver subtrações identificando a ideia adequada' },
-  { id: 'mat-04', title: 'A Fábrica da Multiplicação', sub: 'Agrupamentos e parcelas iguais', status: 'concluido', xp: 70, coins: 35, modalidade: ['individual', 'grupo', 'impresso'], habilidades: ['Multiplicação por agrupamento', 'Tabuada'], criterioAvanco: 'Multiplicar usando estratégias variadas com autonomia' },
+  { id: 'mat-02', title: 'O Desafio da Centena', sub: 'Composição e cálculo com reagrupamento', status: 'concluido', xp: 60, coins: 30, modalidade: ['individual', 'dupla', 'impresso'], habilidades: ['Adição com reagrupamento', 'Cálculo mental'], criterioAvanco: 'Calcular adições com reagrupamento com autonomia' },
+  { id: 'mat-03', title: 'A Unidade de Milhar', sub: 'Retirar, comparar e achar a diferença', status: 'concluido', xp: 60, coins: 30, modalidade: ['individual', 'dupla', 'impresso'], habilidades: ['Subtração com e sem reagrupamento', 'Ideia de diferença'], criterioAvanco: 'Resolver subtrações identificando a ideia adequada' },
+  { id: 'mat-04', title: 'Compondo e Decompondo', sub: 'Agrupamentos e parcelas iguais', status: 'concluido', xp: 70, coins: 35, modalidade: ['individual', 'grupo', 'impresso'], habilidades: ['Multiplicação por agrupamento', 'Tabuada'], criterioAvanco: 'Multiplicar usando estratégias variadas com autonomia' },
   { id: 'mat-05', title: 'O Desafio da Divisão', sub: 'Grupos iguais e repartição (Missão Atual)', status: 'ativo', xp: 75, coins: 40, modalidade: ['individual', 'dupla', 'grupo', 'impresso'], habilidades: ['Divisão por agrupamento', 'Repartição equitativa', 'Relação divisão-multiplicação'], criterioAvanco: 'Resolver divisões compreendendo o processo de repartição' },
   { id: 'mat-06', title: 'Situações-Problema', sub: 'Aplicação das 4 operações no cotidiano', status: 'bloqueado', xp: 100, coins: 50, modalidade: ['individual', 'grupo', 'impresso'], habilidades: ['Interpretação de problemas', 'Escolha da operação adequada', 'Resolução de problemas complexos'], criterioAvanco: 'Resolver problemas com múltiplas etapas identificando as operações corretas' },
-];*/
+];
 
 const PORTUGUESE_NODES: TrailNode[] = [
   { id: 'por-01', title: 'Território das Palavras', sub: 'Relação fonema-grafema e ortografia', status: 'concluido', xp: 50, coins: 25, modalidade: ['individual', 'impresso'], habilidades: ['Sons e letras do português', 'Regras ortográficas básicas'], criterioAvanco: 'Aplicar regras ortográficas estudadas com consistência' },
@@ -160,200 +119,232 @@ const TRAIL_DATA: Record<Discipline, TrailNode[]> = {
   fin: [],
 };
 
-const MODAL_FILTER_LABELS: Record<ModalFilter, { label: string; icon: React.ComponentType<{ className?: string }> }> = {
-  all: { label: 'Todos', icon: Filter },
-  individual: { label: 'Individual', icon: User },
-  dupla: { label: 'Em Dupla', icon: Users },
-  grupo: { label: 'Em Grupo', icon: Users },
-  impresso: { label: 'Impresso', icon: Printer }
-};
+// ─────────────────────────────────────────────────────────────────────────────
 
 export const TrilhasView: React.FC<TrilhasViewProps> = ({
   onStartMission,
-  selectedStudent
+  selectedStudent,
+  triggerRef,
 }) => {
   const [selectedDiscipline, setSelectedDiscipline] = useState<Discipline>('mat');
   const [activeModalFilter, setActiveModalFilter] = useState<ModalFilter>('all');
-  const [showBncc, setShowBncc] = useState(false);
-  const [expandedNode, setExpandedNode] = useState<string | null>(null);
   const [stageModal, setStageModal] = useState<TrailNode | null>(null);
+  const [isOpen, setIsOpen] = useState(true);
 
   const currentDisc = DISCIPLINES.find(d => d.id === selectedDiscipline)!;
   const allNodes = TRAIL_DATA[selectedDiscipline];
-  
-  const filteredNodes = activeModalFilter === 'all' 
-    ? allNodes 
-    : allNodes.filter(n => n.modalidade.includes(activeModalFilter));
 
+  // Filtered nodes
+  const filteredNodes = useMemo(() =>
+    activeModalFilter === 'all'
+      ? allNodes
+      : allNodes.filter(n => n.modalidade.includes(activeModalFilter)),
+    [allNodes, activeModalFilter]
+  );
+
+  // Counts
   const completedCount = allNodes.length > 0 ? allNodes.filter(n => n.status === 'concluido').length : 0;
   const progressPercent = allNodes.length > 0 ? Math.round((completedCount / allNodes.length) * 100) : 0;
 
-  // Pegar as trilhas da disciplina ativa
-  const subjectIdStr = selectedDiscipline === 'mat' ? 'matematica' : 
-                       selectedDiscipline === 'por' ? 'portugues' : 
-                       selectedDiscipline === 'cie' ? 'ciencias' : 
-                       selectedDiscipline === 'cul' ? 'artes' : 'financeira';
+  // Active tracks from curriculum data
+  const subjectIdStr = selectedDiscipline === 'mat' ? 'matematica'
+    : selectedDiscipline === 'por' ? 'portugues'
+    : selectedDiscipline === 'cie' ? 'ciencias'
+    : selectedDiscipline === 'cul' ? 'artes'
+    : 'financeira';
   const activeTracks = subjectTracksMap[subjectIdStr] || [];
 
+  // Next mission
+  const nextNode = allNodes.find(n => n.status === 'ativo');
+
+  // Count per filter for display
+  const countByFilter = useMemo(() => {
+    const counts: Partial<Record<ModalFilter, number>> = {};
+    (['all', 'individual', 'dupla', 'grupo', 'impresso'] as ModalFilter[]).forEach(f => {
+      counts[f] = f === 'all' ? allNodes.length : allNodes.filter(n => n.modalidade.includes(f)).length;
+    });
+    return counts;
+  }, [allNodes]);
+
+  // Disciplines with computed counts for WorldSelector
+  const worldData = useMemo(() => DISCIPLINES.map(d => {
+    const nodes = TRAIL_DATA[d.id];
+    return {
+      id: d.id,
+      label: d.label,
+      icon: d.icon,
+      gradient: d.gradient,
+      bncc: d.bncc,
+      isNew: d.isNew,
+      completedCount: nodes.length > 0 ? nodes.filter(n => n.status === 'concluido').length : 0,
+      totalCount: nodes.length,
+    };
+  }), []);
+
+  // Track nodes from curriculum
+  const buildTrackNodes = (track: any) =>
+    track.units.map((unit: any, idx: number) => ({
+      id: unit.id,
+      title: unit.title,
+      sub: unit.shortDesc,
+      status: (idx === 0 ? 'concluido' : idx === 1 ? 'ativo' : 'bloqueado') as 'concluido' | 'ativo' | 'bloqueado',
+      xp: unit.xpReward || 50,
+      coins: 30,
+      modalidade: ['individual'],
+      habilidades: [],
+      criterioAvanco: '',
+      unitData: unit,
+    }));
+
+  const handleNodeClick = useCallback((node: TrailNode) => {
+    // Use local nodes (with modal preview) or direct start from curriculum
+    if (node.unitData) {
+      onStartMission(node);
+    } else {
+      setStageModal(node);
+    }
+  }, [onStartMission]);
+
+  const handleStartStage = useCallback(() => {
+    if (stageModal) {
+      setStageModal(null);
+      onStartMission(stageModal);
+    }
+  }, [stageModal, onStartMission]);
+
+  const handleContinueJourney = useCallback(() => {
+    if (nextNode) {
+      if (nextNode.unitData) {
+        onStartMission(nextNode);
+      } else {
+        setStageModal(nextNode);
+      }
+    }
+  }, [nextNode, onStartMission]);
+
+  if (!isOpen) return null;
+
+  const currentTrackTitle = activeTracks.length > 0 ? activeTracks[0].title : currentDisc.label;
+  const currentTrackDesc = activeTracks.length > 0 ? activeTracks[0].description : currentDisc.bncc;
+
+  // Determine total and completed counts (prefer curriculum tracks if available)
+  const totalForHud = activeTracks.length > 0
+    ? activeTracks.reduce((s: number, t: any) => s + t.units.length, 0)
+    : allNodes.length;
+  const completedForHud = activeTracks.length > 0 ? completedCount : completedCount;
+  const progressForHud = totalForHud > 0 ? Math.round((completedForHud / totalForHud) * 100) : progressPercent;
+
   return (
-    <div className="space-y-6 pb-12 animate-in fade-in duration-300">
-      {/* Header */}
-      <div className="bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-5 sm:p-6 shadow-md">
-        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-          <div>
-            <div className="text-[10px] font-black text-[#123cc4] uppercase tracking-widest flex items-center gap-1.5 mb-1.5">
-              <GitBranch className="w-3.5 h-3.5" />
-              Percurso de Aprendizagem Adaptativo
-            </div>
-            <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-              Trilhas de Aprendizagem
-            </h1>
-            <p className="text-xs text-slate-500 font-bold leading-relaxed mt-1 max-w-xl">
-              Cada trilha organiza o percurso por habilidades BNCC. Complete missões, domine habilidades e avance para novos desafios.
+    <TrailGameShell
+      student={selectedStudent}
+      worldLabel={currentDisc.label}
+      worldIcon={currentDisc.icon}
+      worldGradient={currentDisc.gradient}
+      completedCount={completedCount}
+      totalCount={allNodes.length > 0 ? allNodes.length : totalForHud}
+      progressPercent={progressForHud}
+      nextMissionTitle={nextNode?.title}
+      onExit={() => setIsOpen(false)}
+      triggerRef={triggerRef}
+    >
+      {/* ── World Selector ───────────────────────────────────────────── */}
+      <section aria-label="Selecionar mundo">
+        <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest mb-2 ml-1">
+          Mundos de Aprendizagem
+        </p>
+        <WorldSelector
+          disciplines={worldData}
+          selectedId={selectedDiscipline}
+          onChange={(id) => {
+            setSelectedDiscipline(id as Discipline);
+            setActiveModalFilter('all');
+          }}
+        />
+      </section>
+
+      {/* ── Trail Progress Card ───────────────────────────────────────── */}
+      <TrailProgressCard
+        worldLabel={currentDisc.label}
+        worldIcon={currentDisc.icon}
+        worldGradient={currentDisc.gradient}
+        bncc={currentDisc.bncc}
+        completedCount={completedCount}
+        totalCount={allNodes.length > 0 ? allNodes.length : totalForHud}
+        progressPercent={progressForHud}
+        nextMissionTitle={nextNode?.title}
+        onContinue={nextNode ? handleContinueJourney : undefined}
+        trackTitle={currentTrackTitle}
+        trackDescription={currentTrackDesc}
+      />
+
+      {/* ── Filter Bar ───────────────────────────────────────────────── */}
+      {allNodes.length > 0 && (
+        <div className="bg-slate-900/60 backdrop-blur-sm border border-white/10 rounded-2xl px-4 py-3">
+          <TrailFilterBar
+            activeFilter={activeModalFilter}
+            onChange={setActiveModalFilter}
+            countByFilter={countByFilter}
+          />
+          {filteredNodes.length === 0 && (
+            <p className="text-center text-xs text-white/40 mt-3 py-2">
+              Nenhuma missão encontrada para este filtro. Tente "Todos".
             </p>
-          </div>
-
-          <div className="flex flex-col items-end gap-2">
-            <div className="text-right">
-              <span className="text-xs text-slate-500 font-medium">Explorador:</span>
-              <span className="text-sm font-black text-slate-900 ml-1">{selectedStudent?.name || 'Estudante'}</span>
-            </div>
-            <div className={`px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1.5 bg-gradient-to-r ${currentDisc.gradient} text-white shadow-sm`}>
-              <currentDisc.icon className="w-3.5 h-3.5" />
-              <span>{progressPercent}% da trilha concluída</span>
-            </div>
-          </div>
+          )}
         </div>
+      )}
 
-        {/* Discipline Tabs */}
-        <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-slate-100">
-          {DISCIPLINES.map((disc) => (
-            <button
-              key={disc.id}
-              onClick={() => { setSelectedDiscipline(disc.id); setActiveModalFilter('all'); setExpandedNode(null); }}
-              className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-2xl text-xs sm:text-sm font-black flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs active:scale-95 border ${
-                selectedDiscipline === disc.id ? disc.activeColor : disc.inactiveColor
-              }`}
-            >
-              <disc.icon className="w-4 h-4" />
-              <span>{disc.label}</span>
-              {disc.id === 'cul' && (
-                <span className="px-1.5 py-0.5 rounded-full bg-white/20 text-[9px] font-black">NOVO</span>
-              )}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Trail Map */}
-      <div className="bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl p-5 sm:p-6 shadow-md">
-        {/* Trail Header */}
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-5 pb-4 border-b border-slate-100">
-          <div>
-            <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gradient-to-r ${currentDisc.gradient} text-white text-xs font-black mb-1`}>
-              <currentDisc.icon className="w-3.5 h-3.5" />
-              {currentDisc.label}
-            </div>
-            <p className="text-xs text-slate-500 font-medium">{currentDisc.bncc}</p>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setShowBncc(!showBncc)}
-              className="p-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-all cursor-pointer"
-              title="Ver habilidades BNCC"
-            >
-              <Info className="w-4 h-4" />
-            </button>
-            <span className={`px-3 py-1 rounded-xl ${currentDisc.badge} text-xs font-black border`}>
-              {completedCount}/{allNodes.length} concluídas
-            </span>
-          </div>
-        </div>
-
-        {/* Modal Filters */}
-        <div className="flex flex-wrap gap-2 mb-5">
-          <span className="text-xs text-slate-500 font-bold flex items-center gap-1 mr-1">
-            <Filter className="w-3 h-3" />
-            Modalidade:
-          </span>
-          {(Object.keys(MODAL_FILTER_LABELS) as ModalFilter[]).map((filter) => {
-            const { label, icon: Icon } = MODAL_FILTER_LABELS[filter];
+      {/* ── Track Maps ───────────────────────────────────────────────── */}
+      {activeTracks.length > 0 ? (
+        <div className="flex flex-col gap-10">
+          {activeTracks.map((track: any) => {
+            const trackNodes = buildTrackNodes(track);
             return (
-              <button
-                key={filter}
-                onClick={() => setActiveModalFilter(filter)}
-                className={`px-2.5 sm:px-3 py-1.5 rounded-2xl text-xs font-bold flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer border shadow-2xs ${
-                  activeModalFilter === filter
-                    ? 'bg-[#123cc4]/10 text-[#00067a] border-[#123cc4]/25 hover:bg-[#123cc4]/15'
-                    : 'bg-white/90 text-slate-700 border-slate-200/80 hover:bg-white'
-                }`}
-              >
-                <Icon className="w-3 h-3" />
-                {label}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Progress Bar */}
-        <div className="mb-5">
-          <div className="flex justify-between text-xs text-slate-500 mb-1.5 font-medium">
-            <span>Progresso da Trilha</span>
-            <span className="font-black">{progressPercent}%</span>
-          </div>
-          <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
-            <div
-              className={`h-full bg-gradient-to-r ${currentDisc.gradient} rounded-full transition-all duration-700`}
-              style={{ width: `${progressPercent}%` }}
-            />
-          </div>
-        </div>
-
-        {/* GameWorld Track Replacement */}
-        <div className="w-full flex flex-col gap-12">
-          {activeTracks.map(track => {
-            const trackNodes = track.units.map((unit, idx) => ({
-              id: unit.id,
-              title: unit.title,
-              sub: unit.shortDesc,
-              status: (idx === 0 ? 'concluido' : idx === 1 ? 'ativo' : 'bloqueado') as 'concluido' | 'ativo' | 'bloqueado',
-              xp: unit.xpReward || 50,
-              coins: 30,
-              modalidade: ['individual'],
-              habilidades: [],
-              criterioAvanco: '',
-              unitData: unit
-            }));
-            return (
-              <div key={track.id} className="space-y-4">
-                <h3 className="text-2xl font-fredoka font-bold text-slate-800 ml-4">{track.title}</h3>
-                <GameWorldTrack 
+              <section key={track.id} aria-label={`Trilha: ${track.title}`}>
+                <div className="mb-3 flex items-center gap-2">
+                  <div className={`h-0.5 flex-1 bg-gradient-to-r ${currentDisc.gradient} opacity-40 rounded-full`} />
+                  <h3 className="text-sm font-black text-white/80 px-2">{track.title}</h3>
+                  <div className={`h-0.5 flex-1 bg-gradient-to-l ${currentDisc.gradient} opacity-40 rounded-full`} />
+                </div>
+                <GameWorldTrack
                   trackId={track.id}
-                  nodes={trackNodes as any} 
-                  onNodeClick={(node) => onStartMission(node)} 
+                  nodes={trackNodes as any}
+                  onNodeClick={(node) => handleNodeClick(node as any)}
                 />
-              </div>
+              </section>
             );
           })}
         </div>
-      </div>
+      ) : allNodes.length > 0 ? (
+        <section aria-label={`Mapa: ${currentDisc.label}`}>
+          <GameWorldTrack
+            trackId={selectedDiscipline}
+            nodes={filteredNodes as any}
+            onNodeClick={(node) => handleNodeClick(node as any)}
+          />
+        </section>
+      ) : (
+        <div className="text-center py-12 text-white/40 text-sm">
+          <Sparkles className="w-8 h-8 mx-auto mb-2 opacity-40" />
+          <p className="font-bold">Em breve!</p>
+          <p className="text-xs mt-1">Esta trilha está sendo preparada.</p>
+        </div>
+      )}
 
-      {/* Cultural Trail Highlight */}
+      {/* ── Cultural highlight (preserved) ───────────────────────────── */}
       {selectedDiscipline === 'cul' && (
-        <div className="p-6 rounded-3xl bg-white/85 backdrop-blur-xl border border-white/90 shadow-md">
+        <div className="bg-purple-900/40 border border-purple-400/25 rounded-2xl p-5 backdrop-blur-sm">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-white shadow-lg shrink-0">
-              <Globe className="w-6 h-6" />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-white shadow-md shrink-0">
+              <Globe className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-black text-purple-900 mb-1">Trilha Cultural: Formação Humana Integral</h3>
-              <p className="text-sm text-purple-700 leading-relaxed">
-                O Mundo da Cultura vai além dos conteúdos escolares. Aqui, o estudante amplia seu repertório cultural, desenvolve pensamento crítico, conhece a diversidade do Brasil e se forma como sujeito participativo. Cada missão cultural é também uma jornada de autoconhecimento e pertencimento.
+              <h3 className="text-sm font-black text-purple-200 mb-1">Trilha Cultural: Formação Humana Integral</h3>
+              <p className="text-xs text-purple-300/80 leading-relaxed">
+                O Mundo da Cultura vai além dos conteúdos escolares. Aqui, o estudante amplia seu repertório cultural, desenvolve pensamento crítico, conhece a diversidade do Brasil e se forma como sujeito participativo.
               </p>
-              <div className="flex flex-wrap gap-2 mt-3">
+              <div className="flex flex-wrap gap-1.5 mt-2">
                 {['Literatura', 'Música', 'Arte', 'Teatro', 'Cidadania', 'Diversidade', 'Patrimônio'].map(tag => (
-                  <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-200 font-bold">{tag}</span>
+                  <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-400/20 font-bold">{tag}</span>
                 ))}
               </div>
             </div>
@@ -361,108 +352,135 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
         </div>
       )}
 
-      {/* Print Activities Banner */}
-      <div className="p-4 rounded-3xl bg-white/85 backdrop-blur-xl border border-white/90 shadow-md flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-orange-500 flex items-center justify-center shrink-0">
-          <Printer className="w-5 h-5 text-white" />
+      {/* ── Print missions banner (preserved) ────────────────────────── */}
+      <div className="flex items-center gap-3 bg-orange-900/30 border border-orange-400/20 rounded-2xl p-4 backdrop-blur-sm">
+        <div className="w-9 h-9 rounded-xl bg-orange-500/80 flex items-center justify-center shrink-0">
+          <Printer className="w-4 h-4 text-white" />
         </div>
-        <div className="flex-1">
-          <div className="text-xs font-black text-orange-900">Missões com versão impressa disponível</div>
-          <div className="text-xs text-orange-700 font-medium">
-            Missões marcadas com 🖨️ têm versão para impressão. Solicite ao professor — a atividade pode ser feita no papel e registrada depois.
+        <div>
+          <div className="text-xs font-black text-orange-200">Missões com versão impressa disponível</div>
+          <div className="text-xs text-orange-300/70 font-medium">
+            Missões marcadas com 🖨️ têm versão para impressão. Solicite ao professor.
           </div>
         </div>
       </div>
-      {/* Modal da Fase */}
+
+      {/* ── Stage Modal (preserved + improved) ───────────────────────── */}
       {stageModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fadeIn">
-          <div 
-            className="bg-white rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl border-4 border-slate-800 relative animate-scaleUp overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
+        <div
+          className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="stage-modal-title"
+          onClick={() => setStageModal(null)}
+        >
+          <div
+            className="bg-slate-900 border border-white/15 rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl relative overflow-hidden animate-trail-enter"
+            onClick={e => e.stopPropagation()}
           >
+            {/* Gradient top accent */}
+            <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${currentDisc.gradient}`} />
+
+            {/* Close */}
             <button
               onClick={() => setStageModal(null)}
-              className="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition active:scale-90 z-20 border border-slate-200"
-              title="Fechar"
+              className="trail-focus absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white/60 hover:text-white flex items-center justify-center transition border border-white/10"
+              aria-label="Fechar"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
 
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-xs font-bold uppercase tracking-wider font-fredoka bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded-full border border-slate-200">
+            {/* Badges row */}
+            <div className="flex items-center gap-2 mb-4 flex-wrap pr-8">
+              <span className="text-[10px] font-bold uppercase tracking-wider bg-white/10 text-white/60 px-2.5 py-0.5 rounded-full border border-white/10">
                 {currentDisc.label}
               </span>
-              <span className="text-xs font-bold text-[#0e2fb2] font-fredoka bg-[#123cc4]/10 px-2.5 py-0.5 rounded-full border border-[#123cc4]/20 flex items-center gap-1">
-                <Star className="w-3 h-3 text-[#123cc4] fill-[#123cc4]" />
+              <span className="text-[10px] font-bold text-yellow-300 bg-yellow-400/15 px-2.5 py-0.5 rounded-full border border-yellow-400/20 flex items-center gap-1">
+                <Star className="w-2.5 h-2.5 fill-yellow-400 text-yellow-400" />
                 +{stageModal.xp} XP
               </span>
-              <span className="text-xs font-bold text-[#0e2fb2] font-fredoka bg-[#123cc4]/10 px-2.5 py-0.5 rounded-full border border-[#123cc4]/20 flex items-center gap-1">
-                <Coins className="w-3 h-3 text-[#123cc4] fill-[#123cc4]" />
-                {stageModal.coins} Moedas
+              <span className="text-[10px] font-bold text-amber-300 bg-amber-400/15 px-2.5 py-0.5 rounded-full border border-amber-400/20 flex items-center gap-1">
+                <Coins className="w-2.5 h-2.5 text-amber-400" />
+                {stageModal.coins} moedas
               </span>
             </div>
 
+            {/* Title + icon */}
             <div className="flex items-center gap-4 mb-4">
-              <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shadow-md border-3 flex-shrink-0 ${stageModal.status === 'concluido' ? 'bg-gradient-to-tr from-amber-400 to-yellow-300 border-amber-500 text-amber-950' : stageModal.status === 'ativo' ? 'bg-gradient-to-tr from-emerald-400 to-green-500 border-emerald-600 text-white' : 'bg-slate-200 border-slate-300 text-slate-400'}`}>
-                {stageModal.status === 'concluido' ? (
-                  <Check className="w-8 h-8 text-amber-950 stroke-[3]" />
-                ) : stageModal.status === 'ativo' ? (
-                  <Star className="w-8 h-8 fill-white text-white" />
-                ) : (
-                  <Lock className="w-7 h-7 text-slate-400" />
-                )}
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg shrink-0 ${
+                stageModal.status === 'concluido' ? 'bg-gradient-to-tr from-amber-400 to-yellow-300 text-amber-950'
+                : stageModal.status === 'ativo' ? `bg-gradient-to-r ${currentDisc.gradient} text-white`
+                : 'bg-slate-700 text-slate-400'
+              }`}>
+                {stageModal.status === 'concluido' ? <Check className="w-7 h-7 stroke-[3]" />
+                  : stageModal.status === 'ativo' ? <Play className="w-7 h-7 fill-white" />
+                  : <Lock className="w-6 h-6" />}
               </div>
-              <div>
+              <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap gap-1 mb-1">
                   {stageModal.modalidade.map((mod: any) => (
-                    <span key={mod} className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase flex items-center gap-1 shadow-2xs border bg-[#123cc4]/10 text-[#00067a] border-[#123cc4]/20">
-                      {mod === 'individual' ? <User className="w-2.5 h-2.5" /> : mod === 'impresso' ? <Printer className="w-2.5 h-2.5" /> : <Users className="w-2.5 h-2.5" />} {mod}
+                    <span key={mod} className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-white/10 text-white/50 border border-white/10 flex items-center gap-1">
+                      {mod === 'individual' ? <User className="w-2.5 h-2.5" /> : mod === 'impresso' ? <Printer className="w-2.5 h-2.5" /> : <Users className="w-2.5 h-2.5" />}
+                      {mod}
                     </span>
                   ))}
                 </div>
-                <h3 className="font-fredoka text-xl font-bold text-slate-900 leading-tight">
+                <h3 id="stage-modal-title" className="font-black text-lg text-white leading-tight">
                   {stageModal.title}
                 </h3>
               </div>
             </div>
 
-            <div className="bg-amber-50/80 p-3.5 rounded-2xl border border-amber-200 mb-4">
-              <div className="text-[11px] font-fredoka font-bold uppercase tracking-wider text-amber-900 mb-1 flex items-center gap-1.5">
-                <Target className="w-3.5 h-3.5 text-amber-800" />
-                <span>Objetivo da Fase:</span>
+            {/* Objective */}
+            <div className="bg-amber-400/10 p-3.5 rounded-xl border border-amber-400/20 mb-3">
+              <div className="text-[10px] font-bold text-amber-400/70 uppercase tracking-wider mb-1 flex items-center gap-1">
+                <Target className="w-3 h-3" /> Objetivo da Fase
               </div>
-              <p className="text-sm text-slate-700 font-sans leading-relaxed">
-                {stageModal.sub}
-              </p>
+              <p className="text-sm text-white/80 leading-relaxed">{stageModal.sub}</p>
             </div>
 
-            <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200 mb-5 text-xs text-slate-600 space-y-1.5">
-              <div className="flex items-center justify-between font-fredoka font-bold text-slate-700">
-                <span className="flex items-center gap-1.5">
-                  <BookOpen className="w-3.5 h-3.5 text-blue-600" />
-                  Critério de Avanço:
-                </span>
+            {/* Criteria */}
+            {stageModal.criterioAvanco && (
+              <div className="bg-white/5 p-3 rounded-xl border border-white/10 mb-4">
+                <div className="text-[10px] font-bold text-white/40 uppercase tracking-wider mb-1 flex items-center gap-1">
+                  <BookOpen className="w-3 h-3" /> Critério de Avanço
+                </div>
+                <p className="text-xs text-white/60 leading-relaxed">{stageModal.criterioAvanco}</p>
               </div>
-              <div className="text-[11px] text-slate-500">
-                {stageModal.criterioAvanco}
-              </div>
-            </div>
+            )}
 
+            {/* Skills */}
+            {stageModal.habilidades.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 mb-4">
+                {stageModal.habilidades.map(h => (
+                  <span key={h} className="text-[10px] px-2 py-0.5 rounded-full bg-white/8 text-white/50 border border-white/10 font-medium">
+                    {h}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* CTA */}
             {stageModal.status !== 'bloqueado' ? (
               <button
-                onClick={() => { setStageModal(null); onStartMission(stageModal); }}
-                className={`w-full py-3.5 px-6 rounded-2xl text-white font-fredoka font-bold text-base flex items-center justify-center gap-2 shadow-md transition active:scale-95 ${stageModal.status === 'concluido' ? 'bg-amber-500 hover:bg-amber-600' : 'bg-emerald-500 hover:bg-emerald-600'}`}
+                onClick={handleStartStage}
+                className={`trail-focus w-full py-3.5 px-6 rounded-2xl text-white font-black text-base flex items-center justify-center gap-2 shadow-xl transition active:scale-95 bg-gradient-to-r ${
+                  stageModal.status === 'concluido'
+                    ? 'from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400'
+                    : `${currentDisc.gradient} hover:opacity-90`
+                }`}
+                aria-label={stageModal.status === 'concluido' ? `Jogar novamente: ${stageModal.title}` : `Começar fase: ${stageModal.title}`}
               >
                 <Play className="w-5 h-5 fill-white" />
-                <span>{stageModal.status === 'concluido' ? 'JOGAR NOVAMENTE' : 'COMEÇAR FASE AGORA'}</span>
+                {stageModal.status === 'concluido' ? 'JOGAR NOVAMENTE' : 'COMEÇAR FASE AGORA'}
               </button>
             ) : (
-              <div className="bg-slate-100 p-4 rounded-2xl border border-slate-200 text-center text-slate-500 space-y-2">
-                <div className="flex items-center justify-center gap-1.5 text-xs font-fredoka font-bold text-slate-600">
+              <div className="bg-slate-800 p-4 rounded-2xl border border-white/10 text-center space-y-2" role="alert">
+                <div className="flex items-center justify-center gap-1.5 text-sm font-bold text-white/50">
                   <Lock className="w-4 h-4 text-slate-400" />
                   <span>Esta fase está bloqueada</span>
                 </div>
-                <p className="text-xs">
+                <p className="text-xs text-white/35">
                   Conclua as fases anteriores para liberar esta missão!
                 </p>
               </div>
@@ -470,6 +488,6 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
           </div>
         </div>
       )}
-    </div>
+    </TrailGameShell>
   );
 };

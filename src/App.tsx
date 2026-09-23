@@ -330,26 +330,30 @@ export default function App() {
       />
 
       {/* Global Application Header */}
-      <Header
-        currentRole={currentRole}
-        selectedStudent={selectedStudent}
-        onOpenNotifications={() => setIsNotificationsModalOpen(true)}
-        isMobileMenuOpen={isMobileMenuOpen}
-        setIsMobileMenuOpen={setIsMobileMenuOpen}
-      />
+      <div className="app-header">
+        <Header
+          currentRole={currentRole}
+          selectedStudent={selectedStudent}
+          onOpenNotifications={() => setIsNotificationsModalOpen(true)}
+          isMobileMenuOpen={isMobileMenuOpen}
+          setIsMobileMenuOpen={setIsMobileMenuOpen}
+        />
+      </div>
 
       {/* Main Layout Area with Sidebar & Dynamic View */}
       <div className="flex-1 flex flex-col lg:flex-row w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 gap-4 sm:gap-6">
         {/* Navigation Sidebar (Desktop + Mobile Drawer) */}
-        <Sidebar
-          currentRole={currentRole}
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          onOpenMission={() => setIsMissionPlayerOpen(true)}
-          onOpenCards={() => setActiveTab('cards')}
-          isMobileMenuOpen={isMobileMenuOpen}
-          setIsMobileMenuOpen={setIsMobileMenuOpen}
-        />
+        <div className="app-sidebar">
+          <Sidebar
+            currentRole={currentRole}
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            onOpenMission={() => setIsMissionPlayerOpen(true)}
+            onOpenCards={() => setActiveTab('cards')}
+            isMobileMenuOpen={isMobileMenuOpen}
+            setIsMobileMenuOpen={setIsMobileMenuOpen}
+          />
+        </div>
 
         {/* Central Dynamic View Area */}
         <main className="flex-1 min-w-0">
