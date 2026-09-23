@@ -2,7 +2,7 @@ import React, { useState, useRef, useCallback, useMemo } from 'react';
 import {
   Lock, Play, BookOpen, Calculator, FlaskConical, Check,
   Sparkles, Printer, User, Users, Globe, Filter, Coins,
-  X, Target, Star, Palette, CheckCircle2, Info
+  X, Target, Star, Palette, CheckCircle2, Info, MapPin
 } from 'lucide-react';
 import { GameWorldTrack } from './game-ui/GameWorldTrack';
 import { subjectTracksMap } from '../data/curriculum';
@@ -357,128 +357,109 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
       </div>
 
       {/* ── Stage Modal (preserved + improved) ───────────────────────── */}
-      {stageModal && (
-        <div
-          className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="stage-modal-title"
-          onClick={() => setStageModal(null)}
-        >
+      {stageModal && (() => {
+        const WorldIcon = currentDisc.icon;
+        return (
           <div
-            className="bg-slate-900 border border-white/15 rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl relative overflow-hidden animate-trail-enter"
-            onClick={e => e.stopPropagation()}
+            className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="stage-modal-title"
+            onClick={() => setStageModal(null)}
           >
-            {/* Gradient top accent */}
-            <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${currentDisc.gradient}`} />
-
-            {/* Close */}
-            <button
-              onClick={() => setStageModal(null)}
-              className="trail-focus absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white/60 hover:text-white flex items-center justify-center transition border border-white/10"
-              aria-label="Fechar"
+            <div
+              className="bg-slate-900/90 backdrop-blur-xl border border-white/15 rounded-2xl w-full max-w-md shadow-2xl relative overflow-hidden animate-trail-enter"
+              onClick={e => e.stopPropagation()}
             >
-              <X className="w-4 h-4" />
-            </button>
+              {/* Gradient top banner */}
+              <div className={`h-1.5 bg-gradient-to-r ${currentDisc.gradient}`} />
 
-            {/* Badges row */}
-            <div className="flex items-center gap-2 mb-4 flex-wrap pr-8">
-              <span className="text-[10px] font-bold uppercase tracking-wider bg-white/10 text-white/60 px-2.5 py-0.5 rounded-full border border-white/10">
-                {currentDisc.label}
-              </span>
-              <span className="text-[10px] font-bold text-yellow-300 bg-yellow-400/15 px-2.5 py-0.5 rounded-full border border-yellow-400/20 flex items-center gap-1">
-                <Star className="w-2.5 h-2.5 fill-yellow-400 text-yellow-400" />
-                +{stageModal.xp} XP
-              </span>
-              <span className="text-[10px] font-bold text-amber-300 bg-amber-400/15 px-2.5 py-0.5 rounded-full border border-amber-400/20 flex items-center gap-1">
-                <Coins className="w-2.5 h-2.5 text-amber-400" />
-                {stageModal.coins} moedas
-              </span>
-            </div>
+              <div className="p-5 sm:p-6">
+                {/* Close button */}
+                <button
+                  onClick={() => setStageModal(null)}
+                  className="trail-focus absolute top-4 right-4 w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-white/60 hover:text-white flex items-center justify-center transition border border-white/10"
+                  aria-label="Fechar"
+                >
+                  <X className="w-4 h-4" />
+                </button>
 
-            {/* Title + icon */}
-            <div className="flex items-center gap-4 mb-4">
-              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg shrink-0 ${
-                stageModal.status === 'concluido' ? 'bg-gradient-to-tr from-amber-400 to-yellow-300 text-amber-950'
-                : stageModal.status === 'ativo' ? `bg-gradient-to-r ${currentDisc.gradient} text-white`
-                : 'bg-slate-700 text-slate-400'
-              }`}>
-                {stageModal.status === 'concluido' ? <Check className="w-7 h-7 stroke-[3]" />
-                  : stageModal.status === 'ativo' ? <Play className="w-7 h-7 fill-white" />
-                  : <Lock className="w-6 h-6" />}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex flex-wrap gap-1 mb-1">
-                  {stageModal.modalidade.map((mod: any) => (
-                    <span key={mod} className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-white/10 text-white/50 border border-white/10 flex items-center gap-1">
-                      {mod === 'individual' ? <User className="w-2.5 h-2.5" /> : mod === 'impresso' ? <Printer className="w-2.5 h-2.5" /> : <Users className="w-2.5 h-2.5" />}
-                      {mod}
-                    </span>
-                  ))}
+                {/* Label row */}
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="flex items-center gap-1.5 text-[10px] font-black text-white/40 uppercase tracking-widest">
+                    <MapPin className="w-3 h-3" />
+                    Percurso de Aprendizagem Adaptativo
+                  </div>
                 </div>
-                <h3 id="stage-modal-title" className="font-black text-lg text-white leading-tight">
-                  {stageModal.title}
-                </h3>
+
+                {/* World + Title */}
+                <div className="flex flex-col gap-2 mb-5">
+                  <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gradient-to-r ${currentDisc.gradient} text-white text-xs font-black self-start shadow-md`}>
+                    <WorldIcon className="w-3 h-3" />
+                    {currentDisc.label}
+                  </div>
+                  <h2 id="stage-modal-title" className="text-xl sm:text-2xl font-black text-white leading-tight">
+                    {stageModal.title}
+                  </h2>
+                  <p className="text-xs text-white/60 mt-1 leading-relaxed">
+                    {stageModal.sub || currentDisc.bncc}
+                  </p>
+                </div>
+
+                {/* Progress bar matching the card */}
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="flex-1">
+                    <div className="h-2.5 bg-white/10 rounded-full overflow-hidden border border-white/5 mb-1.5">
+                      <div
+                        className={`h-full bg-gradient-to-r ${currentDisc.gradient} rounded-full transition-all`}
+                        style={{ width: `${progressForHud}%` }}
+                      />
+                    </div>
+                    <div className="flex justify-between text-[10px] text-white/40 font-medium">
+                      <span>Trilhas de Aprendizagem</span>
+                      <span className="font-black text-white/60">{completedForHud} de {totalForHud} fases dominadas</span>
+                    </div>
+                  </div>
+                  <div className="shrink-0 text-center bg-white/10 rounded-xl px-3 py-2 border border-white/10">
+                    <div className="text-xl font-black text-white leading-none">{progressForHud}%</div>
+                    <div className="text-[9px] text-white/50 font-bold mt-0.5">{completedForHud}/{totalForHud}</div>
+                  </div>
+                </div>
+
+                {/* Next mission CTA (Próximo destino) */}
+                <div className="flex items-center gap-3 mb-5 p-3.5 bg-emerald-500/15 border border-emerald-400/25 rounded-xl">
+                  <Target className="w-5 h-5 text-emerald-400 shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[9px] text-emerald-400/70 font-bold uppercase tracking-wider">Destino da Missão</div>
+                    <div className="text-sm font-black text-emerald-300 truncate">{stageModal.title}</div>
+                  </div>
+                  <button
+                    onClick={handleStartStage}
+                    disabled={stageModal.status === 'bloqueado'}
+                    className={`trail-focus shrink-0 px-5 py-2 text-white text-sm font-black rounded-xl transition-all shadow-md ${
+                      stageModal.status === 'bloqueado' 
+                        ? 'bg-slate-700 text-white/40 cursor-not-allowed'
+                        : 'bg-emerald-500 hover:bg-emerald-400 active:scale-95'
+                    }`}
+                  >
+                    {stageModal.status === 'bloqueado' ? <Lock className="w-4 h-4 mx-auto" /> : 'Ir!'}
+                  </button>
+                </div>
+
+                {/* BNCC */}
+                <div className="bg-white/5 p-3.5 rounded-xl border border-white/10">
+                  <div className="text-[10px] font-bold text-white/40 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <BookOpen className="w-3.5 h-3.5" /> Habilidades BNCC
+                  </div>
+                  <div className="text-xs text-white/60 leading-relaxed font-medium">
+                    {stageModal.habilidades.length > 0 ? stageModal.habilidades.join(', ') : currentDisc.bncc}
+                  </div>
+                </div>
               </div>
             </div>
-
-            {/* Objective */}
-            <div className="bg-amber-400/10 p-3.5 rounded-xl border border-amber-400/20 mb-3">
-              <div className="text-[10px] font-bold text-amber-400/70 uppercase tracking-wider mb-1 flex items-center gap-1">
-                <Target className="w-3 h-3" /> Objetivo da Fase
-              </div>
-              <p className="text-sm text-white/80 leading-relaxed">{stageModal.sub}</p>
-            </div>
-
-            {/* Criteria */}
-            {stageModal.criterioAvanco && (
-              <div className="bg-white/5 p-3 rounded-xl border border-white/10 mb-4">
-                <div className="text-[10px] font-bold text-white/40 uppercase tracking-wider mb-1 flex items-center gap-1">
-                  <BookOpen className="w-3 h-3" /> Critério de Avanço
-                </div>
-                <p className="text-xs text-white/60 leading-relaxed">{stageModal.criterioAvanco}</p>
-              </div>
-            )}
-
-            {/* Skills */}
-            {stageModal.habilidades.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 mb-4">
-                {stageModal.habilidades.map(h => (
-                  <span key={h} className="text-[10px] px-2 py-0.5 rounded-full bg-white/8 text-white/50 border border-white/10 font-medium">
-                    {h}
-                  </span>
-                ))}
-              </div>
-            )}
-
-            {/* CTA */}
-            {stageModal.status !== 'bloqueado' ? (
-              <button
-                onClick={handleStartStage}
-                className={`trail-focus w-full py-3.5 px-6 rounded-2xl text-white font-black text-base flex items-center justify-center gap-2 shadow-xl transition active:scale-95 bg-gradient-to-r ${
-                  stageModal.status === 'concluido'
-                    ? 'from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400'
-                    : `${currentDisc.gradient} hover:opacity-90`
-                }`}
-                aria-label={stageModal.status === 'concluido' ? `Jogar novamente: ${stageModal.title}` : `Começar fase: ${stageModal.title}`}
-              >
-                <Play className="w-5 h-5 fill-white" />
-                {stageModal.status === 'concluido' ? 'JOGAR NOVAMENTE' : 'COMEÇAR FASE AGORA'}
-              </button>
-            ) : (
-              <div className="bg-slate-800 p-4 rounded-2xl border border-white/10 text-center space-y-2" role="alert">
-                <div className="flex items-center justify-center gap-1.5 text-sm font-bold text-white/50">
-                  <Lock className="w-4 h-4 text-slate-400" />
-                  <span>Esta fase está bloqueada</span>
-                </div>
-                <p className="text-xs text-white/35">
-                  Conclua as fases anteriores para liberar esta missão!
-                </p>
-              </div>
-            )}
           </div>
-        </div>
-      )}
+        );
+      })()}
     </TrailGameShell>
   );
 };
