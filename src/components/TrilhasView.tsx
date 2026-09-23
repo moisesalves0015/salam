@@ -197,13 +197,8 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
     }));
 
   const handleNodeClick = useCallback((node: TrailNode) => {
-    // Use local nodes (with modal preview) or direct start from curriculum
-    if (node.unitData) {
-      onStartMission(node);
-    } else {
-      setStageModal(node);
-    }
-  }, [onStartMission]);
+    setStageModal(node);
+  }, []);
 
   const handleStartStage = useCallback(() => {
     if (stageModal) {
@@ -214,13 +209,9 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
 
   const handleContinueJourney = useCallback(() => {
     if (nextNode) {
-      if (nextNode.unitData) {
-        onStartMission(nextNode);
-      } else {
-        setStageModal(nextNode);
-      }
+      setStageModal(nextNode);
     }
-  }, [nextNode, onStartMission]);
+  }, [nextNode]);
 
   if (!isOpen) return null;
 

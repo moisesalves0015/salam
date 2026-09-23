@@ -20,7 +20,7 @@ interface WorldSelectorProps {
 export const WorldSelector: React.FC<WorldSelectorProps> = ({ disciplines, selectedId, onChange }) => {
   return (
     <div role="radiogroup" aria-label="Mundos de aprendizagem" className="w-full">
-      <div className="flex gap-3 overflow-x-auto pb-3 pt-1 -mx-4 sm:-mx-5 px-4 sm:px-5 snap-x snap-mandatory scrollbar-none after:content-[''] after:w-1 after:shrink-0 sm:after:w-2">
+      <div className="flex gap-3 overflow-x-auto pb-3 pt-1 -mx-4 sm:-mx-5 snap-x snap-mandatory scrollbar-none">
         {disciplines.map((disc) => {
           const Icon = disc.icon;
           const isSelected = disc.id === selectedId;
@@ -38,6 +38,7 @@ export const WorldSelector: React.FC<WorldSelectorProps> = ({ disciplines, selec
               className={`
                 trail-focus snap-start shrink-0 flex flex-col items-center gap-2 p-3 rounded-2xl border-2 transition-all
                 min-w-[100px] sm:min-w-[120px] cursor-pointer active:scale-95
+                first:ml-4 sm:first:ml-5 last:mr-4 sm:last:mr-5
                 ${isSelected
                   ? `bg-gradient-to-b ${disc.gradient} text-white border-white/40 shadow-xl scale-[1.04] ring-2 ring-white/50`
                   : 'bg-slate-900/60 text-white/60 border-white/10 hover:border-white/25 hover:bg-slate-800/70 hover:text-white/80'

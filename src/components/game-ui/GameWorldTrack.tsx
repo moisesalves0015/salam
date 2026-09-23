@@ -259,23 +259,23 @@ export const GameWorldTrack: React.FC<GameWorldTrackProps> = ({
                       className="group flex flex-col items-center cursor-pointer transition transform hover:scale-110 active:scale-95"
                       title="Baú Secreto da Trilha! Clique para abrir"
                     >
-                      <div className={`relative p-2.5 rounded-2xl border-2 shadow-md transition-all ${
-                        isChestOpened
-                          ? 'bg-amber-100 border-amber-300 text-amber-600'
-                          : 'bg-gradient-to-tr from-amber-400 to-yellow-300 border-amber-500 text-amber-950 animate-pulse'
-                      }`}>
-                        <Gift className="w-6 h-6 fill-current drop-shadow-xs" />
+                      <div className={`relative w-14 h-14 sm:w-16 sm:h-16 transition-transform duration-500 ${isChestOpened ? 'scale-110' : 'animate-[bounce_3s_infinite]'}`}>
+                        <img 
+                          src={isChestOpened ? "/assets/trilhas/bau-aberto.png" : "/assets/trilhas/bau-fechado.png"} 
+                          alt={isChestOpened ? "Baú aberto" : "Baú fechado"}
+                          className={`w-full h-full object-contain drop-shadow-xl transition-all duration-300 ${isChestOpened ? 'brightness-110 drop-shadow-2xl' : 'drop-shadow-md'}`}
+                        />
                         {!isChestOpened && (
-                          <span className="absolute -top-2 -right-2 bg-rose-500 text-white text-[9px] font-bold px-1.5 py-0.2 rounded-full border border-white">
+                          <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full border-2 border-white z-10 shadow-sm">
                             +XP
                           </span>
                         )}
                       </div>
-                      <span className="text-[10px] font-bold text-amber-900 mt-1 bg-white/90 px-2 py-0.5 rounded-full border border-amber-200 shadow-2xs flex items-center gap-1">
+                      <span className="text-[10px] font-black text-amber-900 mt-1 bg-white/90 px-2 py-0.5 rounded-full border border-amber-200 shadow-2xs flex items-center gap-1">
                         {isChestOpened ? (
                           <>
                             <CheckCircle className="w-3 h-3 text-emerald-600" />
-                            <span>Conquistado</span>
+                            <span>Aberto</span>
                           </>
                         ) : (
                           <span>Baú Mágico</span>
