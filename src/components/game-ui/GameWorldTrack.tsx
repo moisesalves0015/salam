@@ -307,16 +307,7 @@ export const GameWorldTrack: React.FC<GameWorldTrackProps> = ({
                     </span>
                   )}
                 </div>
-                <span className={`text-[11px] font-black mt-0.5 drop-shadow-md flex items-center gap-1 ${isRevDone ? 'text-emerald-400' : 'text-purple-300'}`}>
-                  {isRevDone ? (
-                    <>
-                      <CheckCircle className="w-3.5 h-3.5" />
-                      <span>Revisado</span>
-                    </>
-                  ) : (
-                    <span>Super Revisão</span>
-                  )}
-                </span>
+                {/* Text was here but removed per user request */}
               </button>
 
               {/* 2. Treasure Chest */}
