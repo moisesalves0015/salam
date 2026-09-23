@@ -19,8 +19,8 @@ interface WorldSelectorProps {
 
 export const WorldSelector: React.FC<WorldSelectorProps> = ({ disciplines, selectedId, onChange }) => {
   return (
-    <div role="radiogroup" aria-label="Mundos de aprendizagem">
-      <div className="flex gap-3 overflow-x-auto pb-1 px-1 snap-x snap-mandatory scrollbar-none">
+    <div role="radiogroup" aria-label="Mundos de aprendizagem" className="w-full">
+      <div className="flex gap-3 overflow-x-auto pb-3 pt-1 -mx-4 px-4 sm:-mx-5 sm:px-5 snap-x snap-mandatory scrollbar-none">
         {disciplines.map((disc) => {
           const Icon = disc.icon;
           const isSelected = disc.id === selectedId;

@@ -79,31 +79,28 @@ export const GameWorldTrack: React.FC<GameWorldTrackProps> = ({
     return { x, y, node, idx };
   });
 
-  // Boss coordinate (We can use a mock boss or just end the track if we don't have bosses in sala-de-missoes)
-  // For sala-de-missoes, we'll keep the final point just as the end of the road.
-  const endY = START_Y + nodes.length * STEP_Y;
-  const endX = 220;
+  // Boss coordinate / End coordinate (Stops exactly at the last node)
+  const endY = nodes.length > 0 ? START_Y + (nodes.length - 1) * STEP_Y : START_Y;
   const totalSvgHeight = endY + 80;
 
-  // Build continuous cubic Bezier road path
+  // Build segments
   const allPoints = [...nodePositions.map(n => ({ x: n.x, y: n.y }))];
-  if (allPoints.length > 0) {
-    allPoints.push({ x: endX, y: endY });
-  }
 
-  let roadPathD = '';
-  if (allPoints.length > 0) {
-    roadPathD = `M ${allPoints[0].x} ${allPoints[0].y}`;
-    for (let i = 0; i < allPoints.length - 1; i++) {
-      const p0 = allPoints[i];
-      const p1 = allPoints[i + 1];
-      const dy = p1.y - p0.y;
-      const cp1X = p0.x;
-      const cp1Y = p0.y + dy * 0.52;
-      const cp2X = p1.x;
-      const cp2Y = p1.y - dy * 0.48;
-      roadPathD += ` C ${cp1X} ${cp1Y}, ${cp2X} ${cp2Y}, ${p1.x} ${p1.y}`;
-    }
+  const segments: { d: string; isLocked: boolean }[] = [];
+  for (let i = 0; i < allPoints.length - 1; i++) {
+    const p0 = allPoints[i];
+    const p1 = allPoints[i + 1];
+    const dy = p1.y - p0.y;
+    const cp1X = p0.x;
+    const cp1Y = p0.y + dy * 0.52;
+    const cp2X = p1.x;
+    const cp2Y = p1.y - dy * 0.48;
+    const d = `M ${p0.x} ${p0.y} C ${cp1X} ${cp1Y}, ${cp2X} ${cp2Y}, ${p1.x} ${p1.y}`;
+    
+    const targetNode = nodes[i + 1];
+    const isLocked = targetNode?.status === 'bloqueado';
+    
+    segments.push({ d, isLocked });
   }
 
   // Interactive Treasure Chest handler
@@ -178,51 +175,63 @@ export const GameWorldTrack: React.FC<GameWorldTrackProps> = ({
               <stop offset="50%" stopColor="#fde047" />
               <stop offset="100%" stopColor="#fef08a" />
             </linearGradient>
+
+            {/* Gray gradient for locked track */}
+            <linearGradient id={`gray-road-${trackId}`} x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#cbd5e1" />
+              <stop offset="50%" stopColor="#94a3b8" />
+              <stop offset="100%" stopColor="#cbd5e1" />
+            </linearGradient>
           </defs>
 
-          {/* 1. Road Deep Ground Shadow */}
-          <path
-            d={roadPathD}
-            fill="none"
-            stroke="#b45309"
-            strokeWidth="52"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            opacity="0.25"
-            filter={`url(#road-shadow-${trackId})`}
-          />
+          {/* Render Path Segments */}
+          {segments.map((seg, i) => (
+            <React.Fragment key={`seg-${i}`}>
+              {/* 1. Road Deep Ground Shadow */}
+              <path
+                d={seg.d}
+                fill="none"
+                stroke={seg.isLocked ? '#475569' : '#b45309'}
+                strokeWidth="52"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                opacity="0.25"
+                filter={`url(#road-shadow-${trackId})`}
+              />
 
-          {/* 2. Road Earth / Curb Bedding */}
-          <path
-            d={roadPathD}
-            fill="none"
-            stroke="#d97706"
-            strokeWidth="42"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
+              {/* 2. Road Earth / Curb Bedding */}
+              <path
+                d={seg.d}
+                fill="none"
+                stroke={seg.isLocked ? '#64748b' : '#d97706'}
+                strokeWidth="42"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
 
-          {/* 3. Road Inner Walking Surface */}
-          <path
-            d={roadPathD}
-            fill="none"
-            stroke={`url(#gold-road-${trackId})`}
-            strokeWidth="32"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
+              {/* 3. Road Inner Walking Surface */}
+              <path
+                d={seg.d}
+                fill="none"
+                stroke={`url(#${seg.isLocked ? 'gray' : 'gold'}-road-${trackId})`}
+                strokeWidth="32"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
 
-          {/* 4. Cobblestone Stepping Stones Centerline */}
-          <path
-            d={roadPathD}
-            fill="none"
-            stroke="#b45309"
-            strokeWidth="6"
-            strokeDasharray="12 16"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            opacity="0.8"
-          />
+              {/* 4. Cobblestone Stepping Stones Centerline */}
+              <path
+                d={seg.d}
+                fill="none"
+                stroke={seg.isLocked ? '#475569' : '#b45309'}
+                strokeWidth="6"
+                strokeDasharray="12 16"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                opacity="0.8"
+              />
+            </React.Fragment>
+          ))}
         </svg>
 
         {/* Decorative Scenery Elements Placed at Road Bends */}
