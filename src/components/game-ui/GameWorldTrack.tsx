@@ -59,6 +59,14 @@ export const GameWorldTrack: React.FC<GameWorldTrackProps> = ({
       return [];
     }
   });
+  const [completedRevisions, setCompletedRevisions] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem(`trilha_revisions_${trackId}`);
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
   const [chestModal, setChestModal] = useState<ChestModalData | null>(null);
 
   const trackCompleted = nodes.every(n => n.status === 'concluido');
@@ -137,6 +145,35 @@ export const GameWorldTrack: React.FC<GameWorldTrackProps> = ({
       title: 'Tesouro Encontrado!',
       fact: fact,
       xp: 15
+    });
+  };
+
+  const handleOpenRevision = (revId: string) => {
+    if (completedRevisions.includes(revId)) {
+      setChestModal({
+        title: 'Revisão já Concluída!',
+        fact: 'Você já relembrou esses conceitos incríveis!',
+        xp: 0
+      });
+      return;
+    }
+
+    confetti({ particleCount: 50, spread: 70, origin: { y: 0.6 } });
+
+    const nextRevs = [...completedRevisions, revId];
+    setCompletedRevisions(nextRevs);
+    try {
+      localStorage.setItem(`trilha_revisions_${trackId}`, JSON.stringify(nextRevs));
+    } catch {}
+
+    if (onRewardBonusXp) {
+      onRewardBonusXp(20, `Super Revisão da Trilha ${trackId}`);
+    }
+
+    setChestModal({
+      title: 'Super Revisão Concluída!',
+      fact: 'Revisar o que aprendemos fortalece as conexões no nosso cérebro. Muito bem, explorador!',
+      xp: 20
     });
   };
 
@@ -266,8 +303,8 @@ export const GameWorldTrack: React.FC<GameWorldTrackProps> = ({
                           className={`w-full h-full object-contain drop-shadow-xl transition-all duration-300 ${isChestOpened ? 'brightness-110 drop-shadow-2xl' : 'drop-shadow-md'}`}
                         />
                         {!isChestOpened && (
-                          <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full border-2 border-white z-10 shadow-sm">
-                            +XP
+                          <span className="absolute -top-1 -right-3 bg-gradient-to-br from-yellow-400 to-amber-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full border-2 border-white z-10 shadow-md">
+                            +15 XP
                           </span>
                         )}
                       </div>
@@ -275,10 +312,10 @@ export const GameWorldTrack: React.FC<GameWorldTrackProps> = ({
                         {isChestOpened ? (
                           <>
                             <CheckCircle className="w-3 h-3 text-emerald-600" />
-                            <span>Aberto</span>
+                            <span>Explorado</span>
                           </>
                         ) : (
-                          <span>Baú Mágico</span>
+                          <span>Tesouro Secreto</span>
                         )}
                       </span>
                     </button>
@@ -296,7 +333,7 @@ export const GameWorldTrack: React.FC<GameWorldTrackProps> = ({
                 </div>
               )}
 
-              {/* If node curves left, place scenery on the right */}
+              {/* If node curves left, place revision challenge */}
               {isLeft && (
                 <div
                   className="absolute z-10 pointer-events-auto flex items-center gap-2"
@@ -305,15 +342,46 @@ export const GameWorldTrack: React.FC<GameWorldTrackProps> = ({
                     top: `${pos.y - 25}px`,
                   }}
                 >
-                  <div className="flex items-center gap-2 bg-amber-50/90 px-2.5 py-1.5 rounded-2xl border border-amber-200/90 shadow-xs">
-                    <div className="flex flex-col items-center">
-                      <Flame className="w-4 h-4 text-amber-500 fill-amber-400 animate-pulse" />
-                      <span className="text-[9px] font-bold text-amber-900 uppercase">
-                        Descanso
+                  {i % 2 === 0 ? (
+                    <button
+                      onClick={() => handleOpenRevision(`rev_${trackId}_${i}`)}
+                      className="group flex flex-col items-center cursor-pointer transition transform hover:scale-110 active:scale-95"
+                      title="Desafio de Revisão! Clique para resolver"
+                    >
+                      <div className={`relative w-14 h-14 sm:w-16 sm:h-16 transition-transform duration-500 ${completedRevisions.includes(`rev_${trackId}_${i}`) ? 'scale-110' : 'animate-[pulse_3s_infinite]'}`}>
+                        <img 
+                          src={completedRevisions.includes(`rev_${trackId}_${i}`) ? "/assets/trilhas/revisao-feita.png" : "/assets/trilhas/revisao-pronta.png"} 
+                          alt="Desafio de Revisão"
+                          className={`w-full h-full object-contain drop-shadow-xl transition-all duration-300 ${completedRevisions.includes(`rev_${trackId}_${i}`) ? 'brightness-110 drop-shadow-2xl' : 'drop-shadow-md'}`}
+                        />
+                        {!completedRevisions.includes(`rev_${trackId}_${i}`) && (
+                          <span className="absolute -top-1 -left-3 bg-gradient-to-br from-purple-500 to-pink-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full border-2 border-white z-10 shadow-md">
+                            +20 XP
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-[10px] font-black text-purple-900 mt-1 bg-white/90 px-2 py-0.5 rounded-full border border-purple-200 shadow-2xs flex items-center gap-1">
+                        {completedRevisions.includes(`rev_${trackId}_${i}`) ? (
+                          <>
+                            <CheckCircle className="w-3 h-3 text-emerald-600" />
+                            <span>Revisado</span>
+                          </>
+                        ) : (
+                          <span>Super Revisão</span>
+                        )}
                       </span>
+                    </button>
+                  ) : (
+                    <div className="flex items-center gap-2 bg-amber-50/90 px-2.5 py-1.5 rounded-2xl border border-amber-200/90 shadow-xs">
+                      <div className="flex flex-col items-center">
+                        <Flame className="w-4 h-4 text-amber-500 fill-amber-400 animate-pulse" />
+                        <span className="text-[9px] font-bold text-amber-900 uppercase">
+                          Descanso
+                        </span>
+                      </div>
+                      <Tent className="w-5 h-5 text-amber-800" />
                     </div>
-                    <Tent className="w-5 h-5 text-amber-800" />
-                  </div>
+                  )}
                 </div>
               )}
             </React.Fragment>
