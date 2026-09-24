@@ -40,8 +40,8 @@ export const MoneyNote: React.FC<MoneyNoteProps> = ({ value, onClick, className 
       onClick={onClick}
       disabled={disabled}
       className={`
-        relative w-20 h-10 sm:w-28 sm:h-14 rounded-md sm:rounded-lg 
-        border-2 shadow-sm flex items-center justify-between px-1.5 sm:px-2 
+        relative w-[130px] h-[60px] sm:w-[170px] sm:h-[80px] rounded-lg sm:rounded-xl 
+        border-2 shadow-sm flex items-center justify-between px-2 sm:px-3 
         overflow-hidden transition-all shrink-0
         ${disabled ? 'opacity-60 cursor-not-allowed grayscale-[30%]' : 'hover:-translate-y-1 hover:shadow-md active:scale-95 active:-translate-y-0 cursor-pointer'}
         ${getNoteStyle(value)}
@@ -54,14 +54,14 @@ export const MoneyNote: React.FC<MoneyNoteProps> = ({ value, onClick, className 
       <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px)' }} />
       
       {/* Note Content */}
-      <span className="font-serif font-black text-[10px] sm:text-xs drop-shadow-sm z-10">{value}</span>
+      <span className="font-serif font-black text-xs sm:text-lg drop-shadow-sm z-10">{value}</span>
       
       {/* Center Circle/Animal */}
-      <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border border-black/10 bg-white/30 flex items-center justify-center z-10 backdrop-blur-sm shadow-inner">
-        <span className="text-[10px] sm:text-xs opacity-80">{getAnimalIcon(value)}</span>
+      <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-full border border-black/10 bg-white/30 flex items-center justify-center z-10 backdrop-blur-sm shadow-inner">
+        <span className="text-xs sm:text-lg opacity-80">{getAnimalIcon(value)}</span>
       </div>
       
-      <span className="font-serif font-black text-[10px] sm:text-xs drop-shadow-sm z-10">{value}</span>
+      <span className="font-serif font-black text-xs sm:text-lg drop-shadow-sm z-10">{value}</span>
     </button>
   );
 };

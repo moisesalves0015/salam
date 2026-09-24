@@ -58,12 +58,12 @@ export const MoneyCoin: React.FC<MoneyCoinProps> = ({ value, onClick, className 
   
   const getSizeClass = (v: number) => {
     switch(v) {
-      case 1: return 'w-11 h-11 sm:w-14 sm:h-14 text-sm sm:text-base';
-      case 0.5: return 'w-10 h-10 sm:w-12 sm:h-12 text-xs sm:text-sm';
-      case 0.25: return 'w-10 h-10 sm:w-13 sm:h-13 text-xs sm:text-sm';
-      case 0.1: return 'w-8 h-8 sm:w-10 sm:h-10 text-[10px] sm:text-xs';
-      case 0.05: return 'w-9 h-9 sm:w-11 sm:h-11 text-[11px] sm:text-xs';
-      default: return 'w-10 h-10 text-xs';
+      case 1: return 'w-14 h-14 sm:w-[68px] sm:h-[68px] text-base sm:text-xl';
+      case 0.5: return 'w-[52px] h-[52px] sm:w-[64px] sm:h-[64px] text-sm sm:text-lg';
+      case 0.25: return 'w-[52px] h-[52px] sm:w-[64px] sm:h-[64px] text-sm sm:text-lg';
+      case 0.1: return 'w-12 h-12 sm:w-[56px] sm:h-[56px] text-xs sm:text-base';
+      case 0.05: return 'w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] text-xs sm:text-base';
+      default: return 'w-12 h-12 text-sm';
     }
   }
 

@@ -302,7 +302,7 @@ export const GameWorldTrack: React.FC<GameWorldTrackProps> = ({
                     className={`w-full h-full object-contain drop-shadow-xl transition-all duration-300 ${isRevDone ? 'brightness-110 drop-shadow-2xl' : 'drop-shadow-md'}`}
                   />
                   {!isRevDone && (
-                    <span className="absolute -top-2 -right-3 text-purple-400 text-[11px] font-black z-10 drop-shadow-md">
+                    <span className="absolute -top-2 -right-3 text-amber-400 text-[11px] font-black z-10 drop-shadow-md">
                       +20XP
                     </span>
                   )}

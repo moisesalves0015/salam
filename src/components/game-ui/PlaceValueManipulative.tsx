@@ -91,9 +91,9 @@ export const PlaceValueManipulative: React.FC<PlaceValueProps> = ({
       {/* Grid of the 4 Orders */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
         {/* Unidade de Milhar (1000) */}
-        <div className="bg-indigo-50/70 border border-indigo-200 rounded-xl p-3 flex flex-col items-center text-center">
-          <div className="flex items-center gap-1.5 text-indigo-900 font-fredoka font-bold text-sm mb-2">
-            <Box className="w-4 h-4 text-indigo-600" />
+        <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-3 flex flex-col items-center text-center">
+          <div className="flex items-center gap-1.5 text-amber-900 font-fredoka font-bold text-sm mb-2">
+            <Box className="w-4 h-4 text-amber-600" />
             Cubão de 1.000
           </div>
           <div className="min-h-16 flex items-center justify-center flex-wrap gap-1 my-1">
@@ -111,15 +111,15 @@ export const PlaceValueManipulative: React.FC<PlaceValueProps> = ({
               ))
             )}
           </div>
-          <div className="mt-auto w-full pt-2 border-t border-indigo-100 text-xs font-semibold text-indigo-800">
+          <div className="mt-auto w-full pt-2 border-t border-amber-100 text-xs font-semibold text-amber-800">
             {blocks.thousands} × 1.000 = {blocks.thousands * 1000}
           </div>
         </div>
 
         {/* Centenas (100) */}
-        <div className="bg-purple-50/70 border border-purple-200 rounded-xl p-3 flex flex-col items-center text-center">
-          <div className="flex items-center gap-1.5 text-purple-900 font-fredoka font-bold text-sm mb-2">
-            <Square className="w-4 h-4 text-purple-600" />
+        <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-3 flex flex-col items-center text-center">
+          <div className="flex items-center gap-1.5 text-amber-900 font-fredoka font-bold text-sm mb-2">
+            <Square className="w-4 h-4 text-amber-600" />
             Placas de 100
           </div>
           <div className="min-h-16 flex items-center justify-center flex-wrap gap-1 my-1">
@@ -139,12 +139,12 @@ export const PlaceValueManipulative: React.FC<PlaceValueProps> = ({
               ))
             )}
           </div>
-          <div className="mt-auto w-full pt-2 border-t border-purple-100 text-xs font-semibold text-purple-800 flex items-center justify-between">
+          <div className="mt-auto w-full pt-2 border-t border-amber-100 text-xs font-semibold text-amber-800 flex items-center justify-between">
             <span>{blocks.hundreds} × 100 = {blocks.hundreds * 100}</span>
             {interactive && (
               <button
                 onClick={addHundred}
-                className="px-2 py-0.5 bg-purple-200 hover:bg-purple-300 rounded text-purple-900 font-bold text-xs"
+                className="px-2 py-0.5 bg-amber-200 hover:bg-amber-300 rounded text-amber-900 font-bold text-xs"
               >
                 +
               </button>
@@ -153,9 +153,9 @@ export const PlaceValueManipulative: React.FC<PlaceValueProps> = ({
         </div>
 
         {/* Dezenas (10) */}
-        <div className="bg-sky-50/70 border border-sky-200 rounded-xl p-3 flex flex-col items-center text-center">
-          <div className="flex items-center gap-1.5 text-sky-900 font-fredoka font-bold text-sm mb-2">
-            <Grid className="w-4 h-4 text-sky-600" />
+        <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-3 flex flex-col items-center text-center">
+          <div className="flex items-center gap-1.5 text-amber-900 font-fredoka font-bold text-sm mb-2">
+            <Grid className="w-4 h-4 text-amber-600" />
             Barras de 10
           </div>
           <div className="min-h-16 flex items-center justify-center flex-wrap gap-1 my-1">
@@ -173,12 +173,12 @@ export const PlaceValueManipulative: React.FC<PlaceValueProps> = ({
               ))
             )}
           </div>
-          <div className="mt-auto w-full pt-2 border-t border-sky-100 text-xs font-semibold text-sky-800 flex items-center justify-between">
+          <div className="mt-auto w-full pt-2 border-t border-amber-100 text-xs font-semibold text-amber-800 flex items-center justify-between">
             <span>{blocks.tens} × 10 = {blocks.tens * 10}</span>
             {interactive && (
               <button
                 onClick={addTen}
-                className="px-2 py-0.5 bg-sky-200 hover:bg-sky-300 rounded text-sky-900 font-bold text-xs"
+                className="px-2 py-0.5 bg-amber-200 hover:bg-amber-300 rounded text-amber-900 font-bold text-xs"
               >
                 +
               </button>
@@ -187,9 +187,9 @@ export const PlaceValueManipulative: React.FC<PlaceValueProps> = ({
         </div>
 
         {/* Unidades (1) */}
-        <div className="bg-emerald-50/70 border border-emerald-200 rounded-xl p-3 flex flex-col items-center text-center">
-          <div className="flex items-center gap-1.5 text-emerald-900 font-fredoka font-bold text-sm mb-2">
-            <Sparkles className="w-4 h-4 text-emerald-600" />
+        <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-3 flex flex-col items-center text-center">
+          <div className="flex items-center gap-1.5 text-amber-900 font-fredoka font-bold text-sm mb-2">
+            <Sparkles className="w-4 h-4 text-amber-600" />
             Cubinhos de 1
           </div>
           <div className="min-h-16 flex items-center justify-center flex-wrap gap-1 my-1 max-w-[120px]">
@@ -205,12 +205,12 @@ export const PlaceValueManipulative: React.FC<PlaceValueProps> = ({
               ))
             )}
           </div>
-          <div className="mt-auto w-full pt-2 border-t border-emerald-100 text-xs font-semibold text-emerald-800 flex items-center justify-between">
+          <div className="mt-auto w-full pt-2 border-t border-amber-100 text-xs font-semibold text-amber-800 flex items-center justify-between">
             <span>{blocks.units} × 1 = {blocks.units}</span>
             {interactive && (
               <button
                 onClick={addUnit}
-                className="px-2 py-0.5 bg-emerald-200 hover:bg-emerald-300 rounded text-emerald-900 font-bold text-xs"
+                className="px-2 py-0.5 bg-amber-200 hover:bg-amber-300 rounded text-amber-900 font-bold text-xs"
               >
                 +
               </button>

@@ -452,15 +452,15 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
 
       {/* ── BOTTOM ACTION BAR ─────────────────────────────────── */}
       <div 
-        className="relative z-10 shrink-0 px-4 pt-3 bg-slate-900/90 backdrop-blur-xl border-t border-white/10"
-        style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}
+        className="relative z-10 shrink-0 px-4 pt-4 bg-slate-900/90 backdrop-blur-xl border-t border-white/10"
+        style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
       >
         <div className="max-w-2xl mx-auto">
           {currentStep.quiz && stepFeedback.status !== 'success' ? (
             <button
               onClick={handleCheckQuiz}
               disabled={selectedOption === null}
-              className={`trail-focus w-full py-3.5 rounded-2xl font-black text-base flex items-center justify-center gap-2 transition active:scale-95 ${
+              className={`trail-focus w-full py-4 rounded-2xl font-black text-[17px] flex items-center justify-center gap-2 transition active:scale-95 ${
                 selectedOption === null
                   ? 'bg-white/10 text-white/30 cursor-not-allowed border border-white/10'
                   : 'bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-400 hover:to-blue-500 text-white shadow-xl'
@@ -472,7 +472,7 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
             <button
               onClick={handleCheckWordProblem}
               disabled={userWordProblemAnswer.trim() === ''}
-              className={`trail-focus w-full py-3.5 rounded-2xl font-black text-base flex items-center justify-center gap-2 transition active:scale-95 ${
+              className={`trail-focus w-full py-4 rounded-2xl font-black text-[17px] flex items-center justify-center gap-2 transition active:scale-95 ${
                 userWordProblemAnswer.trim() === ''
                   ? 'bg-white/10 text-white/30 cursor-not-allowed border border-white/10'
                   : 'bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-400 hover:to-blue-500 text-white shadow-xl'
@@ -483,7 +483,7 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
           ) : (
             <button
               onClick={handleNextStep}
-              className="trail-focus w-full py-3.5 rounded-2xl text-slate-900 font-black text-base bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-300 shadow-xl flex items-center justify-center gap-2 transition active:scale-95"
+              className="trail-focus w-full py-4 rounded-2xl text-slate-900 font-black text-[17px] bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-300 shadow-xl flex items-center justify-center gap-2 transition active:scale-95"
             >
               <span>{currentStepIndex === steps.length - 1 ? 'Concluir Missão! 🏆' : 'Avançar'}</span>
               <ArrowRight className="w-5 h-5" />

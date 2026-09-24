@@ -51,7 +51,7 @@ export const PixSimulator: React.FC<PixSimulatorProps> = ({
 
   return (
     <div className="flex justify-center w-full py-2">
-      <div className="w-[300px] h-[480px] bg-slate-900 rounded-[2.5rem] p-3 shadow-2xl relative overflow-hidden border-8 border-slate-800 flex flex-col">
+      <div className="w-[320px] sm:w-[380px] h-[520px] sm:h-[600px] bg-slate-900 rounded-[2.5rem] p-3 shadow-2xl relative overflow-hidden border-8 border-slate-800 flex flex-col">
         {/* Fake Phone Status Bar */}
         <div className="flex justify-between items-center text-slate-400 text-[10px] font-medium px-4 mb-2 shrink-0">
           <span>9:41</span>

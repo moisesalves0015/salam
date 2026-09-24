@@ -15,7 +15,7 @@ interface PlaceValue3DProps {
 const UnitCube: React.FC<{ position: [number, number, number] }> = ({ position }) => (
   <RigidBody position={position} colliders="cuboid" restitution={0.2} friction={0.5}>
     <Box args={[0.9, 0.9, 0.9]}>
-      <meshStandardMaterial color="#fbbf24" metalness={0.1} roughness={0.4} />
+      <meshStandardMaterial color="#F4C95D" metalness={0.1} roughness={0.4} />
     </Box>
   </RigidBody>
 );
@@ -23,12 +23,12 @@ const UnitCube: React.FC<{ position: [number, number, number] }> = ({ position }
 const TenRod: React.FC<{ position: [number, number, number] }> = ({ position }) => (
   <RigidBody position={position} colliders="cuboid" restitution={0.2} friction={0.5}>
     <Box args={[0.9, 9.8, 0.9]}>
-      <meshStandardMaterial color="#34d399" metalness={0.1} roughness={0.4} />
+      <meshStandardMaterial color="#D9A441" metalness={0.1} roughness={0.4} />
     </Box>
     {Array.from({ length: 10 }).map((_, i) => (
       <group key={i} position={[0, -4.5 + i, 0]}>
          <Box args={[0.92, 0.1, 0.92]}>
-            <meshBasicMaterial color="#059669" opacity={0.3} transparent />
+            <meshBasicMaterial color="#8C5A1D" opacity={0.3} transparent />
          </Box>
       </group>
     ))}
@@ -38,16 +38,16 @@ const TenRod: React.FC<{ position: [number, number, number] }> = ({ position }) 
 const HundredFlat: React.FC<{ position: [number, number, number] }> = ({ position }) => (
   <RigidBody position={position} colliders="cuboid" restitution={0.2} friction={0.5}>
     <Box args={[9.8, 9.8, 0.9]}>
-      <meshStandardMaterial color="#60a5fa" metalness={0.1} roughness={0.4} />
+      <meshStandardMaterial color="#C68A2B" metalness={0.1} roughness={0.4} />
     </Box>
     {/* Grid lines to make it look like 100 blocks */}
     {Array.from({ length: 10 }).map((_, i) => (
       <group key={`h-line-${i}`}>
          <Box position={[-4.5 + i, 0, 0]} args={[0.1, 9.8, 0.92]}>
-            <meshBasicMaterial color="#3b82f6" opacity={0.3} transparent />
+            <meshBasicMaterial color="#7C4A15" opacity={0.3} transparent />
          </Box>
          <Box position={[0, -4.5 + i, 0]} args={[9.8, 0.1, 0.92]}>
-            <meshBasicMaterial color="#3b82f6" opacity={0.3} transparent />
+            <meshBasicMaterial color="#7C4A15" opacity={0.3} transparent />
          </Box>
       </group>
     ))}
