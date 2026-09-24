@@ -126,6 +126,11 @@ export default function App() {
   const handleCompleteMission = (xpEarned: number, updatedAbility: string) => {
     setIsMissionPlayerOpen(false);
 
+    if (import.meta.env.VITE_ENABLE_MISSION_PREVIEW === 'true') {
+      console.log('Modo de revisão ativo: nenhum progresso foi salvo.');
+      return;
+    }
+
     // Update active student data
     setStudents(prev => prev.map(s => {
       if (s.id === selectedStudent.id) {

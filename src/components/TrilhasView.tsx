@@ -136,8 +136,16 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
   const [stageModal, setStageModal] = useState<TrailNode | null>(null);
   const [isOpen, setIsOpen] = useState(true);
 
+  // Modo de revisão
+  const isPreviewMode = import.meta.env.VITE_ENABLE_MISSION_PREVIEW === 'true';
+
   const currentDisc = DISCIPLINES.find(d => d.id === selectedDiscipline)!;
-  const allNodes = TRAIL_DATA[selectedDiscipline];
+  // Se for preview, força o status para 'ativo'
+  const rawNodes = TRAIL_DATA[selectedDiscipline];
+  const allNodes = useMemo(() => {
+    if (!isPreviewMode) return rawNodes;
+    return rawNodes.map(n => ({ ...n, status: 'ativo' as const }));
+  }, [rawNodes, isPreviewMode]);
 
   // Filtered nodes
   const filteredNodes = useMemo(() =>
@@ -193,7 +201,9 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
       id: unit.id,
       title: unit.title,
       sub: unit.shortDesc,
-      status: (idx === 0 ? 'concluido' : idx === 1 ? 'ativo' : 'bloqueado') as 'concluido' | 'ativo' | 'bloqueado',
+      status: isPreviewMode 
+        ? 'ativo' 
+        : (idx === 0 ? 'concluido' : idx === 1 ? 'ativo' : 'bloqueado') as 'concluido' | 'ativo' | 'bloqueado',
       xp: unit.xpReward || 50,
       coins: 30,
       modalidade: ['individual'],
@@ -244,6 +254,13 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
       onExit={() => setIsOpen(false)}
       triggerRef={triggerRef}
     >
+      {isPreviewMode && (
+        <div className="bg-amber-500/20 border border-amber-500/40 text-amber-300 px-4 py-2 text-xs font-bold rounded-xl mb-4 flex items-center justify-center gap-2">
+          <Sparkles className="w-4 h-4" />
+          Modo de Revisão Ativo: Todas as missões estão desbloqueadas para teste. Nenhum progresso será salvo.
+        </div>
+      )}
+
       {/* ── World Selector ───────────────────────────────────────────── */}
       <section aria-label="Selecionar mundo" className="-mx-3 sm:-mx-5">
         <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest mb-2 px-3 sm:px-5">
