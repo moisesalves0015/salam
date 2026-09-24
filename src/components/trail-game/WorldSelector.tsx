@@ -9,6 +9,7 @@ interface DisciplineData {
   completedCount: number;
   totalCount: number;
   isNew?: boolean;
+  image?: string;
 }
 
 interface WorldSelectorProps {
@@ -20,7 +21,7 @@ interface WorldSelectorProps {
 export const WorldSelector: React.FC<WorldSelectorProps> = ({ disciplines, selectedId, onChange }) => {
   return (
     <div role="radiogroup" aria-label="Mundos de aprendizagem" className="w-full">
-      <div className="flex gap-3 overflow-x-auto pb-3 pt-1 snap-x snap-mandatory scrollbar-none">
+      <div className="flex gap-1 sm:gap-2 overflow-x-auto py-6 snap-x snap-mandatory scrollbar-none">
         {disciplines.map((disc, index) => {
           const Icon = disc.icon;
           const isSelected = disc.id === selectedId;
@@ -37,15 +38,15 @@ export const WorldSelector: React.FC<WorldSelectorProps> = ({ disciplines, selec
               onClick={() => onChange(disc.id)}
               className={`
                 relative trail-focus snap-start shrink-0 transition-all duration-300 ease-out
-                w-[120px] sm:w-[150px] cursor-pointer
+                w-[140px] sm:w-[180px] cursor-pointer
                 ${index === 0 ? 'ml-3 sm:ml-5 scroll-ml-3 sm:scroll-ml-5' : ''}
                 ${index === disciplines.length - 1 ? 'mr-3 sm:mr-5 scroll-mr-3 sm:scroll-mr-5' : ''}
               `}
             >
               <div className={`
                 w-full transition-all duration-300
-                ${isSelected ? 'scale-110 drop-shadow-[0_10px_20px_rgba(255,255,255,0.2)] brightness-110 -translate-y-2' : 'scale-90 opacity-50 brightness-75 hover:scale-100 hover:opacity-90'}
-                active:scale-95
+                ${isSelected ? 'scale-110 drop-shadow-[0_10px_20px_rgba(255,255,255,0.4)] brightness-110 -translate-y-2' : 'scale-95 brightness-95 hover:scale-100 hover:brightness-100'}
+                active:scale-90
               `}>
                 {disc.image ? (
                   <img 
