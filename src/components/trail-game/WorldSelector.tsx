@@ -36,44 +36,36 @@ export const WorldSelector: React.FC<WorldSelectorProps> = ({ disciplines, selec
               aria-label={`${disc.label}. ${disc.completedCount} de ${disc.totalCount} fases concluídas. ${disc.bncc}`}
               onClick={() => onChange(disc.id)}
               className={`
-                trail-focus snap-start shrink-0 flex flex-col items-center gap-2 p-3 rounded-2xl border-2 transition-all
-                min-w-[100px] sm:min-w-[120px] cursor-pointer active:scale-95
+                relative trail-focus snap-start shrink-0 transition-all duration-300 ease-out
+                w-[120px] sm:w-[150px] cursor-pointer
                 ${index === 0 ? 'ml-3 sm:ml-5 scroll-ml-3 sm:scroll-ml-5' : ''}
                 ${index === disciplines.length - 1 ? 'mr-3 sm:mr-5 scroll-mr-3 sm:scroll-mr-5' : ''}
-                ${isSelected
-                  ? `bg-gradient-to-b ${disc.gradient} text-white border-white/40 shadow-xl scale-[1.04] ring-2 ring-white/50`
-                  : 'bg-slate-900/60 text-white/60 border-white/10 hover:border-white/25 hover:bg-slate-800/70 hover:text-white/80'
-                }
               `}
             >
-              {/* Icon */}
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-md ${isSelected ? 'bg-white/25' : 'bg-white/10'}`}>
-                <Icon className={`w-5 h-5 ${isSelected ? 'text-white' : 'text-white/60'}`} />
-              </div>
-
-              {/* Label */}
-              <div className="text-center leading-none">
-                <div className="flex items-center justify-center gap-1">
-                  <span className={`text-[11px] font-black leading-tight text-center ${isSelected ? 'text-white' : 'text-white/70'}`}>
-                    {disc.label}
-                  </span>
-                  {disc.isNew && (
-                    <span className="px-1.5 py-0.5 rounded-full bg-white/25 text-[8px] font-black text-white">
-                      NOVO
-                    </span>
-                  )}
-                </div>
-                {/* Mini progress */}
-                <div className="mt-1.5 w-full bg-white/20 rounded-full h-1 overflow-hidden">
-                  <div
-                    className="h-full bg-white/80 rounded-full transition-all duration-500"
-                    style={{ width: `${progressPct}%` }}
+              <div className={`
+                w-full transition-all duration-300
+                ${isSelected ? 'scale-110 drop-shadow-[0_10px_20px_rgba(255,255,255,0.2)] brightness-110 -translate-y-2' : 'scale-90 opacity-50 brightness-75 hover:scale-100 hover:opacity-90'}
+                active:scale-95
+              `}>
+                {disc.image ? (
+                  <img 
+                    src={disc.image} 
+                    alt={disc.label} 
+                    className="w-full h-auto object-contain pointer-events-none drop-shadow-xl" 
+                    draggable={false}
                   />
-                </div>
-                <span className={`text-[9px] font-bold mt-0.5 ${isSelected ? 'text-white/80' : 'text-white/40'}`}>
-                  {disc.totalCount > 0 ? `${disc.completedCount}/${disc.totalCount}` : '—'}
-                </span>
+                ) : (
+                  <div className="w-full aspect-square bg-white/10 rounded-2xl flex items-center justify-center">
+                    <Icon className="w-10 h-10 text-white/50" />
+                  </div>
+                )}
               </div>
+              
+              {disc.isNew && (
+                <span className={`absolute top-0 right-2 px-2 py-0.5 rounded-full bg-pink-500 text-[10px] font-black text-white shadow-lg z-10 transition-transform ${isSelected ? 'scale-110 -translate-y-2' : 'scale-100'}`}>
+                  NOVO
+                </span>
+              )}
             </button>
           );
         })}

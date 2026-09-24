@@ -30,6 +30,7 @@ const DISCIPLINES = [
     gradient: 'from-emerald-500 to-teal-600',
     bncc: 'EF05MA - Operações, geometria e resolução de problemas',
     isNew: false,
+    image: '/assets/trilhas/reino-matematica-3d-transparente.png',
   },
   {
     id: 'por' as Discipline,
@@ -38,6 +39,7 @@ const DISCIPLINES = [
     gradient: 'from-blue-500 to-indigo-600',
     bncc: 'EF05LP - Leitura, produção textual e oralidade',
     isNew: false,
+    image: '/assets/trilhas/jornada-lingua-3d-transparente.png',
   },
   {
     id: 'cie' as Discipline,
@@ -46,6 +48,7 @@ const DISCIPLINES = [
     gradient: 'from-amber-500 to-orange-600',
     bncc: 'EF05CI - Vida, ambiente, matéria e energia',
     isNew: false,
+    image: '/assets/trilhas/ilha-ciencias-3d-transparente.png',
   },
   {
     id: 'cul' as Discipline,
@@ -54,6 +57,7 @@ const DISCIPLINES = [
     gradient: 'from-purple-500 to-pink-600',
     bncc: 'Arte, Literatura, Música, Cidadania e Diversidade Cultural',
     isNew: true,
+    image: '/assets/trilhas/mundo-cultura-3d-transparente.png',
   },
   {
     id: 'fin' as Discipline,
@@ -62,6 +66,7 @@ const DISCIPLINES = [
     gradient: 'from-yellow-400 to-amber-500',
     bncc: 'Educação Financeira - Consumo consciente e planejamento',
     isNew: false,
+    image: '/assets/trilhas/educacao-financeira-3d-transparente.png',
   },
 ];
 
@@ -176,6 +181,7 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
       gradient: d.gradient,
       bncc: d.bncc,
       isNew: d.isNew,
+      image: d.image,
       completedCount: nodes.length > 0 ? nodes.filter(n => n.status === 'concluido').length : 0,
       totalCount: nodes.length,
     };
