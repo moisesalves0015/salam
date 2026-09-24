@@ -14,7 +14,7 @@ interface NotebookGridProps {
 // DND COMPONENTS
 // ----------------------------------------------------------------------
 
-const DraggableDigit: React.FC<{ digit: string }> = ({ digit }) => {
+const DraggableDigit: React.FC<{ digit: string; isSelected?: boolean; onClick?: () => void }> = ({ digit, isSelected, onClick }) => {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: `drag-${digit}`,
     data: { value: digit },
@@ -25,7 +25,10 @@ const DraggableDigit: React.FC<{ digit: string }> = ({ digit }) => {
       ref={setNodeRef}
       {...listeners}
       {...attributes}
-      className={`w-12 h-12 flex items-center justify-center bg-white border-2 border-indigo-200 rounded-xl shadow-sm text-2xl font-bold font-mono text-indigo-700 cursor-grab active:cursor-grabbing hover:bg-indigo-50 hover:scale-110 transition-all ${isDragging ? 'opacity-50 scale-90' : ''}`}
+      onClick={onClick}
+      className={`w-12 h-12 flex items-center justify-center bg-white border-2 rounded-xl shadow-sm text-2xl font-bold font-mono cursor-grab active:cursor-grabbing transition-all 
+      ${isSelected ? 'border-emerald-400 ring-4 ring-emerald-200 scale-110 text-emerald-600' : 'border-indigo-200 text-indigo-700 hover:bg-indigo-50 hover:scale-110'}
+      ${isDragging ? 'opacity-50 scale-90' : ''}`}
     >
       {digit}
     </div>
@@ -45,7 +48,8 @@ const DroppableCell = ({
   placeholder?: string, 
   isCarry?: boolean, 
   isFocus?: boolean,
-  onRemove: () => void 
+  onRemove: () => void,
+  onDropClick?: () => void
 }) => {
   const { isOver, setNodeRef } = useDroppable({ id });
 
@@ -71,7 +75,7 @@ const DroppableCell = ({
   }
 
   return (
-    <div ref={setNodeRef} className={baseStyle}>
+    <div ref={setNodeRef} className={baseStyle} onClick={!value && onDropClick ? onDropClick : undefined}>
       {value ? (
         <div className="group w-full h-full flex items-center justify-center cursor-pointer" onClick={onRemove}>
           <span>{value}</span>
@@ -100,6 +104,7 @@ export const NotebookGrid: React.FC<NotebookGridProps> = ({
   const [userInputDigits, setUserInputDigits] = useState<{ [column: string]: string }>({});
   const [userCarries, setUserCarries] = useState<{ [column: string]: string }>({});
   const [activeDragDigit, setActiveDragDigit] = useState<string | null>(null);
+  const [selectedDigit, setSelectedDigit] = useState<string | null>(null);
   
   const [feedback, setFeedback] = useState<{ type: 'neutral' | 'success' | 'error'; message: string }>({
     type: 'neutral',
@@ -118,6 +123,17 @@ export const NotebookGrid: React.FC<NotebookGridProps> = ({
 
   const handleDragStart = (e: any) => {
     setActiveDragDigit(e.active.data.current?.value);
+  };
+
+  
+  const handleCellClick = (type: 'carry' | 'result', col: string) => {
+    if (!interactive || completed || !selectedDigit) return;
+    if (type === 'carry') {
+      setUserCarries(prev => ({ ...prev, [col]: selectedDigit }));
+    } else {
+      setUserInputDigits(prev => ({ ...prev, [col]: selectedDigit }));
+    }
+    setSelectedDigit(null);
   };
 
   const handleDragEnd = (e: DragEndEvent) => {
@@ -199,7 +215,11 @@ export const NotebookGrid: React.FC<NotebookGridProps> = ({
     <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <div className="flex flex-col items-center w-full max-w-xl mx-auto my-2 overflow-x-hidden">
         {/* Caderno Escolar Container */}
-        <div className="w-full bg-[#fcfcf9] rounded-2xl shadow-xl border-2 border-slate-200 overflow-hidden notebook-grid notebook-margin p-3 sm:p-6 mb-4">
+        <div className="w-full bg-[#fcfcf9] rounded-2xl shadow-xl border-2 border-slate-200 overflow-hidden p-3 sm:p-6 mb-4 relative"
+          style={{
+            backgroundImage: 'repeating-linear-gradient(transparent, transparent 31px, #e0f2fe 31px, #e0f2fe 32px)',
+            backgroundPosition: '0 10px'
+          }}>
           
           <div className="flex items-center justify-between border-b border-sky-200/60 pb-2 mb-4 pl-3 sm:pl-6">
             <div className="flex items-center gap-1.5 sm:gap-2">
@@ -216,6 +236,7 @@ export const NotebookGrid: React.FC<NotebookGridProps> = ({
           </div>
 
           {/* Vertical Grid */}
+          <div className="absolute top-0 bottom-0 left-8 sm:left-12 w-0.5 bg-rose-200 opacity-70 pointer-events-none" />
           <div className="pl-3 sm:pl-6 flex flex-col items-center w-full">
             <div className="grid grid-cols-5 gap-1 sm:gap-2 w-full max-w-md text-center mb-1.5">
               <div className="text-[10px] sm:text-xs font-bold text-slate-400 self-center">Ordem</div>
@@ -252,6 +273,7 @@ export const NotebookGrid: React.FC<NotebookGridProps> = ({
                         isCarry 
                         isFocus={expected !== undefined && isCarryActive}
                         onRemove={() => handleRemoveItem('carry', col)}
+                        onDropClick={() => handleCellClick('carry', col)}
                       />
                     ) : (
                       expected ? (
@@ -311,6 +333,7 @@ export const NotebookGrid: React.FC<NotebookGridProps> = ({
                         isFocus={isFocus}
                         placeholder={isFocus ? '?' : ''}
                         onRemove={() => handleRemoveItem('result', col)}
+                        onDropClick={() => handleCellClick('result', col)}
                       />
                     </div>
                   );
@@ -356,7 +379,12 @@ export const NotebookGrid: React.FC<NotebookGridProps> = ({
         {interactive && !completed && (
           <div className="w-full bg-white/80 p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 flex flex-wrap justify-center gap-3">
             {['0','1','2','3','4','5','6','7','8','9'].map(d => (
-              <DraggableDigit key={d} digit={d} />
+              <DraggableDigit 
+                key={d} 
+                digit={d} 
+                isSelected={selectedDigit === d}
+                onClick={() => setSelectedDigit(selectedDigit === d ? null : d)}
+              />
             ))}
           </div>
         )}

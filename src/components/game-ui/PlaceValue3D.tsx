@@ -158,14 +158,39 @@ export const PlaceValue3D: React.FC<PlaceValue3DProps> = ({
           {isFusing && <Sparkles count={100} scale={10} size={5} speed={2} opacity={0.8} color="#fbbf24" />}
 
           <Physics>
+            {/* Floor */}
             <RigidBody type="fixed" position={[0, -0.5, 0]}>
               <Box args={[30, 1, 30]} receiveShadow>
                 <meshStandardMaterial color="#1e293b" />
               </Box>
             </RigidBody>
 
+            {/* Back Wall */}
             <RigidBody type="fixed" position={[0, 5, -5]}>
-              <Box args={[30, 10, 1]} />
+              <Box args={[30, 20, 1]}>
+                <meshBasicMaterial transparent opacity={0} />
+              </Box>
+            </RigidBody>
+            
+            {/* Front Wall */}
+            <RigidBody type="fixed" position={[0, 5, 10]}>
+              <Box args={[30, 20, 1]}>
+                <meshBasicMaterial transparent opacity={0} />
+              </Box>
+            </RigidBody>
+
+            {/* Left Wall */}
+            <RigidBody type="fixed" position={[-10, 5, 0]}>
+              <Box args={[1, 20, 30]}>
+                <meshBasicMaterial transparent opacity={0} />
+              </Box>
+            </RigidBody>
+            
+            {/* Right Wall */}
+            <RigidBody type="fixed" position={[10, 5, 0]}>
+              <Box args={[1, 20, 30]}>
+                <meshBasicMaterial transparent opacity={0} />
+              </Box>
             </RigidBody>
 
             <Suspense fallback={null}>

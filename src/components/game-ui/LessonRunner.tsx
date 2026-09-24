@@ -451,7 +451,10 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
       </div>
 
       {/* ── BOTTOM ACTION BAR ─────────────────────────────────── */}
-      <div className="relative z-10 shrink-0 px-4 py-3 bg-slate-900/90 backdrop-blur-xl border-t border-white/10">
+      <div 
+        className="relative z-10 shrink-0 px-4 pt-3 bg-slate-900/90 backdrop-blur-xl border-t border-white/10"
+        style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}
+      >
         <div className="max-w-2xl mx-auto">
           {currentStep.quiz && stepFeedback.status !== 'success' ? (
             <button

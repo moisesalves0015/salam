@@ -263,7 +263,10 @@ export const MissionPlayerModal: React.FC<MissionPlayerModalProps> = ({
           </div>
 
           {/* Footer */}
-          <div className="px-5 py-4 bg-slate-900/80 border-t border-white/10 flex items-center justify-between gap-3">
+          <div 
+            className="px-5 pt-4 bg-slate-900/80 border-t border-white/10 flex items-center justify-between gap-3"
+            style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
+          >
             <button
               onClick={handlePrevStep}
               disabled={currentStepIndex === 0}

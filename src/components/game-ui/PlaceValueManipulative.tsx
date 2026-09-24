@@ -103,7 +103,8 @@ export const PlaceValueManipulative: React.FC<PlaceValueProps> = ({
               Array.from({ length: blocks.thousands }).map((_, i) => (
                 <div
                   key={i}
-                  className="w-10 h-10 bg-indigo-500 rounded border-2 border-indigo-700 shadow flex items-center justify-center text-white text-xs font-bold font-mono"
+                  className="w-10 h-10 bg-amber-500 rounded border-t-4 border-l-4 border-t-amber-300 border-l-amber-300 border-b-4 border-r-4 border-b-amber-700 border-r-amber-700 shadow-md flex items-center justify-center text-amber-950 text-[10px] font-bold font-mono"
+                  title="1 cubão = 1.000"
                 >
                   1k
                 </div>
@@ -128,9 +129,12 @@ export const PlaceValueManipulative: React.FC<PlaceValueProps> = ({
               Array.from({ length: Math.min(blocks.hundreds, 9) }).map((_, i) => (
                 <div
                   key={i}
-                  className="w-8 h-8 bg-amber-400 rounded border border-amber-600 shadow-sm flex items-center justify-center text-[10px] font-bold text-amber-900"
+                  className="relative w-8 h-8 bg-amber-400 border-t-2 border-l-2 border-t-amber-200 border-l-amber-200 border-b-2 border-r-2 border-b-amber-600 border-r-amber-600 shadow-sm flex items-center justify-center text-[8px] font-bold text-amber-900 overflow-hidden"
+                  title="1 placa = 100"
                 >
-                  100
+                  {/* Grid lines inside */}
+                  <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'linear-gradient(to right, #000 1px, transparent 1px), linear-gradient(to bottom, #000 1px, transparent 1px)', backgroundSize: '25% 25%' }}></div>
+                  <span className="relative z-10 bg-amber-400/80 px-1 rounded-sm backdrop-blur-sm">100</span>
                 </div>
               ))
             )}
@@ -161,9 +165,11 @@ export const PlaceValueManipulative: React.FC<PlaceValueProps> = ({
               Array.from({ length: Math.min(blocks.tens, 9) }).map((_, i) => (
                 <div
                   key={i}
-                  className="w-2.5 h-10 bg-amber-500 rounded-sm border border-amber-700 shadow-xs"
+                  className="relative w-2.5 h-10 bg-amber-400 border-t-2 border-l border-t-amber-200 border-l-amber-200 border-b-2 border-r border-b-amber-600 border-r-amber-600 shadow-sm overflow-hidden"
                   title="1 barra = 10"
-                />
+                >
+                  <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'linear-gradient(to bottom, #000 1px, transparent 1px)', backgroundSize: '100% 10%' }}></div>
+                </div>
               ))
             )}
           </div>
@@ -193,7 +199,7 @@ export const PlaceValueManipulative: React.FC<PlaceValueProps> = ({
               Array.from({ length: Math.min(blocks.units, 9) }).map((_, i) => (
                 <div
                   key={i}
-                  className="w-3 h-3 bg-amber-400 rounded-xs border border-amber-600 shadow-xs"
+                  className="w-3 h-3 bg-amber-400 border-t-2 border-l-2 border-t-amber-200 border-l-amber-200 border-b-2 border-r-2 border-b-amber-600 border-r-amber-600 shadow-sm"
                   title="1 cubinho = 1 unidade"
                 />
               ))
