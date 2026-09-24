@@ -94,7 +94,7 @@ export const TrailGameShell: React.FC<TrailGameShellProps> = ({
       <div className="trail-scrim absolute inset-0 z-[1]" aria-hidden="true" />
 
       {/* HUD — sticky top */}
-      <div className="relative z-[10]">
+      <div className="relative z-[10] safe-pt">
         <TrailHud
           student={student}
           worldLabel={worldLabel}
@@ -115,7 +115,7 @@ export const TrailGameShell: React.FC<TrailGameShellProps> = ({
         className="relative z-[5] flex-1 overflow-y-auto overflow-x-hidden"
         style={{ WebkitOverflowScrolling: 'touch' }}
       >
-        <div className="max-w-3xl mx-auto px-3 sm:px-5 py-4 pb-16 space-y-4">
+        <div className="max-w-3xl mx-auto px-3 sm:px-5 py-4 pb-16 safe-pb space-y-4">
           {children}
         </div>
       </div>

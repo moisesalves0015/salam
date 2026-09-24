@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { ProfessorDashboard } from './components/ProfessorDashboard';
@@ -41,8 +41,8 @@ type AppScreen = 'landing' | 'login' | 'app';
 
 export default function App() {
   // Screen / Navigation
-  const [currentScreen, setCurrentScreen] = useState<AppScreen>('landing');
-  const [loginDefaultRole, setLoginDefaultRole] = useState<'aluno' | 'professor' | 'coordenacao' | undefined>(undefined);
+  const [currentScreen, setCurrentScreen] = useState<AppScreen>('login');
+  const [loginDefaultRole, setLoginDefaultRole] = useState<'aluno' | 'professor' | 'coordenacao' | undefined>('aluno');
 
   // Global States
   const [currentRole, setCurrentRole] = useState<UserRole>('professor');
@@ -55,6 +55,19 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isTvModeOpen, setIsTvModeOpen] = useState<boolean>(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   // Landing / Login Handlers
   const handleEnterAsStudent = () => {
@@ -317,8 +330,14 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_center,#ffffff_0%,#e0e7ff_100%)] text-slate-800 flex flex-col font-sans selection:bg-[#123cc4] selection:text-white relative">
+    <div className="app-shell min-h-screen bg-[radial-gradient(circle_at_center,#ffffff_0%,#e0e7ff_100%)] text-slate-800 flex flex-col font-sans selection:bg-[#123cc4] selection:text-white relative">
       
+      {isOffline && (
+        <div className="bg-amber-500 text-white text-xs font-bold text-center py-2 px-4 safe-pt z-[9999] shadow-md flex items-center justify-center gap-2">
+          <span>⚠️</span> Você está offline. Reconecte para salvar seu progresso.
+        </div>
+      )}
+
       {/* Dev Assistant (Floating Developer Tools) */}
       <DevAssistant
         currentRole={currentRole}

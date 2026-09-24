@@ -223,7 +223,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           />
 
           {/* Drawer Container */}
-          <div className="fixed inset-y-0 left-0 w-[85%] max-w-sm bg-white/95 backdrop-blur-xl border-r border-white/90 p-4 shadow-xl overflow-y-auto flex flex-col justify-between animate-in slide-in-from-left duration-300">
+          <div className="fixed inset-y-0 left-0 w-[85%] max-w-sm bg-white/95 backdrop-blur-xl border-r border-white/90 p-4 shadow-xl overflow-y-auto flex flex-col justify-between animate-in slide-in-from-left duration-300 safe-pt safe-pb">
             {sidebarContent}
           </div>
         </div>

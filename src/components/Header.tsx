@@ -29,7 +29,7 @@ export const Header: React.FC<HeaderProps> = ({
   const [selectedClass, setSelectedClass] = useState('Turma 5º ano A');
 
   return (
-    <header className="sticky top-2 sm:top-4 z-40 mx-2 sm:mx-4 lg:mx-8 bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl px-3 sm:px-5 py-2.5 flex items-center justify-between gap-2 sm:gap-4 transition-all shadow-md">
+    <header className="sticky top-2 sm:top-4 z-40 mx-2 sm:mx-4 lg:mx-8 bg-white/85 backdrop-blur-xl border border-white/90 rounded-3xl px-3 sm:px-5 py-2.5 flex items-center justify-between gap-2 sm:gap-4 transition-all shadow-md safe-mt">
       {/* Left: Mobile Hamburger & Brand Logo */}
       <div className="flex items-center gap-2.5 sm:gap-4 lg:gap-6 shrink-0">
         {/* Hamburger Menu Toggle Button */}
