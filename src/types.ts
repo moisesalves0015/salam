@@ -140,14 +140,7 @@ export interface Student {
     ciencias: number;
   };
   abilities: AbilityDetail[];
-  currentMission: {
-    id: string;
-    title: string;
-    primaryAbility: string;
-    difficulty: 'Fácil' | 'Média' | 'Difícil';
-    status: 'Em andamento' | 'Concluída' | 'Disponível' | 'Bloqueada';
-    progress: number;
-  };
+  currentMission: Mission;
   cards: CardItem[];
   achievements: AchievementItem[];
   interventions: InterventionRecord[];
