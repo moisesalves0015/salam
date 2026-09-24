@@ -50,9 +50,15 @@ export const TrailGameShell: React.FC<TrailGameShellProps> = ({
     return () => document.removeEventListener('keydown', handleKey);
   }, [handleExit]);
 
-  // Add class to body for chrome hiding CSS
+  // Add class to body for chrome hiding CSS and update theme-color
   useEffect(() => {
     document.documentElement.classList.add('trail-game-active');
+    
+    // Update theme-color to match HUD
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    const originalTheme = metaTheme?.getAttribute('content');
+    metaTheme?.setAttribute('content', '#020617');
+
     if (motionReduced) {
       document.documentElement.classList.add('motion-reduced');
     } else {
@@ -60,6 +66,9 @@ export const TrailGameShell: React.FC<TrailGameShellProps> = ({
     }
     return () => {
       document.documentElement.classList.remove('trail-game-active');
+      if (originalTheme) {
+        metaTheme?.setAttribute('content', originalTheme);
+      }
     };
   }, [motionReduced]);
 
