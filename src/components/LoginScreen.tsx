@@ -198,7 +198,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                 placeholder="Pesquisar seu nome..."
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                className="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 transition-all shadow-sm"
+                className="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 text-[16px] text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 transition-all shadow-sm"
                 autoFocus
               />
             </div>
