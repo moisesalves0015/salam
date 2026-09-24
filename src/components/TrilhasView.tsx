@@ -239,8 +239,8 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
       triggerRef={triggerRef}
     >
       {/* ── World Selector ───────────────────────────────────────────── */}
-      <section aria-label="Selecionar mundo">
-        <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest mb-2 ml-1">
+      <section aria-label="Selecionar mundo" className="-mx-3 sm:-mx-5">
+        <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest mb-2 px-3 sm:px-5">
           Mundos de Aprendizagem
         </p>
         <WorldSelector

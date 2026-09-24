@@ -38,8 +38,8 @@ export const WorldSelector: React.FC<WorldSelectorProps> = ({ disciplines, selec
               className={`
                 trail-focus snap-start shrink-0 flex flex-col items-center gap-2 p-3 rounded-2xl border-2 transition-all
                 min-w-[100px] sm:min-w-[120px] cursor-pointer active:scale-95
-                ${index === 0 ? 'ml-4 sm:ml-6' : ''}
-                ${index === disciplines.length - 1 ? 'mr-4 sm:mr-6' : ''}
+                ${index === 0 ? 'ml-3 sm:ml-5 scroll-ml-3 sm:scroll-ml-5' : ''}
+                ${index === disciplines.length - 1 ? 'mr-3 sm:mr-5 scroll-mr-3 sm:scroll-mr-5' : ''}
                 ${isSelected
                   ? `bg-gradient-to-b ${disc.gradient} text-white border-white/40 shadow-xl scale-[1.04] ring-2 ring-white/50`
                   : 'bg-slate-900/60 text-white/60 border-white/10 hover:border-white/25 hover:bg-slate-800/70 hover:text-white/80'
