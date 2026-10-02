@@ -91,7 +91,7 @@ const MATH_NODES: TrailNode[] = [
   { id: 'mat-03', title: 'A Unidade de Milhar', sub: 'Retirar, comparar e achar a diferença', status: 'concluido', xp: 60, coins: 30, modalidade: ['individual', 'dupla', 'impresso'], habilidades: ['Subtração com e sem reagrupamento', 'Ideia de diferença'], criterioAvanco: 'Resolver subtrações identificando a ideia adequada' },
   { id: 'mat-04', title: 'Compondo e Decompondo', sub: 'Agrupamentos e parcelas iguais', status: 'concluido', xp: 70, coins: 35, modalidade: ['individual', 'grupo', 'impresso'], habilidades: ['Multiplicação por agrupamento', 'Tabuada'], criterioAvanco: 'Multiplicar usando estratégias variadas com autonomia' },
   { id: 'mat-05', title: 'O Desafio da Divisão', sub: 'Grupos iguais e repartição (Missão Atual)', status: 'ativo', xp: 75, coins: 40, modalidade: ['individual', 'dupla', 'grupo', 'impresso'], habilidades: ['Divisão por agrupamento', 'Repartição equitativa', 'Relação divisão-multiplicação'], criterioAvanco: 'Resolver divisões compreendendo o processo de repartição' },
-  { id: 'mat-06', title: 'Situações-Problema', sub: 'Aplicação das 4 operações no cotidiano', status: 'bloqueado', xp: 100, coins: 50, modalidade: ['individual', 'grupo', 'impresso'], habilidades: ['Interpretação de problemas', 'Escolha da operação adequada', 'Resolução de problemas complexos'], criterioAvanco: 'Resolver problemas com múltiplas etapas identificando as operações corretas' },
+  { id: 'mat-06', title: 'Situações-Problema', sub: 'Aplicação das 4 operações no cotidiano', status: 'ativo', xp: 100, coins: 50, modalidade: ['individual', 'grupo', 'impresso'], habilidades: ['Interpretação de problemas', 'Escolha da operação adequada', 'Resolução de problemas complexos'], criterioAvanco: 'Resolver problemas com múltiplas etapas identificando as operações corretas' },
 ];
 
 const PORTUGUESE_NODES: TrailNode[] = [
@@ -99,21 +99,21 @@ const PORTUGUESE_NODES: TrailNode[] = [
   { id: 'por-02', title: 'Construção de Frases', sub: 'Sintaxe e pontuação básica', status: 'concluido', xp: 55, coins: 28, modalidade: ['individual', 'dupla', 'impresso'], habilidades: ['Estrutura de frases', 'Uso de pontuação'], criterioAvanco: 'Construir frases coerentes com pontuação adequada' },
   { id: 'por-03', title: 'Compreensão Textual', sub: 'Localizar informações explícitas', status: 'concluido', xp: 60, coins: 30, modalidade: ['individual', 'impresso'], habilidades: ['Localização de informações', 'Pistas textuais explícitas'], criterioAvanco: 'Localizar com precisão informações explícitas em textos variados' },
   { id: 'por-04', title: 'A Ideia Principal', sub: 'Inferências e mensagem central (Missão Atual)', status: 'ativo', xp: 70, coins: 35, modalidade: ['individual', 'dupla', 'impresso'], habilidades: ['Inferência textual', 'Identificar ideia central', 'Uso de conhecimento de mundo'], criterioAvanco: 'Realizar inferências apoiadas em evidências do texto com autonomia' },
-  { id: 'por-05', title: 'Produção Textual', sub: 'Organização de parágrafos e coerência', status: 'bloqueado', xp: 80, coins: 40, modalidade: ['individual', 'grupo', 'impresso'], habilidades: ['Produção de textos coerentes', 'Organização textual', 'Revisão e reescrita'], criterioAvanco: 'Produzir texto com início, meio e fim organizado e coerente' },
-  { id: 'por-06', title: 'Desafio da Escrita Criativa', sub: 'Contos, crônicas e apresentações', status: 'bloqueado', xp: 100, coins: 50, modalidade: ['grupo', 'dupla', 'impresso'], habilidades: ['Criação literária', 'Narração', 'Expressão pessoal'], criterioAvanco: 'Criar um texto de gênero definido demonstrando autoria' },
+  { id: 'por-05', title: 'Produção Textual', sub: 'Organização de parágrafos e coerência', status: 'ativo', xp: 80, coins: 40, modalidade: ['individual', 'grupo', 'impresso'], habilidades: ['Produção de textos coerentes', 'Organização textual', 'Revisão e reescrita'], criterioAvanco: 'Produzir texto com início, meio e fim organizado e coerente' },
+  { id: 'por-06', title: 'Desafio da Escrita Criativa', sub: 'Contos, crônicas e apresentações', status: 'ativo', xp: 100, coins: 50, modalidade: ['grupo', 'dupla', 'impresso'], habilidades: ['Criação literária', 'Narração', 'Expressão pessoal'], criterioAvanco: 'Criar um texto de gênero definido demonstrando autoria' },
 ];
 
 const SCIENCE_NODES: TrailNode[] = [
   { id: 'cie-01', title: 'Ilha da Observação', sub: 'Seres vivos e seus ambientes', status: 'concluido', xp: 50, coins: 25, modalidade: ['individual', 'grupo', 'impresso'], habilidades: ['Classificação de seres vivos', 'Observação científica'], criterioAvanco: 'Classificar seres vivos a partir das características observadas' },
   { id: 'cie-02', title: 'Ciclos da Água e Solo', sub: 'Transformações e ecossistemas (Missão Atual)', status: 'ativo', xp: 60, coins: 30, modalidade: ['individual', 'grupo', 'impresso'], habilidades: ['Ciclo da água', 'Preservação ambiental', 'Ecossistemas'], criterioAvanco: 'Explicar o ciclo da água e sua importância para a vida' },
-  { id: 'cie-03', title: 'Laboratório do Explorador', sub: 'Experimentos práticos e hipóteses', status: 'bloqueado', xp: 80, coins: 40, modalidade: ['grupo', 'impresso'], habilidades: ['Método científico', 'Formulação de hipóteses', 'Experimentação'], criterioAvanco: 'Planejar e executar experimento simples seguindo etapas científicas' },
+  { id: 'cie-03', title: 'Laboratório do Explorador', sub: 'Experimentos práticos e hipóteses', status: 'ativo', xp: 80, coins: 40, modalidade: ['grupo', 'impresso'], habilidades: ['Método científico', 'Formulação de hipóteses', 'Experimentação'], criterioAvanco: 'Planejar e executar experimento simples seguindo etapas científicas' },
 ];
 
 const CULTURE_NODES: TrailNode[] = [
   { id: 'cul-01', title: 'Vozes do Brasil', sub: 'Literatura e diversidade cultural', status: 'ativo', xp: 55, coins: 30, modalidade: ['individual', 'grupo', 'impresso'], habilidades: ['Apreciação literária', 'Identidade cultural', 'Leitura de textos literários'], criterioAvanco: 'Identificar elementos culturais em textos literários e relacionar com identidade', cultural: '🎭 Literatura, Diversidade e Memória Cultural' },
   { id: 'cul-02', title: 'Ritmos do Brasil', sub: 'Música, expressão e identidade regional', status: 'ativo', xp: 50, coins: 25, modalidade: ['individual', 'grupo'], habilidades: ['Apreciação musical', 'Diversidade regional', 'Expressão artística'], criterioAvanco: 'Reconhecer ritmos musicais brasileiros e suas origens culturais', cultural: '🎵 Música, Ritmo e Expressão Cultural' },
   { id: 'cul-03', title: 'Cidadãos do Mundo', sub: 'Direitos, responsabilidades e cidadania ativa', status: 'ativo', xp: 70, coins: 35, modalidade: ['individual', 'grupo', 'impresso'], habilidades: ['Cidadania crítica', 'Direitos e responsabilidades', 'Pensamento argumentativo'], criterioAvanco: 'Identificar direitos e responsabilidades cidadãs e propor ações concretas', cultural: '🌍 Cidadania, Ética e Participação Social' },
-  { id: 'cul-04', title: 'Arte que Fala', sub: 'Artes visuais e patrimônio cultural', status: 'bloqueado', xp: 65, coins: 32, modalidade: ['grupo', 'impresso'], habilidades: ['Leitura de obras de arte', 'Patrimônio cultural', 'Expressão visual'], criterioAvanco: 'Analisar obras de arte identificando elementos visuais e contexto cultural', cultural: '🎨 Arte, Criação e Patrimônio' },
+  { id: 'cul-04', title: 'Arte que Fala', sub: 'Artes visuais e patrimônio cultural', status: 'ativo', xp: 65, coins: 32, modalidade: ['grupo', 'impresso'], habilidades: ['Leitura de obras de arte', 'Patrimônio cultural', 'Expressão visual'], criterioAvanco: 'Analisar obras de arte identificando elementos visuais e contexto cultural', cultural: '🎨 Arte, Criação e Patrimônio' },
 ];
 
 const TRAIL_DATA: Record<Discipline, TrailNode[]> = {
@@ -203,7 +203,7 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
       sub: unit.shortDesc,
       status: isPreviewMode 
         ? 'ativo' 
-        : (idx === 0 ? 'concluido' : idx === 1 ? 'ativo' : 'bloqueado') as 'concluido' | 'ativo' | 'bloqueado',
+        : (idx === 0 ? 'concluido' : 'ativo') as 'concluido' | 'ativo' | 'bloqueado',
       xp: unit.xpReward || 50,
       coins: 30,
       modalidade: ['individual'],
@@ -262,49 +262,57 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
       )}
 
       {/* ── World Selector ───────────────────────────────────────────── */}
-      <section aria-label="Selecionar mundo" className="-mx-3 sm:-mx-5">
-        <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest mb-2 px-3 sm:px-5">
+      <section aria-label="Selecionar mundo" className="-mx-3 sm:-mx-10 md:-mx-20">
+        <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest mb-2 px-3 sm:px-10 md:px-20">
           Mundos de Aprendizagem
         </p>
-        <WorldSelector
-          disciplines={worldData}
-          selectedId={selectedDiscipline}
-          onChange={(id) => {
-            setSelectedDiscipline(id as Discipline);
-            setActiveModalFilter('all');
-          }}
-        />
+        <div className="px-0 sm:px-6 md:px-16">
+          <WorldSelector
+            disciplines={worldData}
+            selectedId={selectedDiscipline}
+            onChange={(id) => {
+              setSelectedDiscipline(id as Discipline);
+              setActiveModalFilter('all');
+            }}
+          />
+        </div>
       </section>
 
-      {/* ── Trail Progress Card ───────────────────────────────────────── */}
-      <TrailProgressCard
-        worldLabel={currentDisc.label}
-        worldIcon={currentDisc.icon}
-        worldGradient={currentDisc.gradient}
-        bncc={currentDisc.bncc}
-        completedCount={completedCount}
-        totalCount={allNodes.length > 0 ? allNodes.length : totalForHud}
-        progressPercent={progressForHud}
-        nextMissionTitle={nextNode?.title}
-        onContinue={nextNode ? handleContinueJourney : undefined}
-        trackTitle={currentTrackTitle}
-        trackDescription={currentTrackDesc}
-      />
-
-      {/* ── Filter Bar ───────────────────────────────────────────────── */}
-      {allNodes.length > 0 && (
-        <div className="bg-slate-900/60 backdrop-blur-sm border border-white/10 rounded-2xl px-4 py-3">
-          <TrailFilterBar
-            activeFilter={activeModalFilter}
-            onChange={setActiveModalFilter}
-            countByFilter={countByFilter}
+      {/* ── Progress Card & Filters ────────────────────────────────────── */}
+      <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-stretch gap-3">
+        {/* Progress Card (flex-1) */}
+        <div className="flex-1 min-w-0">
+          <TrailProgressCard
+            worldLabel={currentDisc.label}
+            worldIcon={currentDisc.icon}
+            worldGradient={currentDisc.gradient}
+            bncc={currentDisc.bncc}
+            completedCount={completedCount}
+            totalCount={allNodes.length > 0 ? allNodes.length : totalForHud}
+            progressPercent={progressForHud}
+            nextMissionTitle={nextNode?.title}
+            onContinue={nextNode ? handleContinueJourney : undefined}
+            trackTitle={currentTrackTitle}
+            trackDescription={currentTrackDesc}
           />
-          {filteredNodes.length === 0 && (
-            <p className="text-center text-xs text-white/40 mt-3 py-2">
-              Nenhuma missão encontrada para este filtro. Tente "Todos".
-            </p>
-          )}
         </div>
+
+        {/* Filter Bar (Dropdown) */}
+        {allNodes.length > 0 && (
+          <div className="shrink-0">
+            <TrailFilterBar
+              activeFilter={activeModalFilter}
+              onChange={setActiveModalFilter}
+              countByFilter={countByFilter}
+            />
+          </div>
+        )}
+      </div>
+
+      {filteredNodes.length === 0 && (
+        <p className="text-center text-xs text-white/40 mt-3 py-2">
+          Nenhuma missão encontrada para este filtro. Tente "Todos".
+        </p>
       )}
 
       {/* ── Track Maps ───────────────────────────────────────────────── */}

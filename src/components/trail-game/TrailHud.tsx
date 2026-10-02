@@ -78,24 +78,27 @@ export const TrailHud: React.FC<TrailHudProps> = ({
         <div className="flex-1 min-w-0 flex flex-col gap-0.5">
           {/* Counts */}
           <div className="flex items-center justify-between mb-0.5">
-            <span className="text-[10px] text-white/60 font-medium truncate">
-              <span className="text-white font-bold">{completedCount}</span> de {totalCount} fases
+            <span className="text-[10px] text-white/80 font-bold truncate">
+              Nível {student?.level || 1}
               {nextMissionTitle && (
-                <span className="hidden sm:inline text-white/50"> · Próxima: <span className="text-yellow-300">{nextMissionTitle}</span></span>
+                <span className="hidden sm:inline text-white/50 font-medium"> · Missão: <span className="text-yellow-300">{nextMissionTitle}</span></span>
               )}
             </span>
-            <span className="text-[10px] text-white font-black ml-2">{progressPercent}%</span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-[9px] text-white/50 font-medium">{student?.currentXp || 0} / {student?.nextLevelXp || 100} XP</span>
+              <span className="text-[10px] text-white font-black">Nível {(student?.level || 1) + 1}</span>
+            </div>
           </div>
           {/* Progress bar */}
           <div className="h-1.5 bg-white/15 rounded-full overflow-hidden">
             <div
               className={`h-full bg-gradient-to-r from-yellow-400 to-emerald-400 rounded-full transition-all duration-700 ${motionReduced ? '' : 'transition-all duration-700'}`}
-              style={{ width: `${progressPercent}%` }}
+              style={{ width: `${Math.min(100, Math.max(0, ((student?.currentXp || 0) / (student?.nextLevelXp || 1)) * 100))}%` }}
               role="progressbar"
-              aria-valuenow={progressPercent}
+              aria-valuenow={student?.currentXp || 0}
               aria-valuemin={0}
-              aria-valuemax={100}
-              aria-label={`Progresso da trilha: ${progressPercent}%`}
+              aria-valuemax={student?.nextLevelXp || 100}
+              aria-label={`Progresso para o nível ${(student?.level || 1) + 1}`}
             />
           </div>
         </div>

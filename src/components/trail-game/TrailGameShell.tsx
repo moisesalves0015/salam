@@ -87,14 +87,25 @@ export const TrailGameShell: React.FC<TrailGameShellProps> = ({
       role="main"
       aria-label="Modo Trilheiro"
     >
-      {/* Background image layer */}
+      {/* Background image layer - Mobile */}
       <div
-        className="absolute inset-0 z-0"
+        className="absolute inset-0 z-0 md:hidden"
         aria-hidden="true"
         style={{
           backgroundImage: "url('/assets/trilhas/fundo-trilhas-vertical.png')",
           backgroundSize: 'cover',
           backgroundPosition: 'center top',
+          backgroundRepeat: 'no-repeat',
+        }}
+      />
+      {/* Background image layer - PC */}
+      <div
+        className="absolute inset-0 z-0 hidden md:block"
+        aria-hidden="true"
+        style={{
+          backgroundImage: "url('/assets/trilhas/fundo-trilhas-pc.jpg')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
         }}
       />
@@ -124,7 +135,7 @@ export const TrailGameShell: React.FC<TrailGameShellProps> = ({
         className="relative z-[5] flex-1 overflow-y-auto overflow-x-hidden"
         style={{ WebkitOverflowScrolling: 'touch' }}
       >
-        <div className="max-w-3xl mx-auto px-3 sm:px-5 py-4 pb-16 safe-pb space-y-4">
+        <div className="max-w-5xl mx-auto px-3 sm:px-5 py-4 pb-16 safe-pb space-y-4">
           {children}
         </div>
       </div>

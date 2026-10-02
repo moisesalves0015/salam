@@ -204,7 +204,8 @@ export type StepType =
   | 'independent_exercise'   // 6. Exercícios independentes
   | 'contextualized_problem' // 7. Problemas contextualizados
   | 'final_challenge'        // 8. Desafio final
-  | 'recovery_mission';      // 9. Revisão dos erros
+  | 'recovery_mission'       // 9. Revisão dos erros
+  | 'interactive_drag_drop'; // Interação de arrastar e soltar
 
 export interface MoneyChallengeData {
   targetAmount: number;
@@ -252,10 +253,19 @@ export interface ReadingPassage {
   glossary?: { word: string; meaning: string }[];
 }
 
+export interface DragAndDropMatch {
+  title: string;
+  instruction: string;
+  items: { id: string; content: string; type?: 'fraction' | 'decimal' | 'text' }[];
+  categories: { id: string; title: string; color?: string }[];
+  correctMapping: Record<string, string>; // itemId -> categoryId
+  successMessage: string;
+}
+
 export interface ConceptCard {
   title: string;
   subtitle?: string;
-  points: { label: string; text: string; iconEmoji?: string }[];
+  points: { label: string; text: string; iconName?: string; iconEmoji?: string }[];
 }
 
 export interface WrittenPrompt {
@@ -264,6 +274,12 @@ export interface WrittenPrompt {
   suggestedAnswer: string;
   guideline: string;
 }
+
+export interface MafsVisualization {
+  type: 'number-line' | 'grid-10' | 'grid-100';
+  value: number | number[];
+}
+
 
 export interface LessonStep {
   id: string;
@@ -281,6 +297,12 @@ export interface LessonStep {
 
   // Written prompt with lined notebook simulation
   writtenPrompt?: WrittenPrompt;
+
+  // Interação de Arrastar e Soltar
+  dragAndDrop?: DragAndDropMatch;
+
+  // Mafs Math Visualizations
+  mafsVisualization?: MafsVisualization;
 
   // Specific interactive payloads
   moneyExample?: MoneyChallengeData;

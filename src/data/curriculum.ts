@@ -5,7 +5,9 @@ import { track3 } from './tracks/track3';
 import { track4 } from './tracks/track4';
 import { track5 } from './tracks/track5';
 import { track6 } from './tracks/track6';
+import { trackMatDecimais } from './tracks/trackMatDecimais';
 import { trackPortugues } from './tracks/trackPortugues';
+import { trackPortuguesMural } from './tracks/trackPortuguesMural';
 import { trackCiencias } from './tracks/trackCiencias';
 import { trackHistoria } from './tracks/trackHistoria';
 import { trackGeografia } from './tracks/trackGeografia';
@@ -32,7 +34,7 @@ export const subjects: CurriculumSubject[] = [
     icon: 'Calculator',
     color: 'emerald',
     available: true,
-    totalTracks: 6
+    totalTracks: 7
   },
   {
     id: 'portugues',
@@ -41,7 +43,7 @@ export const subjects: CurriculumSubject[] = [
     icon: 'BookOpen',
     color: 'blue',
     available: true,
-    totalTracks: 1
+    totalTracks: 2
   },
   {
     id: 'ciencias',
@@ -96,12 +98,13 @@ export const mathTracks: Track[] = [
   track3,
   track4,
   track5,
-  track6
+  track6,
+  trackMatDecimais,
 ];
 
 export const subjectTracksMap: Record<SubjectId, Track[]> = {
   matematica: mathTracks,
-  portugues: [trackPortugues],
+  portugues: [trackPortugues, trackPortuguesMural],
   ciencias: [trackCiencias],
   historia: [trackHistoria],
   geografia: [trackGeografia],
@@ -112,6 +115,7 @@ export const subjectTracksMap: Record<SubjectId, Track[]> = {
 export const allTracks: Track[] = [
   ...mathTracks,
   trackPortugues,
+  trackPortuguesMural,
   trackCiencias,
   trackHistoria,
   trackGeografia,

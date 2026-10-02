@@ -4,6 +4,9 @@ import { NotebookGrid } from './NotebookGrid';
 import { PlaceValueManipulative } from './PlaceValueManipulative';
 import { MoneyManipulator } from './MoneyManipulator';
 import { VideoModal } from './VideoModal';
+import { MafsVisuals } from './MafsVisuals';
+import { DragDropGame } from './DragDropGame';
+import * as LucideIcons from 'lucide-react';
 import confetti from 'canvas-confetti';
 import {
   ArrowLeft, Sparkles, CheckCircle2, XCircle, Lightbulb,
@@ -293,15 +296,20 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
                 <p className="text-xs text-white/40 mb-3">{currentStep.conceptCard.subtitle}</p>
               )}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                {currentStep.conceptCard.points.map((pt, pti) => (
-                  <div key={pti} className="bg-white/8 p-3 rounded-xl border border-white/10">
-                    <div className="flex items-center gap-1.5 mb-1">
-                      <span className="text-base">{pt.iconEmoji || '✨'}</span>
-                      <strong className="text-xs sm:text-sm font-black text-white/90">{pt.label}</strong>
+                {currentStep.conceptCard.points.map((pt, pti) => {
+                  const IconComponent = pt.iconName ? (LucideIcons as any)[pt.iconName] : null;
+                  return (
+                    <div key={pti} className="bg-white/8 p-3 rounded-xl border border-white/10">
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <span className="text-base text-indigo-400">
+                          {IconComponent ? <IconComponent className="w-4 h-4" /> : (pt as any).iconEmoji || '✨'}
+                        </span>
+                        <strong className="text-xs sm:text-sm font-black text-white/90">{pt.label}</strong>
+                      </div>
+                      <p className="text-xs text-white/60 leading-relaxed whitespace-pre-line">{pt.text}</p>
                     </div>
-                    <p className="text-xs text-white/60 leading-relaxed">{pt.text}</p>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
@@ -339,6 +347,20 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
           {currentStep.moneyExample && (
             <div className="my-3">
               <MoneyManipulator data={currentStep.moneyExample} />
+            </div>
+          )}
+
+          {/* Mafs Visualizations */}
+          {currentStep.mafsVisualization && (
+            <div className="my-4">
+              <MafsVisuals data={currentStep.mafsVisualization} />
+            </div>
+          )}
+
+          {/* Drag and Drop Interactivity */}
+          {currentStep.dragAndDrop && (
+            <div className="my-4">
+              <DragDropGame data={currentStep.dragAndDrop} />
             </div>
           )}
 
