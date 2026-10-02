@@ -37,7 +37,7 @@ export const ProfessorDashboard: React.FC<ProfessorDashboardProps> = ({
   onOpenNewInterventionModal,
   onOpenResourceModal
 }) => {
-  const firstStudent = students[0] || {
+  const firstStudent = students[0] || ({
     id: 'aluno-joao',
     name: 'João Silva',
     avatar: '👦',
@@ -70,7 +70,7 @@ export const ProfessorDashboard: React.FC<ProfessorDashboardProps> = ({
       xpReward: 50,
       steps: []
     }
-  };
+  } as unknown as Student);
 
   const [selectedStudentForDetail, setSelectedStudentForDetail] = useState<Student>(
     students.find(s => s.id === 'aluno-joao') || firstStudent

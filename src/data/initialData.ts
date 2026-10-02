@@ -397,7 +397,7 @@ export const INITIAL_STUDENTS: Student[] = [
       difficulty: 'Média',
       status: 'Em andamento',
       progress: 60
-    },
+    } as any,
     cards: INITIAL_CARDS,
     achievements: INITIAL_ACHIEVEMENTS,
     interventions: [
@@ -519,7 +519,7 @@ export const INITIAL_STUDENTS: Student[] = [
       difficulty: 'Média',
       status: 'Em andamento',
       progress: 40
-    },
+    } as any,
     cards: INITIAL_CARDS.slice(0, 4),
     achievements: INITIAL_ACHIEVEMENTS.slice(0, 4),
     interventions: [
@@ -602,7 +602,7 @@ export const INITIAL_STUDENTS: Student[] = [
       difficulty: 'Difícil',
       status: 'Concluída',
       progress: 100
-    },
+    } as any,
     cards: INITIAL_CARDS,
     achievements: INITIAL_ACHIEVEMENTS,
     interventions: [
@@ -665,7 +665,7 @@ export const INITIAL_STUDENTS: Student[] = [
       difficulty: 'Média',
       status: 'Em andamento',
       progress: 75
-    },
+    } as any,
     cards: INITIAL_CARDS.slice(0, 5),
     achievements: INITIAL_ACHIEVEMENTS.slice(0, 5),
     interventions: [],
@@ -711,7 +711,7 @@ export const INITIAL_STUDENTS: Student[] = [
       difficulty: 'Fácil',
       status: 'Concluída',
       progress: 100
-    },
+    } as any,
     cards: INITIAL_CARDS.slice(0, 4),
     achievements: INITIAL_ACHIEVEMENTS.slice(0, 4),
     interventions: [],

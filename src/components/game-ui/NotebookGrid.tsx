@@ -41,7 +41,8 @@ const DroppableCell = ({
   placeholder, 
   isCarry, 
   isFocus,
-  onRemove
+  onRemove,
+  onDropClick
 }: { 
   id: string, 
   value: string, 

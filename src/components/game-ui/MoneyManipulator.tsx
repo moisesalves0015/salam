@@ -14,8 +14,6 @@ interface MoneyManipulatorProps {
 interface CurrencyItem {
   value: number;
   type: 'bill' | 'coin';
-  label: string;
-  colorClass: string;
 }
 
 const CURRENCIES: CurrencyItem[] = [

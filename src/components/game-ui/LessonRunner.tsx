@@ -4,8 +4,9 @@ import { NotebookGrid } from './NotebookGrid';
 import { PlaceValueManipulative } from './PlaceValueManipulative';
 import { MoneyManipulator } from './MoneyManipulator';
 import { VideoModal } from './VideoModal';
-import { MafsVisuals } from './MafsVisuals';
+import { MathVisuals } from './MathVisuals';
 import { DragDropGame } from './DragDropGame';
+import { ReadingPassageModal } from './ReadingPassageModal';
 import * as LucideIcons from 'lucide-react';
 import confetti from 'canvas-confetti';
 import {
@@ -32,6 +33,8 @@ const STEP_META: Record<LessonStep['type'], { label: string; emoji: string; colo
   contextualized_problem: { label: '7 · Problema Real',      emoji: '🌍', color: 'text-rose-300',     bg: 'bg-rose-500/15',     border: 'border-rose-400/30' },
   final_challenge:        { label: '8 · Desafio Final',      emoji: '🏆', color: 'text-purple-300',   bg: 'bg-purple-500/15',   border: 'border-purple-400/30' },
   recovery_mission:       { label: '9 · Revisão',            emoji: '🔄', color: 'text-orange-300',   bg: 'bg-orange-500/15',   border: 'border-orange-400/30' },
+  interactive_drag_drop:  { label: '10 · Prática Interativa',emoji: '👆', color: 'text-pink-300',     bg: 'bg-pink-500/15',     border: 'border-pink-400/30' },
+  dialogue:               { label: 'História',               emoji: '💬', color: 'text-slate-300',    bg: 'bg-slate-500/15',    border: 'border-slate-400/30' },
 };
 
 export const LessonRunner: React.FC<LessonRunnerProps> = ({
@@ -44,9 +47,13 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
   const [stepFeedback, setStepFeedback] = useState<{ status: 'idle' | 'success' | 'error'; message: string }>({ status: 'idle', message: '' });
   const [isCompleted, setIsCompleted] = useState(false);
   const [mistakesThisSession, setMistakesThisSession] = useState<string[]>([]);
+  const [isReadingModalOpen, setIsReadingModalOpen] = useState(false);
 
   const steps = unit.steps;
   const currentStep: LessonStep = steps[currentStepIndex];
+  
+  // Encontra o texto/receita mais recente para poder consultar
+  const lastReadingPassage = [...steps].slice(0, currentStepIndex + 1).reverse().find(s => s.readingPassage)?.readingPassage;
   const progressPercent = Math.round((currentStepIndex / steps.length) * 100);
   const stepMeta = STEP_META[currentStep?.type] ?? STEP_META['explanation'];
 
@@ -237,47 +244,114 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
             {currentStep.title}
           </h2>
 
-          {/* Mascot tip */}
+          {/* Character Dialogue Bubble */}
           {currentStep.mascotTip && (
-            <div className="flex items-start gap-3 bg-amber-500/10 border border-amber-400/25 p-4 rounded-2xl mb-4">
-              <div className="w-10 h-10 rounded-xl bg-amber-400/20 border border-amber-400/30 flex items-center justify-center text-xl shrink-0">🦉</div>
-              <div>
-                <span className="text-[10px] font-black text-amber-400/70 uppercase tracking-widest block mb-1">Dica do Teco</span>
-                <p className="text-sm text-amber-100/90 font-medium leading-relaxed">{currentStep.mascotTip}</p>
+            <div className="flex items-end gap-3 mb-5">
+              <div className="w-12 h-12 rounded-full bg-indigo-500/20 border-2 border-indigo-400/40 flex items-center justify-center shrink-0 overflow-hidden shadow-lg">
+                {/* Aqui entrará a foto do Eraldo futuramente, por enquanto um ícone genérico de personagem */}
+                <span className="text-2xl">👤</span>
+              </div>
+              <div className="relative bg-indigo-500/10 border border-indigo-400/30 p-4 rounded-2xl rounded-bl-none shadow-md">
+                <p className="text-sm text-indigo-100/90 font-medium leading-relaxed italic">
+                  {currentStep.mascotTip}
+                </p>
+                {/* Triângulo do balão de fala apontando para o avatar */}
+                <div className="absolute -left-2 bottom-0 w-4 h-4 bg-indigo-500/10 border-l border-b border-indigo-400/30 transform rotate-45 translate-x-1 -translate-y-1 rounded-sm"></div>
               </div>
             </div>
           )}
 
           {/* Content text */}
-          <p className="text-white/75 text-sm sm:text-base mb-4 leading-relaxed whitespace-pre-line font-sans">
+          <p className="text-white/75 text-sm sm:text-base mb-4 leading-relaxed whitespace-pre-wrap break-words font-sans">
             {currentStep.content}
           </p>
 
+          {/* Root Custom Visual */}
+          {currentStep.customVisual && (
+            <div className="my-4 border border-white/10 rounded-xl p-4 bg-white/5 shadow-inner">
+              {currentStep.customVisual.type === 'price-table' && (
+                <div className="bg-slate-900 rounded-lg overflow-hidden border border-slate-700 max-w-sm mx-auto">
+                  <table className="w-full text-sm text-left">
+                    <thead className="bg-slate-800 text-slate-400">
+                      <tr>
+                        <th className="px-4 py-3 font-bold uppercase tracking-wider">Loja</th>
+                        <th className="px-4 py-3 font-bold uppercase tracking-wider text-right">Preço</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-800">
+                      {(currentStep.customVisual.data as { store: string; price: string; highlight?: boolean }[]).map((row, idx) => (
+                        <tr key={idx} className={row.highlight ? 'bg-indigo-500/20' : ''}>
+                          <td className={`px-4 py-3 font-medium ${row.highlight ? 'text-indigo-300' : 'text-slate-300'}`}>{row.store}</td>
+                          <td className={`px-4 py-3 font-black text-right ${row.highlight ? 'text-indigo-400' : 'text-emerald-400'}`}>{row.price}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              {currentStep.customVisual.type === 'fraction-box-10' && (
+                <div className="flex flex-col items-center gap-2 w-full max-w-md mx-auto my-2">
+                  <div className="flex w-full border-2 border-slate-500 rounded-lg overflow-hidden bg-slate-900 h-8 shadow-lg">
+                    {Array.from({ length: 10 }).map((_, i) => {
+                      const isPainted = i < (currentStep.customVisual!.data as number);
+                      return (
+                        <div 
+                          key={i} 
+                          className={`flex-1 border-r border-slate-700 last:border-0 ${isPainted ? 'bg-emerald-500' : 'bg-transparent'} transition-colors duration-500`}
+                        />
+                      );
+                    })}
+                  </div>
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">{currentStep.customVisual.data} de 10 preenchidos</span>
+                </div>
+              )}
+
+              {currentStep.customVisual.type === 'vertical-math' && (
+                <div className="flex justify-center my-2">
+                  <div className="bg-slate-900/80 rounded-2xl p-6 border-2 border-slate-700 shadow-xl inline-block">
+                    <div className="text-xl sm:text-2xl font-black text-slate-200 text-right font-mono flex flex-col items-end leading-tight tracking-wider">
+                      <div>{(currentStep.customVisual.data as any).top}</div>
+                      <div className="border-b-4 border-slate-500 pb-2 mb-2 flex items-center justify-between w-full gap-4">
+                        <span className="text-slate-500 font-sans">{(currentStep.customVisual.data as any).operator}</span>
+                        <span>{(currentStep.customVisual.data as any).bottom}</span>
+                      </div>
+                      <div className="pt-1 text-emerald-400">{(currentStep.customVisual.data as any).result}</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Reading Passage */}
           {currentStep.readingPassage && (
-            <div className="my-4 bg-amber-400/8 border border-amber-400/20 rounded-2xl p-4 sm:p-5">
-              <div className="flex items-center justify-between border-b border-amber-400/15 pb-2 mb-3">
+            <div className="my-4 bg-[#fdfbf7] border-4 border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b-2 border-slate-200/60 pb-3 mb-4 gap-2">
                 <div>
-                  <span className="text-[10px] uppercase font-black text-amber-400/60 tracking-wider">
+                  <span className="text-[10px] uppercase font-black text-slate-500 tracking-widest bg-slate-100 px-2 py-1 rounded-md">
                     {currentStep.readingPassage.genre || 'Texto de Leitura'}
                   </span>
-                  <h4 className="font-black text-base sm:text-lg text-white leading-tight">
+                  <h4 className="font-black text-lg sm:text-xl text-slate-800 leading-tight mt-2">
                     {currentStep.readingPassage.title}
                   </h4>
                 </div>
                 {currentStep.readingPassage.author && (
-                  <span className="text-xs text-white/40 italic hidden sm:inline">{currentStep.readingPassage.author}</span>
+                  <div className="text-xs text-slate-500 font-medium sm:text-right">
+                    <span className="block uppercase text-[9px] tracking-wider text-slate-400">Fonte / Autor</span>
+                    {currentStep.readingPassage.author}
+                  </div>
                 )}
               </div>
-              <p className="text-white/80 text-sm sm:text-base leading-relaxed font-serif indent-3 whitespace-pre-line">
+              <p className="text-slate-800 text-base sm:text-lg leading-relaxed font-serif whitespace-pre-wrap break-words">
                 {currentStep.readingPassage.text}
               </p>
               {currentStep.readingPassage.glossary && currentStep.readingPassage.glossary.length > 0 && (
-                <div className="mt-3 pt-3 border-t border-amber-400/15 text-xs">
-                  <span className="font-black text-amber-400/70 block mb-1">📖 Vocabulário:</span>
-                  <div className="space-y-1">
+                <div className="mt-6 p-4 rounded-xl bg-slate-50 border border-slate-200">
+                  <span className="font-black text-slate-600 uppercase tracking-wider text-xs block mb-2">📖 Vocabulário:</span>
+                  <div className="space-y-2">
                     {currentStep.readingPassage.glossary.map((g, gi) => (
-                      <p key={gi} className="text-white/60"><strong className="text-amber-300/80">{g.word}:</strong> {g.meaning}</p>
+                      <p key={gi} className="text-sm text-slate-600"><strong className="text-indigo-600">{g.word}:</strong> {g.meaning}</p>
                     ))}
                   </div>
                 </div>
@@ -307,6 +381,61 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
                         <strong className="text-xs sm:text-sm font-black text-white/90">{pt.label}</strong>
                       </div>
                       <p className="text-xs text-white/60 leading-relaxed whitespace-pre-line">{pt.text}</p>
+                      
+                      {pt.customVisual && (
+                        <div className="mt-3 pt-3 border-t border-white/5">
+                          {pt.customVisual.type === 'price-table' && (
+                            <div className="bg-slate-900 rounded-lg overflow-hidden border border-slate-700">
+                              <table className="w-full text-xs text-left">
+                                <thead className="bg-slate-800 text-slate-400">
+                                  <tr>
+                                    <th className="px-3 py-2 font-bold uppercase tracking-wider">Loja</th>
+                                    <th className="px-3 py-2 font-bold uppercase tracking-wider text-right">Preço</th>
+                                  </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-800">
+                                  {(pt.customVisual.data as { store: string; price: string; highlight?: boolean }[]).map((row, idx) => (
+                                    <tr key={idx} className={row.highlight ? 'bg-indigo-500/20' : ''}>
+                                      <td className={`px-3 py-2 font-medium ${row.highlight ? 'text-indigo-300' : 'text-slate-300'}`}>{row.store}</td>
+                                      <td className={`px-3 py-2 font-black text-right ${row.highlight ? 'text-indigo-400' : 'text-emerald-400'}`}>{row.price}</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          )}
+
+                          {pt.customVisual.type === 'fraction-box-10' && (
+                            <div className="flex flex-col items-center gap-1.5 w-full">
+                              <div className="flex w-full border-2 border-slate-600 rounded-md overflow-hidden bg-slate-900 h-6">
+                                {Array.from({ length: 10 }).map((_, i) => {
+                                  const isPainted = i < (pt.customVisual!.data as number);
+                                  return (
+                                    <div 
+                                      key={i} 
+                                      className={`flex-1 border-r border-slate-700 last:border-0 ${isPainted ? 'bg-indigo-500' : 'bg-transparent'}`}
+                                    />
+                                  );
+                                })}
+                              </div>
+                              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{pt.customVisual.data} de 10 preenchidos</span>
+                            </div>
+                          )}
+
+                          {pt.customVisual.type === 'vertical-math' && (
+                            <div className="flex justify-center bg-slate-900/50 rounded-xl p-3 border border-slate-700">
+                              <div className="text-sm font-black text-slate-200 text-right font-mono flex flex-col items-end leading-tight">
+                                <div>{(pt.customVisual.data as any).top}</div>
+                                <div className="border-b-2 border-slate-500 pb-1 flex items-center justify-between w-full gap-2">
+                                  <span className="text-slate-500 font-sans">{(pt.customVisual.data as any).operator}</span>
+                                  <span>{(pt.customVisual.data as any).bottom}</span>
+                                </div>
+                                <div className="pt-1 text-emerald-400">{(pt.customVisual.data as any).result}</div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   );
                 })}
@@ -350,10 +479,10 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
             </div>
           )}
 
-          {/* Mafs Visualizations */}
+          {/* Math Visualizations */}
           {currentStep.mafsVisualization && (
             <div className="my-4">
-              <MafsVisuals data={currentStep.mafsVisualization} />
+              <MathVisuals data={currentStep.mafsVisualization} />
             </div>
           )}
 
@@ -394,10 +523,21 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
           {/* Quiz */}
           {currentStep.quiz && (
             <div className="my-4 space-y-2.5">
-              <h4 className="font-black text-white text-base flex items-start gap-2">
-                <HelpCircle className="w-5 h-5 text-indigo-400 shrink-0 mt-0.5" />
-                {currentStep.quiz.question}
-              </h4>
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-2">
+                <h4 className="font-black text-white text-base flex items-start gap-2">
+                  <HelpCircle className="w-5 h-5 text-indigo-400 shrink-0 mt-0.5" />
+                  {currentStep.quiz.question}
+                </h4>
+                {lastReadingPassage && (
+                  <button 
+                    onClick={() => setIsReadingModalOpen(true)}
+                    className="shrink-0 flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold uppercase tracking-wide bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30 rounded-lg border border-indigo-500/30 transition-colors w-full sm:w-auto"
+                  >
+                    <BookOpen className="w-4 h-4" />
+                    {lastReadingPassage.genre?.toLowerCase().includes('receita') ? 'Ver Receita' : 'Ver Texto'}
+                  </button>
+                )}
+              </div>
               <div className="grid grid-cols-1 gap-2 pt-1">
                 {currentStep.quiz.options.map((option, idx) => {
                   const isSelected = selectedOption === idx;
@@ -429,9 +569,19 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
           {/* Word Problem */}
           {currentStep.wordProblem && (
             <div className="my-4 bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-5 space-y-4">
-              <div className="border-l-4 border-amber-400 pl-3">
-                <p className="text-white/80 font-medium text-base mb-1">{currentStep.wordProblem.story}</p>
+              <div className="border-l-4 border-amber-400 pl-3 relative">
+                <p className="text-white/80 font-medium text-base mb-1 pr-24">{currentStep.wordProblem.story}</p>
                 <p className="text-amber-300 font-black text-sm">Pergunta: {currentStep.wordProblem.question}</p>
+                
+                {lastReadingPassage && (
+                  <button 
+                    onClick={() => setIsReadingModalOpen(true)}
+                    className="absolute top-0 right-0 shrink-0 flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold uppercase tracking-wide bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30 rounded-lg border border-indigo-500/30 transition-colors"
+                  >
+                    <BookOpen className="w-4 h-4" />
+                    {lastReadingPassage.genre?.toLowerCase().includes('receita') ? 'Ver Receita' : 'Ver Texto'}
+                  </button>
+                )}
               </div>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                 <label className="text-sm font-black text-white/70">Sua Resposta:</label>
@@ -519,6 +669,14 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
         onClose={() => setIsVideoModalOpen(false)}
         unitTitle={unit.title}
       />
+      
+      {lastReadingPassage && (
+        <ReadingPassageModal
+          isOpen={isReadingModalOpen}
+          onClose={() => setIsReadingModalOpen(false)}
+          passage={lastReadingPassage}
+        />
+      )}
     </div>
   );
 };

@@ -50,6 +50,14 @@ export const trackMatDecimais: Track = {
           mascotTip: '"Fala, parceiro! Tenho 10 espaços na caixa. Preenchi 2 deles. Preciso botar um número com vírgula na etiqueta. Me ajuda?" — Eraldo',
         },
 
+        // ── 1.5 Transição: O que vamos aprender ─────────────────────────────
+        {
+          id: 'tmd-u1-s1b',
+          type: 'dialogue',
+          title: 'Preparando a Etiqueta',
+          content: 'Você ouviu o Eraldo! Ele precisa de ajuda com essa caixa nova. Para não errar o preço, vamos precisar entender como a matemática lê esses "pedaços" de caixa usando números com vírgula. Vamos aprender como transformar esses espaços ocupados em decimais!',
+        },
+
         // ── 2. Explicação Visual ────────────────────────────────────────────
         {
           id: 'tmd-u1-s2',
@@ -62,12 +70,12 @@ export const trackMatDecimais: Track = {
             points: [
               {
                 label: '2 espaços preenchidos',
-                text: '2 de 10 partes → fração: 2/10\nNúmero decimal: 0,2\n\n[■][■][ ][ ][ ][ ][ ][ ][ ][ ]\n↑ 2 partes pintadas de 10',
+                text: '2 de 10 partes → fração: 2/10\nNúmero decimal: 0,2',
                 iconName: 'Package',
               },
               {
                 label: 'Como ler a vírgula?',
-                text: 'Antes da vírgula → partes INTEIRAS\nDepois da vírgula → partes DECIMAIS\n\n0 , 2\n↑   ↑\nInteiro  Décimos\n\n"Zero inteiros e dois décimos."',
+                text: 'Antes da vírgula ficam as partes INTEIRAS.\nDepois da vírgula ficam as partes DECIMAIS.\n\nPor exemplo, 0,2 significa: "Zero inteiros e dois décimos."',
                 iconName: 'BarChart',
               },
               {
@@ -90,7 +98,8 @@ export const trackMatDecimais: Track = {
           id: 'tmd-u1-s3',
           type: 'guided_practice',
           title: 'Qual número vai na etiqueta?',
-          content: 'Eraldo preencheu 2 espaços de 10 com balas. Qual número decimal representa essa fração da caixa?\n\n[■][■][ ][ ][ ][ ][ ][ ][ ][ ]\n ← 2 cheios →  ← 8 vazios →',
+          content: 'Eraldo preencheu 2 espaços de 10 com balas. Qual número decimal representa essa fração da caixa?',
+          customVisual: { type: 'fraction-box-10', data: 2 },
           mascotTip: '"Lembra: o denominador 10 vira 1 casa decimal depois da vírgula. Quantas partes pintei?"',
           quiz: {
             question: 'Qual número decimal representa 2 espaços de 10 preenchidos?',
@@ -107,12 +116,21 @@ export const trackMatDecimais: Track = {
           },
         },
 
+        // ── 3.5 Transição: Nova situação ─────────────────────────────────────
+        {
+          id: 'tmd-u1-s3b',
+          type: 'dialogue',
+          title: 'O movimento aumentou!',
+          content: 'Boa! A etiqueta está certinha. Mas o movimento na rua aumentou e o Eraldo começou a vender mais balas. Agora a quantidade mudou, e ele precisa da sua ajuda de novo para analisar como a caixa está ficando!',
+        },
+
         // ── 4. Exercício Independente ───────────────────────────────────────
         {
           id: 'tmd-u1-s4',
           type: 'independent_exercise',
           title: 'Eraldo preenche 7 espaços — mais ou menos que a metade?',
-          content: 'Agora Eraldo vendeu 3 balas e preencheu mais 5 espaços. A caixa ficou com 7 partes ocupadas (0,7).\n\n[■][■][■][■][■][■][■][ ][ ][ ]\n ←────── 7 cheios ──────→\n\nA metade da caixa seria 5 partes (0,5).',
+          content: 'Agora Eraldo vendeu 3 balas e preencheu mais 5 espaços. A caixa ficou com 7 partes ocupadas (0,7).\n\nA metade da caixa seria 5 partes (0,5).',
+          customVisual: { type: 'fraction-box-10', data: 7 },
           mascotTip: '"Minha caixa tem 10 espaços. A metade são 5. Eu tenho 7. O que você acha?"',
           quiz: {
             question: 'Com 7 de 10 espaços cheios (0,7), a caixa tem mais ou menos que a metade?',
@@ -177,13 +195,15 @@ export const trackMatDecimais: Track = {
             points: [
               {
                 label: 'Passo 1 — Some os dois lados conhecidos',
-                text: '  2,90\n+ 2,90\n──────\n  5,80 m\n\nOs dois lados juntos = 5,80 m',
+                text: 'Os dois lados juntos = 5,80 m',
                 iconName: 'Plus',
+                customVisual: { type: 'vertical-math', data: { top: '2,90', bottom: '2,90', operator: '+', result: '5,80' } }
               },
               {
                 label: 'Passo 2 — Subtraia do contorno total',
-                text: ' 12,40\n-  5,80\n───────\n   6,60 m\n\nOs outros dois lados = 6,60 m',
+                text: 'Os outros dois lados = 6,60 m',
                 iconName: 'Minus',
+                customVisual: { type: 'vertical-math', data: { top: '12,40', bottom: '5,80', operator: '−', result: '6,60' } }
               },
               {
                 label: 'Cada lado restante',
@@ -220,29 +240,37 @@ export const trackMatDecimais: Track = {
           },
         },
 
+        // ── 3.5 Transição: Próximo passo da fita ────────────────────────────
+        {
+          id: 'tmd-u2-s3b',
+          type: 'dialogue',
+          title: 'Pano cortado!',
+          content: 'Pano medido com sucesso! Agora o Eraldo vai esticar a fita métrica no chão da calçada para organizar os preços dos produtos. Ele precisa saber exatamente onde colocar cada etiqueta de valor. Vamos lá!',
+        },
+
         // ── 4. Exercício com Reta Numérica ──────────────────────────────────
         {
           id: 'tmd-u2-s4',
           type: 'independent_exercise',
           title: 'A fita métrica no chão — localizando decimais!',
-          content: 'Eraldo esticou 1 metro de fita no chão e a dividiu em 10 partes iguais. Cada tracinho = 0,1 metro (um décimo).\n\n0────┬────┬────┬────┬────┬────┬────┬────┬────┬────1\n     0,1  0,2  0,3  0,4  0,5  0,6  0,7  0,8  0,9\n\nOnde fica a etiqueta de preço R$ 0,20 (= 0,2 m na fita)?',
+          content: 'Eraldo esticou 1 metro de fita no chão e a dividiu em 10 partes iguais. Cada tracinho = 0,1 metro (um décimo).\n\nOnde fica a etiqueta de preço R$ 0,20 (= 0,2 m na fita)?',
           conceptCard: {
             title: '📍 Reta Numérica de Décimos (0 a 1)',
             subtitle: 'Cada divisão = 0,1 = 1/10',
             points: [
               {
                 label: 'Posição do 0,2',
-                text: '0──|──|──|──|──|──|──|──|──|──1\n         ↑\n        0,2\n\nO 0,2 fica no SEGUNDO tracinho depois do zero.',
+                text: 'O 0,2 fica no SEGUNDO tracinho depois do zero.',
                 iconName: 'MapPin',
               },
               {
                 label: 'Posição do 0,5',
-                text: '0──|──|──|──|──|──|──|──|──|──1\n               ↑\n              0,5\n\nO 0,5 fica EXATAMENTE no meio (metade do metro).',
+                text: 'O 0,5 fica EXATAMENTE no meio (metade do metro).',
                 iconName: 'Scale',
               },
               {
                 label: 'Posição do 0,7',
-                text: '0──|──|──|──|──|──|──|──|──|──1\n                        ↑\n                       0,7\n\nO 0,7 fica no SÉTIMO tracinho.',
+                text: 'O 0,7 fica no SÉTIMO tracinho.',
                 iconName: 'Target',
               },
               {
@@ -311,6 +339,14 @@ export const trackMatDecimais: Track = {
           mascotTip: '"O Zé tá enganando os clientes! 0,02 é menor que 0,2 — mas como eu mostro isso no desenho?" — Eraldo',
         },
 
+        // ── 1.5 Transição: A Prova Visual ───────────────────────────────────
+        {
+          id: 'tmd-u3-s1b',
+          type: 'dialogue',
+          title: 'Desenhando a prova',
+          content: 'O Eraldo sabe que a melhor forma de calar o Zé é mostrando um desenho. O 0,02 e o 0,20 podem parecer parecidos por causa dos números, mas a casa decimal muda tudo. Vamos pegar uma malha de 100 quadradinhos e pintar as quantidades para o Eraldo mostrar para a rua inteira quem tem razão!',
+        },
+
         // ── 2. Visualização com Malha Quadriculada ──────────────────────────
         {
           id: 'tmd-u3-s2',
@@ -323,12 +359,12 @@ export const trackMatDecimais: Track = {
             points: [
               {
                 label: '0,2 pintado na malha',
-                text: '████████████████████ ← linha 1 (10 quadrados)\n████████████████████ ← linha 2 (10 quadrados)\n□□□□□□□□□□□□□□□□□□□□\n□□□□□□□□□□□□□□□□□□□□\n... (restante vazio)\n\n20 quadradinhos pintados de 100 = 0,20',
+                text: '20 quadradinhos pintados de 100 representam 0,20',
                 iconName: 'Square',
               },
               {
                 label: '0,02 pintado na malha',
-                text: '██ ← apenas 2 quadradinhos!\n□□□□□□□□□□□□□□□□□□□□\n□□□□□□□□□□□□□□□□□□□□\n... (restante vazio)\n\n2 quadradinhos pintados de 100 = 0,02',
+                text: 'Apenas 2 quadradinhos pintados de 100 representam 0,02',
                 iconName: 'Square',
               },
               {
@@ -372,7 +408,15 @@ export const trackMatDecimais: Track = {
           id: 'tmd-u3-s4',
           type: 'independent_exercise',
           title: 'Comparando preços das lojas',
-          content: 'Eraldo viu os preços do Pega Vareta em 3 lojas da rua:\n\n┌─────────────┬──────────┐\n│ Loja        │ Preço    │\n├─────────────┼──────────┤\n│ Loja A      │ R$ 2,40  │\n│ Loja B      │ R$ 3,80  │\n│ Loja C      │ R$ 5,00  │\n└─────────────┴──────────┘\n\nQual a diferença entre a Loja C (mais cara) e a Loja A (mais barata)?',
+          content: 'Eraldo viu os preços do Pega Vareta em 3 lojas da rua. Qual a diferença entre a Loja C (mais cara) e a Loja A (mais barata)?',
+          customVisual: {
+            type: 'price-table',
+            data: [
+              { store: 'Loja A', price: 'R$ 2,40', highlight: true },
+              { store: 'Loja B', price: 'R$ 3,80' },
+              { store: 'Loja C', price: 'R$ 5,00', highlight: true }
+            ]
+          },
           mascotTip: '"Pra achar diferença de preço, a gente subtrai! É igual ao troco." — Eraldo',
           quiz: {
             question: 'Qual a diferença de preço entre a Loja C (R$ 5,00) e a Loja A (R$ 2,40)?',
@@ -425,6 +469,14 @@ export const trackMatDecimais: Track = {
           mascotTip: '"Lucro = preço de venda − preço de custo. Parece fácil, mas você precisa me dizer o valor EXATO." — Eraldo',
         },
 
+        // ── 1.5 Transição: A hora das contas ────────────────────────────────
+        {
+          id: 'tmd-u4-s1b',
+          type: 'dialogue',
+          title: 'Hora de Fechar o Caixa',
+          content: 'Depois de um bom lanche, é hora de voltar aos negócios! O Eraldo precisa ter certeza de que não está tendo prejuízo. Vamos entender como o dinheiro brasileiro funciona igualzinho ao sistema decimal que a gente já estava usando!',
+        },
+
         // ── 2. Explicação Visual: Decimais e Dinheiro ────────────────────────
         {
           id: 'tmd-u4-s2',
@@ -437,7 +489,7 @@ export const trackMatDecimais: Track = {
             points: [
               {
                 label: '1 Real = 10 décimos = 100 centésimos',
-                text: 'R$ 1,00\n  ↑  ↑↑\n  │  └┘ centavos (centésimos)\n  └── reais (inteiros)\n\n"Centavo" vem de "centésimo"!',
+                text: 'A vírgula separa a parte inteira (reais) da parte decimal (centavos). "Centavo" vem da palavra "centésimo"!',
                 iconName: 'Banknote',
               },
               {
@@ -452,11 +504,16 @@ export const trackMatDecimais: Track = {
               },
               {
                 label: 'Lucro = Venda − Custo',
-                text: 'Eraldo:\nVende por: R$ 1,20\nCompra por: R$ 0,80\n\nLucro = 1,20 − 0,80 = ???\n\nAlinhe as vírgulas e calcule!',
+                text: 'Vende por: R$ 1,20\nCompra por: R$ 0,80\nAlinhe as vírgulas e calcule!',
                 iconName: 'TrendingUp',
+                customVisual: { type: 'vertical-math', data: { top: '1,20', bottom: '0,80', operator: '−', result: '???' } }
               },
             ],
           },
+          mafsVisualization: {
+            type: 'money-breakdown',
+            value: 1
+          }
         },
 
         // ── 3. Prática Guiada ───────────────────────────────────────────────
@@ -464,7 +521,8 @@ export const trackMatDecimais: Track = {
           id: 'tmd-u4-s3',
           type: 'guided_practice',
           title: 'Qual é o lucro real de Eraldo?',
-          content: 'Cada bala:\n• Custo: R$ 0,80\n• Venda: R$ 1,20\n\nLucro = Venda − Custo\n       = R$ 1,20 − R$ 0,80\n       = ???',
+          content: 'Cada bala:\n• Custo: R$ 0,80\n• Venda: R$ 1,20\n\nQual é o lucro real em cada bala?',
+          customVisual: { type: 'vertical-math', data: { top: '1,20', bottom: '0,80', operator: '−', result: '???' } },
           mascotTip: '"Alinha a vírgula! 1,20 menos 0,80. Faça coluna por coluna."',
           quiz: {
             question: 'Qual é o lucro de Eraldo em cada bala vendida?',
@@ -539,12 +597,24 @@ export const trackMatDecimais: Track = {
           mascotTip: '"O diretor me pediu dois favores. Um de subtração e outro de associação de frações com moedas. Vamos resolver juntos?" — Eraldo',
         },
 
+        // ── 1.5 Transição: O favor do Diretor ───────────────────────────────
+        {
+          id: 'tmd-u5-s1b',
+          type: 'dialogue',
+          title: 'O Primeiro Desafio',
+          content: 'A festa está linda! Mas antes de curtir, o diretor puxou o Eraldo para um canto. Ele tem duas caixas grandes e precisa que alguém rápido de conta faça a diferença de valor entre elas. O Eraldo já pegou o caderninho, ajude ele a armar essa conta!',
+        },
+
         // ── 2. Desafio das Caixas (Subtração) ───────────────────────────────
         {
           id: 'tmd-u5-s2',
           type: 'guided_practice',
           title: 'Qual a diferença entre as caixas?',
-          content: 'O diretor tem duas caixas de presente:\n\n┌────────────────────────────────┐\n│ Caixa Ouro    → R$ 177,00     │\n│ Caixa Prata   → R$ 127,00     │\n└────────────────────────────────┘\n\nQual a diferença de valor entre elas?\n\n  177,00\n− 127,00\n────────',
+          content: 'O diretor tem duas caixas de presente:\n• Caixa Ouro: R$ 177,00\n• Caixa Prata: R$ 127,00\n\nQual a diferença de valor entre elas?',
+          customVisual: {
+            type: 'vertical-math',
+            data: { top: '177,00', bottom: '127,00', operator: '−', result: '50,00' }
+          },
           mascotTip: '"Subtração direta! A vírgula está alinhada. Pode ir coluna a coluna."',
           quiz: {
             question: 'Qual a diferença entre R$ 177,00 e R$ 127,00?',
@@ -573,12 +643,12 @@ export const trackMatDecimais: Track = {
             points: [
               {
                 label: '"Metade de Real" → ½ → 0,5 → R$ 0,50',
-                text: '½ real = 1 real ÷ 2 = 0,5 = 50 centavos\n\n🪙 Uma moeda de 50 centavos\n\nVisualize: [████████████████████]\n             ← metade pintada →',
+                text: '½ real = 1 real ÷ 2 = 0,5 = 50 centavos\n\n🪙 Uma moeda de 50 centavos corresponde à metade de um inteiro.',
                 iconName: 'PieChart',
               },
               {
                 label: '"Um Quarto de Real" → ¼ → 0,25 → R$ 0,25',
-                text: '¼ real = 1 real ÷ 4 = 0,25 = 25 centavos\n\n🪙 Uma moeda de 25 centavos\n\nVisualize: [█████               ]\n             ← ¼ pintado →',
+                text: '¼ real = 1 real ÷ 4 = 0,25 = 25 centavos\n\n🪙 Uma moeda de 25 centavos corresponde a um quarto de um inteiro.',
                 iconName: 'PieChart',
               },
               {

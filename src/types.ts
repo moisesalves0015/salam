@@ -45,6 +45,7 @@ export interface CardItem {
   formulaOrQuote?: string;
   unlocked: boolean;
   unlockedAt?: string;
+  lore?: string;
 }
 
 export interface AchievementItem {
@@ -140,7 +141,7 @@ export interface Student {
     ciencias: number;
   };
   abilities: AbilityDetail[];
-  currentMission: Mission;
+  currentMission: Pick<Mission, 'id' | 'title' | 'primaryAbility' | 'difficulty' | 'status' | 'progress' | 'xpReward' | 'objective'>;
   cards: CardItem[];
   achievements: AchievementItem[];
   interventions: InterventionRecord[];
@@ -205,7 +206,8 @@ export type StepType =
   | 'contextualized_problem' // 7. Problemas contextualizados
   | 'final_challenge'        // 8. Desafio final
   | 'recovery_mission'       // 9. Revisão dos erros
-  | 'interactive_drag_drop'; // Interação de arrastar e soltar
+  | 'interactive_drag_drop'  // Interação de arrastar e soltar
+  | 'dialogue';              // Tela de transição focada em fala do personagem
 
 export interface MoneyChallengeData {
   targetAmount: number;
@@ -265,7 +267,16 @@ export interface DragAndDropMatch {
 export interface ConceptCard {
   title: string;
   subtitle?: string;
-  points: { label: string; text: string; iconName?: string; iconEmoji?: string }[];
+  points: { 
+    label: string; 
+    text: string; 
+    iconName?: string; 
+    iconEmoji?: string;
+    customVisual?: {
+      type: 'fraction-box-10' | 'price-table' | 'vertical-math';
+      data: any;
+    };
+  }[];
 }
 
 export interface WrittenPrompt {
@@ -276,7 +287,7 @@ export interface WrittenPrompt {
 }
 
 export interface MafsVisualization {
-  type: 'number-line' | 'grid-10' | 'grid-100';
+  type: 'number-line' | 'grid-10' | 'grid-100' | 'money-breakdown';
   value: number | number[];
 }
 
@@ -297,6 +308,12 @@ export interface LessonStep {
 
   // Written prompt with lined notebook simulation
   writtenPrompt?: WrittenPrompt;
+
+  // Explicações customizadas desenhadas em código (ex: tabelas, barras)
+  customVisual?: {
+    type: 'fraction-box-10' | 'price-table' | 'vertical-math';
+    data: any;
+  };
 
   // Interação de Arrastar e Soltar
   dragAndDrop?: DragAndDropMatch;

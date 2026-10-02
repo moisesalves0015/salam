@@ -22,7 +22,7 @@ import { Student, Mission, CardItem } from '../types';
 
 interface StudentDashboardProps {
   student: Student;
-  mission: Mission;
+  mission: Pick<Mission, 'id' | 'title' | 'primaryAbility' | 'difficulty' | 'status' | 'progress' | 'xpReward' | 'objective'>;
   unlockedCard?: CardItem;
   onStartMission: () => void;
   onViewCard: (card: CardItem) => void;
@@ -42,6 +42,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
   const currentCard: CardItem = unlockedCard || {
     id: 'card-guardiao-divisao',
     name: 'Guardião da Divisão',
+    category: 'conquista',
     description: 'Conquistado ao demonstrar que dividir é distribuir em partes iguais sem sobras.',
     rarity: 'epico',
     subject: 'Matemática',
