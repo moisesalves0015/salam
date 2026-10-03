@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Unit, LessonStep } from '../../types';
 import { NotebookGrid } from './NotebookGrid';
 import { PlaceValueManipulative } from './PlaceValueManipulative';
@@ -7,12 +7,15 @@ import { VideoModal } from './VideoModal';
 import { MathVisuals } from './MathVisuals';
 import { DragDropGame } from './DragDropGame';
 import { ReadingPassageModal } from './ReadingPassageModal';
+import { DecimalNumber, RichLessonText, DecimalLegend } from './LessonMath';
+import { STEP_THEME, prefersReducedMotion } from '../../theme/lessonTheme';
 import * as LucideIcons from 'lucide-react';
 import confetti from 'canvas-confetti';
 import {
-  ArrowLeft, Sparkles, CheckCircle2, XCircle, Lightbulb,
-  Award, Heart, ArrowRight, BookOpen, HelpCircle, PlayCircle,
-  Star, Zap, Trophy, Target, ChevronRight
+  X, Sparkles, CheckCircle2, Lightbulb, Heart, ArrowRight, BookOpen,
+  HelpCircle, PlayCircle, Star, Zap, Trophy, ChevronRight, RotateCcw,
+  CircleDot, PenLine, Calculator, SearchCheck, Candy, Store, Flag,
+  MessageCircle, Map as MapIcon,
 } from 'lucide-react';
 
 interface LessonRunnerProps {
@@ -23,19 +26,26 @@ interface LessonRunnerProps {
   onRecordMistake: (unitId: string, skill: string) => void;
 }
 
-const STEP_META: Record<LessonStep['type'], { label: string; emoji: string; color: string; bg: string; border: string }> = {
-  objective:              { label: 'Objetivo',            emoji: '🎯', color: 'text-emerald-300',  bg: 'bg-emerald-500/20',  border: 'border-emerald-400/40' },
-  explanation:            { label: 'Explicação',           emoji: '💡', color: 'text-sky-300',      bg: 'bg-sky-500/20',      border: 'border-sky-400/40' },
-  worked_example:         { label: 'Exemplo Resolvido',   emoji: '📐', color: 'text-indigo-300',   bg: 'bg-indigo-500/20',   border: 'border-indigo-400/40' },
-  notebook_demo:          { label: 'Caderno',              emoji: '📓', color: 'text-amber-300',    bg: 'bg-amber-500/20',    border: 'border-amber-400/40' },
-  guided_practice:        { label: 'Prática Guiada',       emoji: '🤝', color: 'text-blue-300',     bg: 'bg-blue-500/20',     border: 'border-blue-400/40' },
-  independent_exercise:   { label: 'Exercício',            emoji: '⚡', color: 'text-violet-300',   bg: 'bg-violet-500/20',   border: 'border-violet-400/40' },
-  contextualized_problem: { label: 'Problema Real',        emoji: '🌍', color: 'text-rose-300',     bg: 'bg-rose-500/20',     border: 'border-rose-400/40' },
-  final_challenge:        { label: 'Desafio Final',        emoji: '🏆', color: 'text-purple-300',   bg: 'bg-purple-500/20',   border: 'border-purple-400/40' },
-  recovery_mission:       { label: 'Revisão',              emoji: '🔄', color: 'text-orange-300',   bg: 'bg-orange-500/20',   border: 'border-orange-400/40' },
-  interactive_drag_drop:  { label: 'Prática Interativa',  emoji: '👆', color: 'text-pink-300',     bg: 'bg-pink-500/20',     border: 'border-pink-400/40' },
-  dialogue:               { label: 'Eraldo conta',         emoji: '💬', color: 'text-amber-200',    bg: 'bg-amber-500/15',    border: 'border-amber-400/30' },
-};
+type CustomVisual = NonNullable<LessonStep['customVisual']>;
+
+/** Paleta cíclica dos cards de conceito (borda + ícone). */
+const CONCEPT_ACCENTS = [
+  { box: 'bg-sky-500/20 border-sky-400/60 text-sky-200', edge: 'border-l-sky-400' },
+  { box: 'bg-violet-500/20 border-violet-400/60 text-violet-200', edge: 'border-l-violet-400' },
+  { box: 'bg-emerald-500/20 border-emerald-400/60 text-emerald-200', edge: 'border-l-emerald-400' },
+  { box: 'bg-blue-500/20 border-blue-400/60 text-blue-200', edge: 'border-l-blue-400' },
+];
+const WARNING_ACCENT = { box: 'bg-amber-500/25 border-amber-400/70 text-amber-200', edge: 'border-l-amber-400' };
+
+/** Remove marcas que revelariam a resposta no texto da alternativa. */
+const cleanOption = (option: string) => option.replace(/\s*[✓✔✅]\s*/g, ' ').trim();
+
+/** Pequena explosão de partículas ao lado do ícone de acerto (nunca sobre o texto). */
+const SPARKS = [
+  { sx: '-26px', sy: '-22px', c: 'bg-emerald-300' }, { sx: '24px', sy: '-26px', c: 'bg-amber-300' },
+  { sx: '30px', sy: '4px', c: 'bg-sky-300' }, { sx: '18px', sy: '26px', c: 'bg-emerald-300' },
+  { sx: '-20px', sy: '24px', c: 'bg-amber-300' }, { sx: '-30px', sy: '0px', c: 'bg-violet-300' },
+];
 
 export const LessonRunner: React.FC<LessonRunnerProps> = ({
   unit, userStats, onFinishLesson, onClose, onRecordMistake
@@ -48,23 +58,45 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
   const [isCompleted, setIsCompleted] = useState(false);
   const [mistakesThisSession, setMistakesThisSession] = useState<string[]>([]);
   const [isReadingModalOpen, setIsReadingModalOpen] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const steps = unit.steps;
   const currentStep: LessonStep = steps[currentStepIndex];
-  
+  const theme = STEP_THEME[currentStep?.type] ?? STEP_THEME.explanation;
+  const StepIcon = theme.Icon;
+  const isEraldoTrack = unit.trackId === 'trilha-mat-7';
+  const mascotName = isEraldoTrack ? 'Eraldo' : 'Guia da Missão';
+
   // Encontra o texto/receita mais recente para poder consultar
   const lastReadingPassage = [...steps].slice(0, currentStepIndex + 1).reverse().find(s => s.readingPassage)?.readingPassage;
-  const progressPercent = Math.round((currentStepIndex / steps.length) * 100);
-  const stepMeta = STEP_META[currentStep?.type] ?? STEP_META['explanation'];
+
+  const stepSucceeded = stepFeedback.status === 'success';
+  const completedSteps = currentStepIndex + (stepSucceeded ? 1 : 0);
+  const progressPercent = Math.round((completedSteps / steps.length) * 100);
+  const stepXp = Math.max(5, Math.round(unit.xpReward / steps.length));
+  const sessionXp = Math.min(unit.xpReward, Math.round((unit.xpReward * completedSteps) / steps.length));
+  const isLastStep = currentStepIndex === steps.length - 1;
+
+  // Volta ao topo ao trocar de etapa
+  useEffect(() => {
+    contentRef.current?.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+  }, [currentStepIndex]);
 
   const triggerCelebration = () => {
-    try { confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); } catch { /* ignore */ }
+    if (prefersReducedMotion()) return;
+    try { confetti({ particleCount: 110, spread: 75, origin: { y: 0.6 }, colors: ['#34d399', '#fbbf24', '#60a5fa', '#a78bfa'] }); } catch { /* ignore */ }
   };
 
-  const handleNextStep = () => {
+  const resetStepState = () => {
     setStepFeedback({ status: 'idle', message: '' });
     setSelectedOption(null);
     setUserWordProblemAnswer('');
+    setShowHint(false);
+  };
+
+  const handleNextStep = () => {
+    resetStepState();
     if (currentStepIndex < steps.length - 1) {
       setCurrentStepIndex(prev => prev + 1);
     } else {
@@ -74,14 +106,18 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
     }
   };
 
+  const recordMistake = () => {
+    setMistakesThisSession(prev => [...prev, currentStep.title]);
+    onRecordMistake(unit.id, currentStep.title);
+  };
+
   const handleCheckQuiz = () => {
     if (!currentStep.quiz || selectedOption === null) return;
     if (selectedOption === currentStep.quiz.correctIndex) {
       setStepFeedback({ status: 'success', message: currentStep.quiz.explanationOnSuccess });
     } else {
       setStepFeedback({ status: 'error', message: currentStep.quiz.explanationOnError });
-      setMistakesThisSession(prev => [...prev, currentStep.title]);
-      onRecordMistake(unit.id, currentStep.title);
+      recordMistake();
     }
   };
 
@@ -92,66 +128,150 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
       setStepFeedback({ status: 'success', message: `Excelente raciocínio! ${currentStep.wordProblem.stepExplanation}` });
     } else {
       setStepFeedback({ status: 'error', message: `Ainda não está certo. Dica: ${currentStep.wordProblem.suggestedStrategy}` });
-      setMistakesThisSession(prev => [...prev, currentStep.title]);
-      onRecordMistake(unit.id, currentStep.title);
+      recordMistake();
     }
+  };
+
+  const handleTryAgain = () => {
+    setStepFeedback({ status: 'idle', message: '' });
+    setSelectedOption(null);
+    setUserWordProblemAnswer('');
+  };
+
+  // ── Visuais customizados (tabela, caixa de 10, conta armada) ───────────────
+  const renderCustomVisual = (cv: CustomVisual, compact = false) => {
+    if (cv.type === 'price-table') {
+      const rows = cv.data as { store: string; price: string; highlight?: boolean }[];
+      return (
+        <div className={`rounded-xl overflow-hidden border border-slate-500/50 bg-[#0b1430] ${compact ? '' : 'max-w-sm mx-auto'}`}>
+          <div className="grid grid-cols-[1fr_auto] bg-gradient-to-r from-slate-700 to-slate-800 text-slate-100 text-[11px] font-black uppercase tracking-widest">
+            <span className="px-4 py-2.5 flex items-center gap-1.5"><Store className="w-3.5 h-3.5" /> Loja</span>
+            <span className="px-4 py-2.5 text-right">Preço</span>
+          </div>
+          <ul className="divide-y divide-slate-700/80">
+            {rows.map((row, idx) => (
+              <li key={idx} className={`grid grid-cols-[1fr_auto] items-center ${row.highlight ? 'bg-indigo-500/25' : idx % 2 ? 'bg-white/[0.03]' : ''}`}>
+                <span className={`px-4 py-3 font-bold flex items-center gap-2 ${row.highlight ? 'text-indigo-100' : 'text-slate-200'}`}>
+                  {row.highlight && <Star className="w-3.5 h-3.5 text-amber-300 fill-amber-300" aria-label="destaque" />}
+                  {row.store}
+                </span>
+                <span className={`px-4 py-3 text-right font-black ${compact ? 'text-base' : 'text-lg'}`}>
+                  <DecimalNumber value={row.price.replace(/\s+/, ' ')} />
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+    }
+
+    if (cv.type === 'fraction-box-10') {
+      const filled = Number(cv.data) || 0;
+      return (
+        <div className={`flex flex-col items-center gap-3 w-full ${compact ? '' : 'max-w-md mx-auto'}`}>
+          <div className="grid grid-cols-10 gap-1 w-full p-1.5 rounded-xl bg-[#0b1430] border-2 border-slate-500/60" role="img" aria-label={`${filled} de 10 espaços preenchidos`}>
+            {Array.from({ length: 10 }).map((_, i) => {
+              const isPainted = i < filled;
+              return (
+                <div
+                  key={i}
+                  className={`${compact ? 'h-7' : 'h-10 sm:h-12'} rounded-md flex items-center justify-center transition-colors duration-500 ${
+                    isPainted
+                      ? 'bg-gradient-to-b from-emerald-400 to-emerald-600 border border-emerald-200/60 shadow-[0_0_10px_rgba(52,211,153,0.45)]'
+                      : 'bg-slate-800 border border-dashed border-slate-500/70'
+                  }`}
+                >
+                  {isPainted && !compact && <Candy className="w-4 h-4 text-emerald-950/70" aria-hidden="true" />}
+                </div>
+              );
+            })}
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-2 text-sm font-black">
+            <span className="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-500/60 text-slate-100">{filled} de 10 espaços</span>
+            <span className="text-slate-400">=</span>
+            <span className="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-500/60 text-slate-100 lesson-math">{filled}/10</span>
+            {filled < 10 && (
+              <>
+                <span className="text-slate-400">=</span>
+                <span className="px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-400/60 text-lg"><DecimalNumber value={`0,${filled}`} /></span>
+              </>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    if (cv.type === 'vertical-math') {
+      const d = cv.data as { top: string; bottom: string; operator: string; result: string };
+      const unknown = /\?/.test(d.result);
+      return (
+        <div className="flex flex-col items-center">
+          <div className={`rounded-2xl bg-[#0b1430] border-2 border-slate-500/60 shadow-xl ${compact ? 'p-3' : 'p-5 sm:p-6'} inline-block`}>
+            <div className={`${compact ? 'text-base' : 'text-2xl sm:text-3xl'} font-black font-mono text-right flex flex-col items-end leading-tight tracking-wider`}>
+              <DecimalNumber value={d.top} />
+              <div className="border-b-4 border-slate-400 pb-2 mb-2 flex items-center justify-between w-full gap-6">
+                <span className="text-amber-300 font-sans">{d.operator === '-' ? '−' : d.operator}</span>
+                <DecimalNumber value={d.bottom} />
+              </div>
+              {unknown ? (
+                <span className="px-3 rounded-lg border-2 border-dashed border-amber-400/80 bg-amber-500/10 text-amber-300" aria-label="resultado a descobrir">?</span>
+              ) : (
+                <span className="px-2 rounded-lg bg-emerald-500/15 border border-emerald-400/50"><DecimalNumber value={d.result} /></span>
+              )}
+            </div>
+          </div>
+          {!compact && <div className="w-full max-w-xs"><DecimalLegend /></div>}
+        </div>
+      );
+    }
+    return null;
   };
 
   // ── Tela de conclusão ─────────────────────────────────────────────────────
   if (isCompleted) {
     return (
-      <div
-        className="fixed inset-0 z-[90] flex flex-col items-center justify-center p-6 text-center"
-        style={{
-          backgroundImage: "url('/assets/trilhas/fundo-trilhas-vertical.png')",
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
-        {/* Scrim */}
-        <div className="absolute inset-0 bg-slate-950/75 backdrop-blur-sm" />
+      <div className="fixed inset-0 z-[90] flex flex-col items-center justify-center p-6 text-center lesson-bg overflow-y-auto">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-amber-500/25 to-transparent" />
 
         <div className="relative z-10 max-w-md w-full animate-trail-enter">
-          {/* Trophy */}
-          <div className="w-24 h-24 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center shadow-2xl border-4 border-yellow-300/50 animate-bounce">
+          <div className="w-24 h-24 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-yellow-300 via-amber-400 to-orange-500 flex items-center justify-center shadow-2xl shadow-amber-600/40 border-4 border-yellow-200/70 lesson-pop">
             <Trophy className="w-14 h-14 text-amber-950" />
           </div>
 
-          <span className="inline-block px-4 py-1 bg-emerald-500/20 text-emerald-300 rounded-full text-xs font-black uppercase tracking-widest border border-emerald-400/30 mb-3">
-            ✨ Habilidade Dominada!
+          <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-emerald-600 text-white rounded-full text-xs font-black uppercase tracking-widest border border-emerald-300 mb-3">
+            <Sparkles className="w-3.5 h-3.5" /> Habilidade dominada!
           </span>
 
-          <h2 className="text-3xl font-black text-white mb-3 leading-tight">
-            Missão Concluída!
-          </h2>
-          <p className="text-white/60 mb-8 font-sans leading-relaxed">
-            Você dominou a unidade <span className="font-black text-white">{unit.title}</span>. Continue avançando na trilha!
+          <h2 className="text-3xl font-black text-white mb-3 leading-tight">Missão concluída!</h2>
+          <p className="text-slate-300 mb-8 leading-relaxed">
+            Você dominou a fase <span className="font-black text-white">{unit.title}</span>. Continue avançando na trilha!
           </p>
 
-          {/* Reward cards */}
           <div className="grid grid-cols-2 gap-3 mb-6">
-            <div className="bg-yellow-400/15 border border-yellow-400/25 rounded-2xl p-4 backdrop-blur-sm">
+            <div className="rounded-2xl p-4 bg-[#2a2210] border-2 border-amber-400/60 shadow-lg shadow-amber-900/30 lesson-card-in">
               <div className="flex items-center gap-1.5 mb-1">
-                <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                <span className="text-xs text-yellow-400/70 font-bold uppercase tracking-wide">XP Ganho</span>
+                <Star className="w-4 h-4 text-amber-300 fill-amber-300" />
+                <span className="text-xs text-amber-200 font-black uppercase tracking-wide">XP ganho</span>
               </div>
-              <span className="text-3xl font-black text-yellow-300">+{unit.xpReward}</span>
+              <span className="text-3xl font-black text-amber-300">+{unit.xpReward}</span>
             </div>
-            <div className="bg-emerald-500/15 border border-emerald-400/25 rounded-2xl p-4 backdrop-blur-sm">
+            <div className="rounded-2xl p-4 bg-[#0d2a22] border-2 border-emerald-400/60 shadow-lg shadow-emerald-900/30 lesson-card-in" style={{ animationDelay: '80ms' }}>
               <div className="flex items-center gap-1.5 mb-1">
-                <Zap className="w-4 h-4 text-emerald-400" />
-                <span className="text-xs text-emerald-400/70 font-bold uppercase tracking-wide">Status</span>
+                <Zap className="w-4 h-4 text-emerald-300" />
+                <span className="text-xs text-emerald-200 font-black uppercase tracking-wide">Etapas</span>
               </div>
-              <span className="text-2xl font-black text-emerald-300">100% ✓</span>
+              <span className="text-2xl font-black text-emerald-300 flex items-center gap-1.5">
+                {steps.length}/{steps.length} <CheckCircle2 className="w-5 h-5" aria-label="concluídas" />
+              </span>
             </div>
           </div>
 
           {mistakesThisSession.length > 0 && (
-            <div className="bg-blue-500/10 border border-blue-400/20 rounded-2xl p-4 text-left mb-5 text-sm">
-              <p className="font-bold text-blue-300 mb-1 flex items-center gap-1.5">
-                <Lightbulb className="w-4 h-4" /> Revisão Espaçada Ativada
+            <div className="bg-[#10213f] border border-sky-400/40 rounded-2xl p-4 text-left mb-5 text-sm">
+              <p className="font-black text-sky-200 mb-1 flex items-center gap-1.5">
+                <Lightbulb className="w-4 h-4" /> Revisão espaçada ativada
               </p>
-              <p className="text-blue-300/70 text-xs leading-relaxed">
+              <p className="text-sky-100/80 text-xs leading-relaxed">
                 O sistema continuará propondo treinos rápidos para fixar o que você praticou!
               </p>
             </div>
@@ -159,178 +279,252 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
 
           <button
             onClick={onClose}
-            className="trail-focus w-full py-4 rounded-2xl text-slate-900 font-black text-base bg-gradient-to-r from-yellow-400 to-amber-400 hover:from-yellow-300 hover:to-amber-300 shadow-xl transition active:scale-95 flex items-center justify-center gap-2"
+            className="trail-focus w-full min-h-[56px] rounded-2xl text-slate-900 font-black text-base bg-gradient-to-r from-yellow-300 to-amber-400 hover:brightness-110 shadow-xl shadow-amber-600/40 transition active:scale-[0.97] flex items-center justify-center gap-2 lesson-pulse-cta"
           >
+            Continuar na trilha
             <ChevronRight className="w-5 h-5" />
-            Continuar na Trilha
           </button>
         </div>
       </div>
     );
   }
 
+  // ── Botão principal (barra inferior) ─────────────────────────────────────
+  const primaryBase = 'trail-focus w-full min-h-[56px] rounded-2xl font-black text-[17px] flex items-center justify-center gap-2 transition-all duration-150 active:scale-[0.97]';
+  const disabledCls = 'bg-slate-800 text-slate-500 cursor-not-allowed border-2 border-slate-700';
+  const activeCls = `bg-gradient-to-r ${theme.button} text-white shadow-lg hover:brightness-110 border border-white/20`;
+
+  let primaryButton: React.ReactNode;
+  if (stepFeedback.status === 'error' && (currentStep.quiz || currentStep.wordProblem)) {
+    primaryButton = (
+      <button onClick={handleTryAgain} className={`${primaryBase} bg-gradient-to-r from-amber-400 to-orange-500 text-amber-950 shadow-lg shadow-amber-600/30 hover:brightness-110`}>
+        <RotateCcw className="w-5 h-5" /> Tentar novamente
+      </button>
+    );
+  } else if (currentStep.quiz && !stepSucceeded) {
+    primaryButton = (
+      <button onClick={handleCheckQuiz} disabled={selectedOption === null} className={`${primaryBase} ${selectedOption === null ? disabledCls : activeCls}`}>
+        <SearchCheck className="w-5 h-5" /> Verificar resposta
+      </button>
+    );
+  } else if (currentStep.wordProblem && !stepSucceeded) {
+    const empty = userWordProblemAnswer.trim() === '';
+    primaryButton = (
+      <button onClick={handleCheckWordProblem} disabled={empty} className={`${primaryBase} ${empty ? disabledCls : activeCls}`}>
+        <Calculator className="w-5 h-5" /> Conferir cálculo
+      </button>
+    );
+  } else {
+    primaryButton = (
+      <button
+        key={`next-${currentStepIndex}-${stepFeedback.status}`}
+        onClick={handleNextStep}
+        className={`${primaryBase} ${isLastStep
+          ? 'bg-gradient-to-r from-purple-600 via-fuchsia-500 to-amber-400 text-white shadow-lg shadow-purple-600/40 hover:brightness-110'
+          : stepSucceeded
+            ? 'bg-gradient-to-r from-emerald-400 to-teal-400 text-emerald-950 shadow-lg shadow-emerald-600/40 hover:brightness-110'
+            : activeCls} ${stepSucceeded ? 'lesson-pulse-cta' : ''}`}
+      >
+        {isLastStep ? <Trophy className="w-5 h-5" /> : null}
+        <span>{isLastStep ? 'Concluir missão' : 'Continuar missão'}</span>
+        {!isLastStep && <ArrowRight className="w-5 h-5" />}
+      </button>
+    );
+  }
+
   // ── Tela principal do desafio ─────────────────────────────────────────────
   return (
-    <div
-      className="fixed inset-0 z-[90] flex flex-col overflow-hidden"
-      style={{
-        backgroundImage: "url('/assets/trilhas/fundo-trilhas-vertical.png')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center top',
-      }}
-    >
-      {/* Scrim */}
-      <div className="absolute inset-0 bg-slate-950/75 backdrop-blur-sm z-0" />
+    <div className="fixed inset-0 z-[90] flex flex-col overflow-hidden lesson-bg">
+      {/* Brilho ambiente com a cor da etapa (troca suave a cada etapa) */}
+      <div
+        key={`ambient-${currentStepIndex}`}
+        className={`pointer-events-none absolute inset-x-0 top-0 h-64 bg-gradient-to-b ${theme.ambient} to-transparent z-0 lesson-card-in`}
+        aria-hidden="true"
+      />
 
-      {/* ── TOP BAR / HUD ─────────────────────────────────────── */}
-      <div className="relative z-10 flex items-center gap-3 px-4 py-3 bg-slate-900/80 backdrop-blur-xl border-b border-white/10 shadow-xl shrink-0">
-        {/* Back */}
-        <button
-          onClick={onClose}
-          className="trail-focus flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition active:scale-95 border border-white/10 shrink-0"
-          aria-label="Voltar ao mapa da trilha"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Mapa</span>
-        </button>
+      {/* ── 1. BARRA SUPERIOR / HUD ─────────────────────────────── */}
+      <header className="relative z-10 shrink-0 bg-[#0a1128]/95 border-b border-slate-700/80 shadow-lg shadow-black/40">
+        <div className="max-w-3xl mx-auto flex items-center gap-2.5 px-3 sm:px-4 py-2.5">
+          <button
+            onClick={onClose}
+            className="trail-focus w-11 h-11 shrink-0 flex items-center justify-center rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 transition active:scale-95"
+            aria-label="Fechar fase e voltar ao mapa da trilha"
+          >
+            <X className="w-5 h-5" />
+          </button>
 
-        {/* Progress bar */}
-        <div className="flex-1 flex flex-col gap-0.5 min-w-0">
-          <div className="flex justify-between items-center mb-0.5">
-            <span className="text-[10px] text-white/40 font-medium truncate">{unit.title}</span>
-            <span className="text-[10px] font-black text-white/60 ml-2">{currentStepIndex + 1}/{steps.length}</span>
-          </div>
-          <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between gap-2 mb-1.5">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <span className="shrink-0 px-2 py-0.5 rounded-md bg-slate-700 text-[10px] font-black text-white uppercase tracking-wider flex items-center gap-1">
+                  <MapIcon className="w-3 h-3" /> Fase {unit.number}
+                </span>
+                <span className="text-xs text-slate-300 font-bold truncate">{unit.title}</span>
+              </div>
+              <span className="shrink-0 text-[11px] font-black text-slate-200 flex items-center gap-1" aria-live="polite">
+                {stepSucceeded && <CheckCircle2 key={`ck-${currentStepIndex}`} className="w-3.5 h-3.5 text-emerald-300 lesson-pop" aria-hidden="true" />}
+                Etapa {currentStepIndex + 1} de {steps.length}
+              </span>
+            </div>
             <div
-              className="h-full bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full transition-all duration-500"
-              style={{ width: `${Math.max(progressPercent, 6)}%` }}
+              className="relative h-3 rounded-full bg-slate-900 border border-slate-700 overflow-hidden"
               role="progressbar"
+              aria-label="Progresso da fase"
               aria-valuenow={progressPercent}
               aria-valuemin={0}
               aria-valuemax={100}
-            />
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div className="flex items-center gap-2 shrink-0">
-          <button
-            onClick={() => setIsVideoModalOpen(true)}
-            className="trail-focus flex items-center gap-1.5 px-2.5 py-1.5 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-400/30 rounded-xl text-purple-300 font-bold text-xs transition"
-            aria-label="Assistir vídeos de apoio"
-          >
-            <PlayCircle className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Vídeos</span>
-          </button>
-          <div className="flex items-center gap-1 px-2.5 py-1.5 bg-rose-500/15 border border-rose-400/20 rounded-xl text-rose-300 font-bold text-xs">
-            <Heart className="w-3.5 h-3.5 fill-rose-400 text-rose-400" />
-            <span>{userStats.hearts}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* ── SCROLLABLE CONTENT ────────────────────────────────── */}
-      <div className="relative z-10 flex-1 overflow-y-auto px-4 py-4" style={{ WebkitOverflowScrolling: 'touch' }}>
-        <div className="max-w-2xl mx-auto pb-4">
-
-          {/* Step type badge */}
-          <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl ${stepMeta.bg} border ${stepMeta.border} mb-3`}>
-            <span className="text-base leading-none">{stepMeta.emoji}</span>
-            <span className={`text-xs font-black uppercase tracking-wider ${stepMeta.color}`}>{stepMeta.label}</span>
-          </div>
-
-          {/* Step title */}
-          <h2 className="text-xl sm:text-2xl font-black text-white mb-3 leading-tight">
-            {currentStep.title}
-          </h2>
-
-          {/* Character Dialogue Bubble */}
-          {currentStep.mascotTip && (
-            <div className="flex items-end gap-3 mb-5 animate-in fade-in slide-in-from-left-2 duration-300">
-              {/* Avatar do Eraldo */}
-              <div className="shrink-0 flex flex-col items-center gap-0.5">
-                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 border-2 border-amber-300/70 flex items-center justify-center shadow-lg shadow-amber-900/30">
-                  <span className="text-xl">🧑🏽</span>
-                </div>
-                <span className="text-[9px] font-black text-amber-400/90 uppercase tracking-widest">Eraldo</span>
-              </div>
-              {/* Balão de fala */}
-              <div className="relative bg-slate-800 border border-amber-400/30 p-3.5 rounded-2xl rounded-bl-sm shadow-lg shadow-black/30 flex-1 max-w-[calc(100%-4.5rem)]">
-                {/* Cauda do balão */}
-                <div className="absolute -left-[7px] bottom-3 w-3.5 h-3.5 bg-slate-800 border-l border-b border-amber-400/30 transform rotate-45" />
-                <p className="text-sm text-amber-50/90 leading-relaxed font-medium">
-                  {currentStep.mascotTip}
-                </p>
+            >
+              <div
+                key={`pg-${completedSteps}`}
+                className={`lesson-progress-shine relative h-full rounded-full bg-gradient-to-r ${theme.progress} transition-[width] duration-700 ease-out overflow-hidden`}
+                style={{ width: `${Math.max(progressPercent, 4)}%` }}
+              >
+                <span className="absolute right-0.5 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-white/90 shadow-[0_0_8px_2px_rgba(255,255,255,0.7)]" />
               </div>
             </div>
+          </div>
+
+          <div className="flex items-center gap-1.5 shrink-0">
+            <div className="flex items-center gap-1 h-9 px-2.5 rounded-xl bg-[#2a2210] border border-amber-400/60 text-amber-300 font-black text-xs" aria-label={`${sessionXp} XP acumulado nesta fase`}>
+              <Star className="w-3.5 h-3.5 fill-amber-300" />
+              <span key={`xp-${sessionXp}`} className="lesson-pop">{sessionXp}</span>
+              <span className="hidden sm:inline text-amber-200/80">XP</span>
+            </div>
+            <div className="hidden min-[400px]:flex items-center gap-1 h-9 px-2.5 rounded-xl bg-[#2c1424] border border-rose-400/50 text-rose-200 font-black text-xs" aria-label={`${userStats.hearts} vidas`}>
+              <Heart className="w-3.5 h-3.5 fill-rose-400 text-rose-400" />
+              <span>{userStats.hearts}</span>
+            </div>
+            <button
+              onClick={() => setIsVideoModalOpen(true)}
+              className="trail-focus w-9 h-9 flex items-center justify-center rounded-xl bg-[#23174a] hover:bg-[#2e1f60] border border-violet-400/50 text-violet-200 transition"
+              aria-label="Assistir vídeos de apoio"
+            >
+              <PlayCircle className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* ── CONTEÚDO ROLÁVEL ─────────────────────────────────────── */}
+      <main ref={contentRef} className="relative z-10 flex-1 overflow-y-auto overflow-x-hidden px-3 sm:px-4 py-4 sm:py-6" style={{ WebkitOverflowScrolling: 'touch' }}>
+        <div key={currentStep.id} className="max-w-3xl mx-auto pb-6 space-y-4">
+
+          {/* ── 2. CABEÇALHO DA MISSÃO ─────────────────────────────── */}
+          <section className="flex items-start gap-3 lesson-card-in">
+            <div className={`w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-2xl border-2 flex items-center justify-center shadow-lg ${theme.iconBox}`}>
+              <StepIcon className="w-6 h-6 sm:w-7 sm:h-7 text-white" aria-hidden="true" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-lg border text-[11px] font-black uppercase tracking-wider ${theme.chip}`}>
+                {theme.label}
+              </span>
+              <h1 className="text-xl sm:text-2xl font-black text-white leading-tight mt-1.5 break-words">
+                {currentStep.title}
+              </h1>
+              {currentStep.subtitle && (
+                <p className="text-sm text-slate-300 mt-1">{currentStep.subtitle}</p>
+              )}
+            </div>
+          </section>
+
+          {/* ── 3. ÁREA DO PERSONAGEM ─────────────────────────────── */}
+          {currentStep.mascotTip && (
+            <section className="flex items-end gap-2.5 sm:gap-3 lesson-bubble-in" aria-label={`Fala de ${mascotName}`}>
+              <div className="shrink-0 flex flex-col items-center gap-1">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border-[3px] border-teal-300 shadow-lg shadow-teal-900/50 bg-gradient-to-br from-teal-500 to-blue-700 flex items-center justify-center">
+                  {isEraldoTrack ? (
+                    <img src="/assets/trilhas/eraldo-avatar.jpg" alt="" className="w-full h-full object-cover scale-[1.18]" />
+                  ) : (
+                    <MessageCircle className="w-7 h-7 text-white" aria-hidden="true" />
+                  )}
+                </div>
+              </div>
+              <div className="relative flex-1 min-w-0 rounded-2xl rounded-bl-md bg-gradient-to-br from-[#0f3a46] to-[#0d2c45] border-2 border-teal-400/70 shadow-xl shadow-teal-950/50 lesson-glow-once">
+                {/* Cauda do balão */}
+                <div className="absolute -left-[9px] bottom-4 w-4 h-4 bg-[#0e3445] border-l-2 border-b-2 border-teal-400/70 rotate-45" aria-hidden="true" />
+                <div className="relative px-3.5 pt-2.5 pb-3 sm:px-4">
+                  <span className="inline-flex items-center gap-1 -mt-0.5 mb-1.5 px-2 py-0.5 rounded-md bg-teal-400 text-teal-950 text-[10px] font-black uppercase tracking-widest">
+                    <MessageCircle className="w-3 h-3" aria-hidden="true" /> {mascotName}
+                  </span>
+                  <p className="text-[15px] sm:text-base text-white leading-relaxed font-medium">
+                    {currentStep.mascotTip}
+                  </p>
+                </div>
+              </div>
+            </section>
           )}
 
-          {/* Content text */}
-          <p className="text-white/75 text-sm sm:text-base mb-4 leading-relaxed whitespace-pre-wrap break-words font-sans">
-            {currentStep.content}
-          </p>
+          {/* ── 4. CONTEÚDO PRINCIPAL ─────────────────────────────── */}
+          {(currentStep.content || currentStep.customVisual || currentStep.conceptCard) && (
+            <section className={`relative rounded-2xl border-2 overflow-hidden shadow-xl shadow-black/40 lesson-card-in ${theme.panel}`} style={{ animationDelay: '60ms' }}>
+              <div className={`h-1.5 bg-gradient-to-r ${theme.stripe}`} aria-hidden="true" />
+              <div className="p-4 sm:p-5 space-y-4">
+                {currentStep.content && (
+                  <RichLessonText
+                    text={currentStep.content}
+                    className="text-slate-100 text-[15px] sm:text-base leading-relaxed space-y-1 max-w-prose"
+                  />
+                )}
 
-          {/* Root Custom Visual */}
-          {currentStep.customVisual && (
-            <div className="my-4 border border-white/10 rounded-xl p-4 bg-white/5 shadow-inner">
-              {currentStep.customVisual.type === 'price-table' && (
-                <div className="bg-slate-900 rounded-lg overflow-hidden border border-slate-700 max-w-sm mx-auto">
-                  <table className="w-full text-sm text-left">
-                    <thead className="bg-slate-800 text-slate-400">
-                      <tr>
-                        <th className="px-4 py-3 font-bold uppercase tracking-wider">Loja</th>
-                        <th className="px-4 py-3 font-bold uppercase tracking-wider text-right">Preço</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-800">
-                      {(currentStep.customVisual.data as { store: string; price: string; highlight?: boolean }[]).map((row, idx) => (
-                        <tr key={idx} className={row.highlight ? 'bg-indigo-500/20' : ''}>
-                          <td className={`px-4 py-3 font-medium ${row.highlight ? 'text-indigo-300' : 'text-slate-300'}`}>{row.store}</td>
-                          <td className={`px-4 py-3 font-black text-right ${row.highlight ? 'text-indigo-400' : 'text-emerald-400'}`}>{row.price}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-
-              {currentStep.customVisual.type === 'fraction-box-10' && (
-                <div className="flex flex-col items-center gap-2 w-full max-w-md mx-auto my-2">
-                  <div className="flex w-full border-2 border-slate-500 rounded-lg overflow-hidden bg-slate-900 h-8 shadow-lg">
-                    {Array.from({ length: 10 }).map((_, i) => {
-                      const isPainted = i < (currentStep.customVisual!.data as number);
-                      return (
-                        <div 
-                          key={i} 
-                          className={`flex-1 border-r border-slate-700 last:border-0 ${isPainted ? 'bg-emerald-500' : 'bg-transparent'} transition-colors duration-500`}
-                        />
-                      );
-                    })}
+                {currentStep.customVisual && (
+                  <div className="rounded-xl p-3 sm:p-4 bg-black/25 border border-white/10">
+                    {renderCustomVisual(currentStep.customVisual)}
                   </div>
-                  <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">{currentStep.customVisual.data} de 10 preenchidos</span>
-                </div>
-              )}
+                )}
 
-              {currentStep.customVisual.type === 'vertical-math' && (
-                <div className="flex justify-center my-2">
-                  <div className="bg-slate-900/80 rounded-2xl p-6 border-2 border-slate-700 shadow-xl inline-block">
-                    <div className="text-xl sm:text-2xl font-black text-slate-200 text-right font-mono flex flex-col items-end leading-tight tracking-wider">
-                      <div>{(currentStep.customVisual.data as any).top}</div>
-                      <div className="border-b-4 border-slate-500 pb-2 mb-2 flex items-center justify-between w-full gap-4">
-                        <span className="text-slate-500 font-sans">{(currentStep.customVisual.data as any).operator}</span>
-                        <span>{(currentStep.customVisual.data as any).bottom}</span>
+                {/* Concept Card */}
+                {currentStep.conceptCard && (
+                  <div className="rounded-xl bg-[#0a1230] border border-white/10 p-3 sm:p-4">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Sparkles className={`w-4 h-4 ${theme.text}`} aria-hidden="true" />
+                      <span className={`text-[11px] uppercase font-black tracking-widest ${theme.text}`}>Resumo visual</span>
+                    </div>
+                    <h2 className="font-black text-lg sm:text-xl text-white leading-tight">{currentStep.conceptCard.title}</h2>
+                    {currentStep.conceptCard.subtitle && (
+                      <div className="mt-2">
+                        <span className="inline-flex flex-wrap items-center gap-1 px-3 py-1.5 rounded-lg bg-sky-500/15 border border-sky-400/50 text-base font-black">
+                          {currentStep.conceptCard.subtitle.split(/(\d+,\d+)/).map((part, i) =>
+                            /^\d+,\d+$/.test(part) ? <DecimalNumber key={i} value={part} /> : <span key={i} className="text-sky-100">{part}</span>
+                          )}
+                        </span>
                       </div>
-                      <div className="pt-1 text-emerald-400">{(currentStep.customVisual.data as any).result}</div>
+                    )}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+                      {currentStep.conceptCard.points.map((pt, pti) => {
+                        const IconComponent = pt.iconName ? (LucideIcons as any)[pt.iconName] : null;
+                        const isWarning = pt.iconName === 'AlertTriangle' || pt.iconName === 'TriangleAlert';
+                        const accent = isWarning ? WARNING_ACCENT : CONCEPT_ACCENTS[pti % CONCEPT_ACCENTS.length];
+                        return (
+                          <article
+                            key={pti}
+                            className={`rounded-xl border border-slate-600/70 border-l-4 ${accent.edge} ${isWarning ? 'bg-[#2a1f0c]' : 'bg-[#141e3d]'} p-3.5 lesson-card-in`}
+                            style={{ animationDelay: `${100 + pti * 70}ms` }}
+                          >
+                            <div className="flex items-center gap-2.5 mb-2">
+                              <span className={`w-9 h-9 shrink-0 rounded-lg border flex items-center justify-center ${accent.box}`}>
+                                {IconComponent ? <IconComponent className="w-5 h-5" aria-hidden="true" /> : <Sparkles className="w-5 h-5" aria-hidden="true" />}
+                              </span>
+                              <h3 className="text-sm sm:text-[15px] font-black text-white leading-snug">{pt.label}</h3>
+                            </div>
+                            <RichLessonText text={pt.text} mathSize="md" className="text-[13px] sm:text-sm text-slate-200 leading-relaxed" />
+                            {pt.customVisual && (
+                              <div className="mt-3 pt-3 border-t border-white/10">
+                                {renderCustomVisual(pt.customVisual, true)}
+                              </div>
+                            )}
+                          </article>
+                        );
+                      })}
                     </div>
                   </div>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            </section>
           )}
 
           {/* Reading Passage */}
           {currentStep.readingPassage && (
-            <div className="my-4 bg-[#fdfbf7] border-4 border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm">
+            <section className="bg-[#fdfbf7] border-4 border-slate-200 rounded-2xl p-5 sm:p-6 shadow-lg lesson-card-in">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b-2 border-slate-200/60 pb-3 mb-4 gap-2">
                 <div>
                   <span className="text-[10px] uppercase font-black text-slate-500 tracking-widest bg-slate-100 px-2 py-1 rounded-md">
@@ -352,7 +546,9 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
               </p>
               {currentStep.readingPassage.glossary && currentStep.readingPassage.glossary.length > 0 && (
                 <div className="mt-6 p-4 rounded-xl bg-slate-50 border border-slate-200">
-                  <span className="font-black text-slate-600 uppercase tracking-wider text-xs block mb-2">📖 Vocabulário:</span>
+                  <span className="font-black text-slate-600 uppercase tracking-wider text-xs mb-2 flex items-center gap-1.5">
+                    <BookOpen className="w-3.5 h-3.5" /> Vocabulário:
+                  </span>
                   <div className="space-y-2">
                     {currentStep.readingPassage.glossary.map((g, gi) => (
                       <p key={gi} className="text-sm text-slate-600"><strong className="text-indigo-600">{g.word}:</strong> {g.meaning}</p>
@@ -360,114 +556,31 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
                   </div>
                 </div>
               )}
-            </div>
-          )}
-
-          {/* Concept Card */}
-          {currentStep.conceptCard && (
-            <div className="my-4 bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-5">
-              <span className="text-[10px] uppercase font-black text-indigo-400/70 tracking-wider">Resumo Visual</span>
-              <h4 className="font-black text-base sm:text-lg text-white mt-0.5 mb-3">
-                {currentStep.conceptCard.title}
-              </h4>
-              {currentStep.conceptCard.subtitle && (
-                <p className="text-xs text-white/40 mb-3">{currentStep.conceptCard.subtitle}</p>
-              )}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                {currentStep.conceptCard.points.map((pt, pti) => {
-                  const IconComponent = pt.iconName ? (LucideIcons as any)[pt.iconName] : null;
-                  return (
-                    <div key={pti} className="bg-white/8 p-3 rounded-xl border border-white/10">
-                      <div className="flex items-center gap-1.5 mb-1">
-                        <span className="text-base text-indigo-400">
-                          {IconComponent ? <IconComponent className="w-4 h-4" /> : (pt as any).iconEmoji || '✨'}
-                        </span>
-                        <strong className="text-xs sm:text-sm font-black text-white/90">{pt.label}</strong>
-                      </div>
-                      <p className="text-xs text-white/60 leading-relaxed whitespace-pre-line">{pt.text}</p>
-                      
-                      {pt.customVisual && (
-                        <div className="mt-3 pt-3 border-t border-white/5">
-                          {pt.customVisual.type === 'price-table' && (
-                            <div className="bg-slate-900 rounded-lg overflow-hidden border border-slate-700">
-                              <table className="w-full text-xs text-left">
-                                <thead className="bg-slate-800 text-slate-400">
-                                  <tr>
-                                    <th className="px-3 py-2 font-bold uppercase tracking-wider">Loja</th>
-                                    <th className="px-3 py-2 font-bold uppercase tracking-wider text-right">Preço</th>
-                                  </tr>
-                                </thead>
-                                <tbody className="divide-y divide-slate-800">
-                                  {(pt.customVisual.data as { store: string; price: string; highlight?: boolean }[]).map((row, idx) => (
-                                    <tr key={idx} className={row.highlight ? 'bg-indigo-500/20' : ''}>
-                                      <td className={`px-3 py-2 font-medium ${row.highlight ? 'text-indigo-300' : 'text-slate-300'}`}>{row.store}</td>
-                                      <td className={`px-3 py-2 font-black text-right ${row.highlight ? 'text-indigo-400' : 'text-emerald-400'}`}>{row.price}</td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            </div>
-                          )}
-
-                          {pt.customVisual.type === 'fraction-box-10' && (
-                            <div className="flex flex-col items-center gap-1.5 w-full">
-                              <div className="flex w-full border-2 border-slate-600 rounded-md overflow-hidden bg-slate-900 h-6">
-                                {Array.from({ length: 10 }).map((_, i) => {
-                                  const isPainted = i < (pt.customVisual!.data as number);
-                                  return (
-                                    <div 
-                                      key={i} 
-                                      className={`flex-1 border-r border-slate-700 last:border-0 ${isPainted ? 'bg-indigo-500' : 'bg-transparent'}`}
-                                    />
-                                  );
-                                })}
-                              </div>
-                              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{pt.customVisual.data} de 10 preenchidos</span>
-                            </div>
-                          )}
-
-                          {pt.customVisual.type === 'vertical-math' && (
-                            <div className="flex justify-center bg-slate-900/50 rounded-xl p-3 border border-slate-700">
-                              <div className="text-sm font-black text-slate-200 text-right font-mono flex flex-col items-end leading-tight">
-                                <div>{(pt.customVisual.data as any).top}</div>
-                                <div className="border-b-2 border-slate-500 pb-1 flex items-center justify-between w-full gap-2">
-                                  <span className="text-slate-500 font-sans">{(pt.customVisual.data as any).operator}</span>
-                                  <span>{(pt.customVisual.data as any).bottom}</span>
-                                </div>
-                                <div className="pt-1 text-emerald-400">{(pt.customVisual.data as any).result}</div>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+            </section>
           )}
 
           {/* Written Prompt */}
           {currentStep.writtenPrompt && (
-            <div className="my-4 bg-blue-500/8 border border-blue-400/20 rounded-2xl p-4 sm:p-5">
-              <span className="text-[10px] font-black uppercase tracking-wider text-blue-400/70 block mb-2">✍️ Atividade de Registro</span>
+            <section className="rounded-2xl border-2 border-blue-500/50 bg-[#122148] p-4 sm:p-5 lesson-card-in">
+              <span className="text-[11px] font-black uppercase tracking-wider text-blue-300 mb-2 flex items-center gap-1.5">
+                <PenLine className="w-3.5 h-3.5" /> Atividade de registro
+              </span>
               <p className="font-black text-sm sm:text-base text-white mb-2">{currentStep.writtenPrompt.question}</p>
-              <div className="bg-blue-400/10 p-3 rounded-xl border border-blue-400/15 text-xs text-blue-300/80 mb-3">
-                <strong className="text-blue-300">Como formular:</strong> {currentStep.writtenPrompt.guideline}
+              <div className="bg-blue-500/15 p-3 rounded-xl border border-blue-400/40 text-xs text-blue-100 mb-3">
+                <strong className="text-blue-200">Como formular:</strong> {currentStep.writtenPrompt.guideline}
               </div>
-              <div className="bg-slate-800/60 p-3 rounded-xl border border-white/10">
-                <textarea
-                  rows={3}
-                  placeholder="Escreva sua resposta aqui..."
-                  className="w-full text-sm text-white/80 placeholder:text-white/25 outline-none resize-none bg-transparent font-sans"
-                />
-              </div>
-            </div>
+              <textarea
+                rows={3}
+                aria-label="Sua resposta escrita"
+                placeholder="Escreva sua resposta aqui..."
+                className="trail-focus w-full text-sm text-white placeholder:text-slate-400 outline-none resize-none bg-[#0b1430] border-2 border-slate-500/60 focus:border-sky-300 rounded-xl p-3"
+              />
+            </section>
           )}
 
           {/* Place Value Manipulative */}
           {currentStep.placeValueExample && (
-            <div className="my-3">
+            <div className="lesson-card-in">
               <PlaceValueManipulative
                 initialBlocks={currentStep.placeValueExample.blocks}
                 targetNumber={currentStep.placeValueExample.number}
@@ -478,34 +591,37 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
 
           {/* Money / PIX */}
           {currentStep.moneyExample && (
-            <div className="my-3">
+            <div className="lesson-card-in">
               <MoneyManipulator data={currentStep.moneyExample} />
             </div>
           )}
 
           {/* Math Visualizations */}
           {currentStep.mafsVisualization && (
-            <div className="my-4">
+            <div className="lesson-card-in" style={{ animationDelay: '120ms' }}>
               <MathVisuals data={currentStep.mafsVisualization} />
             </div>
           )}
 
           {/* Drag and Drop Interactivity */}
           {currentStep.dragAndDrop && (
-            <div className="my-4">
-              <DragDropGame data={currentStep.dragAndDrop} />
+            <div className="lesson-card-in">
+              <DragDropGame
+                data={currentStep.dragAndDrop}
+                onComplete={() => setStepFeedback({ status: 'success', message: currentStep.dragAndDrop!.successMessage })}
+              />
             </div>
           )}
 
           {/* Notebook Guide */}
           {currentStep.notebookGuide && (
-            <div className="my-3">
-              <div className="bg-sky-500/10 border border-sky-400/20 p-3 rounded-xl mb-3 text-xs text-sky-300/80 space-y-1">
-                <span className="font-black flex items-center gap-1 text-sky-300">
-                  <BookOpen className="w-3.5 h-3.5" /> Dicas de Registro no Caderno:
+            <div className="lesson-card-in">
+              <div className="bg-[#0f2340] border-2 border-sky-500/50 p-3.5 rounded-xl mb-3 text-sm text-sky-100 space-y-1">
+                <span className="font-black flex items-center gap-1.5 text-sky-200">
+                  <BookOpen className="w-4 h-4" /> Dicas de registro no caderno
                 </span>
                 {currentStep.notebookGuide.tips.map((tip, i) => (
-                  <p key={i} className="text-sky-300/70">• {tip}</p>
+                  <p key={i} className="text-sky-100/90">• {tip}</p>
                 ))}
               </div>
               <NotebookGrid operation={currentStep.notebookGuide.operation} interactive={false} />
@@ -514,176 +630,211 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
 
           {/* Interactive Notebook */}
           {currentStep.interactiveNotebook && (
-            <div className="my-3">
+            <div className="lesson-card-in">
               <NotebookGrid
                 operation={currentStep.interactiveNotebook.operation}
                 interactive={true}
                 onComplete={() => setStepFeedback({ status: 'success', message: 'Excelente! Você armou e resolveu cada coluna no caderno perfeitamente!' })}
-                onMistake={() => { setMistakesThisSession(prev => [...prev, currentStep.title]); onRecordMistake(unit.id, currentStep.title); }}
+                onMistake={recordMistake}
               />
             </div>
           )}
 
-          {/* Quiz */}
+          {/* ── 5. ÁREA DA ATIVIDADE: QUIZ ─────────────────────────── */}
           {currentStep.quiz && (
-            <div className="my-4 space-y-2.5">
-              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-2">
-                <h4 className="font-black text-white text-base flex items-start gap-2">
-                  <HelpCircle className="w-5 h-5 text-indigo-400 shrink-0 mt-0.5" />
-                  {currentStep.quiz.question}
-                </h4>
-                {lastReadingPassage && (
-                  <button 
-                    onClick={() => setIsReadingModalOpen(true)}
-                    className="shrink-0 flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold uppercase tracking-wide bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30 rounded-lg border border-indigo-500/30 transition-colors w-full sm:w-auto"
-                  >
-                    <BookOpen className="w-4 h-4" />
-                    {lastReadingPassage.genre?.toLowerCase().includes('receita') ? 'Ver Receita' : 'Ver Texto'}
-                  </button>
-                )}
+            <section className="rounded-2xl border-2 border-slate-600/70 bg-[#0e1733] p-3.5 sm:p-5 shadow-xl shadow-black/40 lesson-card-in" style={{ animationDelay: '120ms' }} aria-labelledby="quiz-question">
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <span className={`text-[11px] font-black uppercase tracking-widest flex items-center gap-1.5 ${theme.text}`}>
+                  <HelpCircle className="w-4 h-4" aria-hidden="true" /> Sua vez
+                </span>
+                <span className="text-[11px] font-bold text-slate-400">
+                  {stepSucceeded ? 'Respondida' : stepFeedback.status === 'error' ? 'Tente outra alternativa' : selectedOption === null ? 'Escolha uma alternativa' : 'Pronto para verificar'}
+                </span>
               </div>
-              <div className="grid grid-cols-1 gap-2 pt-1">
+              <h2 id="quiz-question" className="font-black text-white text-base sm:text-lg leading-snug mb-3">
+                {currentStep.quiz.question}
+              </h2>
+
+              {lastReadingPassage && (
+                <button
+                  onClick={() => setIsReadingModalOpen(true)}
+                  className="trail-focus mb-3 inline-flex items-center gap-1.5 min-h-[40px] px-3 text-xs font-black uppercase tracking-wide bg-indigo-600/30 text-indigo-100 hover:bg-indigo-600/45 rounded-xl border border-indigo-400/60 transition-colors"
+                >
+                  <BookOpen className="w-4 h-4" />
+                  {lastReadingPassage.genre?.toLowerCase().includes('receita') ? 'Ver receita' : 'Ver texto'}
+                </button>
+              )}
+
+              <div className="grid grid-cols-1 gap-2.5" role="radiogroup" aria-labelledby="quiz-question">
                 {currentStep.quiz.options.map((option, idx) => {
                   const isSelected = selectedOption === idx;
+                  const isCorrectShown = stepSucceeded && idx === currentStep.quiz!.correctIndex;
+                  const isWrongShown = stepFeedback.status === 'error' && isSelected;
+                  const isDimmed = stepSucceeded && !isCorrectShown;
+
+                  let stateCls = 'bg-[#1a2547] border-slate-500/60 text-slate-100 hover:bg-[#213060] hover:border-slate-300';
+                  let markerCls = 'bg-slate-700 border-slate-400 text-slate-100';
+                  let StateIcon: LucideIcons.LucideIcon | null = null;
+                  let stateIconCls = '';
+                  if (isCorrectShown) {
+                    stateCls = 'bg-gradient-to-r from-emerald-600/40 to-emerald-700/30 border-emerald-300 text-white shadow-lg shadow-emerald-900/40 lesson-glow-once';
+                    markerCls = 'bg-emerald-400 border-emerald-200 text-emerald-950';
+                    StateIcon = CheckCircle2; stateIconCls = 'text-emerald-300 lesson-pop';
+                  } else if (isWrongShown) {
+                    stateCls = 'bg-gradient-to-r from-amber-600/35 to-orange-700/25 border-amber-300 text-white';
+                    markerCls = 'bg-amber-400 border-amber-200 text-amber-950';
+                    StateIcon = RotateCcw; stateIconCls = 'text-amber-300 lesson-pop';
+                  } else if (isSelected) {
+                    stateCls = `bg-gradient-to-r from-blue-600/45 to-indigo-600/35 border-sky-300 text-white shadow-lg shadow-blue-900/50 ring-4 ${theme.ring} lesson-glow-once`;
+                    markerCls = 'bg-sky-300 border-white text-blue-950';
+                    StateIcon = CircleDot; stateIconCls = 'text-sky-200';
+                  } else if (isDimmed) {
+                    stateCls = 'bg-[#141c38] border-slate-700 text-slate-400 opacity-70';
+                  }
+
                   return (
                     <button
                       key={idx}
-                      disabled={stepFeedback.status === 'success'}
+                      role="radio"
+                      aria-checked={isSelected}
+                      disabled={stepSucceeded}
                       onClick={() => { setSelectedOption(idx); setStepFeedback({ status: 'idle', message: '' }); }}
-                      className={`trail-focus w-full p-4 text-left rounded-2xl border-2 font-medium transition-all flex items-center justify-between text-sm sm:text-base ${
-                        isSelected
-                          ? 'border-indigo-400 bg-indigo-500/20 text-white shadow-md ring-2 ring-indigo-400/30'
-                          : 'border-white/10 bg-white/5 hover:bg-white/10 text-white/75 hover:text-white'
-                      }`}
-                      aria-pressed={isSelected}
+                      className={`trail-focus w-full min-h-[56px] px-3 py-3 text-left rounded-2xl border-2 font-semibold transition-all duration-150 active:scale-[0.98] flex items-center gap-3 text-[15px] sm:text-base disabled:cursor-default ${stateCls}`}
                     >
-                      <span>{option}</span>
-                      <span className={`w-7 h-7 rounded-full border-2 flex items-center justify-center font-black text-xs shrink-0 ${
-                        isSelected ? 'border-indigo-400 bg-indigo-500 text-white' : 'border-white/20 text-white/40'
-                      }`}>
+                      <span className={`w-9 h-9 rounded-xl border-2 flex items-center justify-center font-black text-sm shrink-0 transition-colors ${markerCls}`} aria-hidden="true">
                         {String.fromCharCode(65 + idx)}
                       </span>
+                      <span className="flex-1 min-w-0 break-words leading-snug">{cleanOption(option)}</span>
+                      {StateIcon && <StateIcon className={`w-6 h-6 shrink-0 ${stateIconCls}`} aria-hidden="true" />}
+                      {isCorrectShown && <span className="sr-only">(resposta correta)</span>}
+                      {isWrongShown && <span className="sr-only">(resposta a revisar)</span>}
                     </button>
                   );
                 })}
               </div>
-            </div>
+
+              {currentStep.quiz.hint && !stepSucceeded && (
+                <div className="mt-3">
+                  {showHint ? (
+                    <div className="flex items-start gap-2.5 rounded-xl bg-[#10213f] border border-sky-400/50 p-3 lesson-card-in" role="note">
+                      <Lightbulb className="w-5 h-5 text-sky-300 shrink-0 mt-0.5" aria-hidden="true" />
+                      <p className="text-sm text-sky-50 leading-relaxed"><strong className="text-sky-200">Dica: </strong>{currentStep.quiz.hint}</p>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => setShowHint(true)}
+                      className="trail-focus inline-flex items-center gap-1.5 min-h-[40px] px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-500/70 text-sky-200 text-sm font-bold transition"
+                    >
+                      <Lightbulb className="w-4 h-4" /> Pedir uma dica
+                    </button>
+                  )}
+                </div>
+              )}
+            </section>
           )}
 
-          {/* Word Problem */}
+          {/* ── 5. ÁREA DA ATIVIDADE: PROBLEMA NUMÉRICO ────────────── */}
           {currentStep.wordProblem && (
-            <div className="my-4 bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-5 space-y-4">
-              <div className="border-l-4 border-amber-400 pl-3 relative">
-                <p className="text-white/80 font-medium text-base mb-1 pr-24">{currentStep.wordProblem.story}</p>
-                <p className="text-amber-300 font-black text-sm">Pergunta: {currentStep.wordProblem.question}</p>
-                
-                {lastReadingPassage && (
-                  <button 
-                    onClick={() => setIsReadingModalOpen(true)}
-                    className="absolute top-0 right-0 shrink-0 flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold uppercase tracking-wide bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30 rounded-lg border border-indigo-500/30 transition-colors"
-                  >
-                    <BookOpen className="w-4 h-4" />
-                    {lastReadingPassage.genre?.toLowerCase().includes('receita') ? 'Ver Receita' : 'Ver Texto'}
-                  </button>
-                )}
+            <section className="rounded-2xl border-2 border-slate-600/70 bg-[#0e1733] p-4 sm:p-5 space-y-4 shadow-xl shadow-black/40 lesson-card-in">
+              <div className="border-l-4 border-amber-400 pl-3">
+                <p className="text-slate-100 font-medium text-base mb-1.5">{currentStep.wordProblem.story}</p>
+                <p className="text-amber-300 font-black text-sm sm:text-base">Pergunta: {currentStep.wordProblem.question}</p>
               </div>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                <label className="text-sm font-black text-white/70">Sua Resposta:</label>
-                <div className="flex items-center gap-2">
+              {lastReadingPassage && (
+                <button
+                  onClick={() => setIsReadingModalOpen(true)}
+                  className="trail-focus inline-flex items-center gap-1.5 min-h-[40px] px-3 text-xs font-black uppercase tracking-wide bg-indigo-600/30 text-indigo-100 hover:bg-indigo-600/45 rounded-xl border border-indigo-400/60 transition-colors"
+                >
+                  <BookOpen className="w-4 h-4" />
+                  {lastReadingPassage.genre?.toLowerCase().includes('receita') ? 'Ver receita' : 'Ver texto'}
+                </button>
+              )}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
+                <label htmlFor="word-answer" className="text-sm font-black text-slate-200">Sua resposta:</label>
+                <div className="flex items-stretch gap-2">
                   <input
+                    id="word-answer"
                     type="number"
+                    inputMode="numeric"
                     value={userWordProblemAnswer}
-                    onChange={e => setUserWordProblemAnswer(e.target.value)}
+                    onChange={e => { setUserWordProblemAnswer(e.target.value); if (stepFeedback.status === 'error') setStepFeedback({ status: 'idle', message: '' }); }}
                     placeholder="0"
-                    disabled={stepFeedback.status === 'success'}
-                    className="trail-focus px-4 py-2.5 text-lg font-black bg-white/10 border-2 border-white/20 rounded-xl outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/30 w-32 text-center text-white placeholder:text-white/20 transition"
+                    disabled={stepSucceeded}
+                    className={`trail-focus h-14 px-4 text-xl font-black bg-[#0b1430] border-2 rounded-xl outline-none focus:ring-4 w-36 text-center text-white placeholder:text-slate-500 transition ${
+                      stepSucceeded ? 'border-emerald-400 ring-emerald-400/30' : stepFeedback.status === 'error' ? 'border-amber-400 focus:ring-amber-400/30' : 'border-slate-400/70 focus:border-sky-300 focus:ring-sky-400/30'
+                    }`}
                   />
-                  <span className="text-sm text-white/50 font-semibold">{currentStep.wordProblem.unitName}</span>
+                  <span className="h-14 inline-flex items-center px-3 rounded-xl bg-slate-800 border border-slate-600 text-sm text-slate-200 font-bold">
+                    {currentStep.wordProblem.unitName}
+                  </span>
                 </div>
               </div>
-            </div>
+            </section>
           )}
 
-          {/* Feedback */}
+          {/* ── 6. FEEDBACK ───────────────────────────────────────── */}
           {stepFeedback.status !== 'idle' && (
-            <div className={`rounded-2xl border flex items-start gap-3 my-4 overflow-hidden ${
-              stepFeedback.status === 'success'
-                ? 'bg-emerald-500/10 border-emerald-400/30'
-                : 'bg-amber-500/10 border-amber-400/30'
-            }`}>
-              {/* Barra lateral colorida */}
-              <div className={`w-1 self-stretch shrink-0 ${
-                stepFeedback.status === 'success' ? 'bg-emerald-400' : 'bg-amber-400'
-              }`} />
-              <div className="py-3.5 pr-3.5 flex items-start gap-3">
-                {stepFeedback.status === 'success'
-                  ? <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                  : <Lightbulb className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
-                }
-                <div>
-                  <p className={`font-black text-sm mb-0.5 ${
-                    stepFeedback.status === 'success' ? 'text-emerald-300' : 'text-amber-300'
-                  }`}>
-                    {stepFeedback.status === 'success' ? 'Correto!' : 'Quase lá!'}
-                  </p>
-                  <p className={`text-xs leading-relaxed ${
-                    stepFeedback.status === 'success' ? 'text-emerald-100/75' : 'text-amber-100/75'
-                  }`}>{stepFeedback.message}</p>
+            <section
+              key={`fb-${stepFeedback.status}-${stepFeedback.message.length}`}
+              role="status"
+              aria-live="polite"
+              className={`relative rounded-2xl border-2 flex items-start gap-3 p-3.5 sm:p-4 lesson-card-in ${
+                stepSucceeded
+                  ? 'bg-[#0d2a22] border-emerald-400/80 shadow-lg shadow-emerald-950/50'
+                  : 'bg-[#2a1f0c] border-amber-400/80 shadow-lg shadow-amber-950/50'
+              }`}
+            >
+              <div className="relative shrink-0">
+                <div className={`w-11 h-11 rounded-xl flex items-center justify-center lesson-pop ${stepSucceeded ? 'bg-emerald-400 text-emerald-950' : 'bg-amber-400 text-amber-950'}`}>
+                  {stepSucceeded ? <CheckCircle2 className="w-6 h-6" aria-hidden="true" /> : <Lightbulb className="w-6 h-6" aria-hidden="true" />}
                 </div>
+                {stepSucceeded && SPARKS.map((s, i) => (
+                  <span
+                    key={i}
+                    className={`lesson-spark absolute left-1/2 top-1/2 -ml-1 -mt-1 w-2 h-2 rounded-full ${s.c}`}
+                    style={{ ['--sx' as any]: s.sx, ['--sy' as any]: s.sy, animationDelay: `${i * 25}ms` }}
+                    aria-hidden="true"
+                  />
+                ))}
               </div>
-            </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between gap-2 mb-1">
+                  <p className={`font-black text-base ${stepSucceeded ? 'text-emerald-200' : 'text-amber-200'}`}>
+                    {stepSucceeded ? 'Mandou bem!' : 'Quase lá! Vamos pensar juntos.'}
+                  </p>
+                  {stepSucceeded && (
+                    <span className="lesson-xp-rise shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-amber-400 text-amber-950 text-xs font-black">
+                      <Star className="w-3 h-3 fill-amber-950" aria-hidden="true" /> +{stepXp} XP
+                    </span>
+                  )}
+                </div>
+                <p className={`text-sm leading-relaxed ${stepSucceeded ? 'text-emerald-50' : 'text-amber-50'}`}>{stepFeedback.message}</p>
+              </div>
+            </section>
           )}
         </div>
-      </div>
+      </main>
 
-      {/* ── BOTTOM ACTION BAR ─────────────────────────────────── */}
-      <div 
-        className="relative z-10 shrink-0 px-4 pt-4 bg-slate-900/90 backdrop-blur-xl border-t border-white/10"
-        style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
+      {/* ── 7. BARRA INFERIOR ─────────────────────────────────────── */}
+      <footer
+        className="relative z-10 shrink-0 px-3 sm:px-4 pt-3 bg-[#0a1128]/95 border-t border-slate-700/80 shadow-[0_-10px_30px_-10px_rgba(0,0,0,0.6)]"
+        style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}
       >
-        <div className="max-w-2xl mx-auto">
-          {currentStep.quiz && stepFeedback.status !== 'success' ? (
-            <button
-              onClick={handleCheckQuiz}
-              disabled={selectedOption === null}
-              className={`trail-focus w-full py-4 rounded-2xl font-black text-[17px] flex items-center justify-center gap-2 transition active:scale-95 ${
-                selectedOption === null
-                  ? 'bg-white/10 text-white/30 cursor-not-allowed border border-white/10'
-                  : 'bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-400 hover:to-blue-500 text-white shadow-xl'
-              }`}
-            >
-              Verificar Resposta
-            </button>
-          ) : currentStep.wordProblem && stepFeedback.status !== 'success' ? (
-            <button
-              onClick={handleCheckWordProblem}
-              disabled={userWordProblemAnswer.trim() === ''}
-              className={`trail-focus w-full py-4 rounded-2xl font-black text-[17px] flex items-center justify-center gap-2 transition active:scale-95 ${
-                userWordProblemAnswer.trim() === ''
-                  ? 'bg-white/10 text-white/30 cursor-not-allowed border border-white/10'
-                  : 'bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-400 hover:to-blue-500 text-white shadow-xl'
-              }`}
-            >
-              Conferir Resposta
-            </button>
-          ) : (
-            <button
-              onClick={handleNextStep}
-              className="trail-focus w-full py-4 rounded-2xl text-slate-900 font-black text-[17px] bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-300 shadow-xl flex items-center justify-center gap-2 transition active:scale-95"
-            >
-              <span>{currentStepIndex === steps.length - 1 ? 'Concluir Missão! 🏆' : 'Avançar'}</span>
-              <ArrowRight className="w-5 h-5" />
-            </button>
-          )}
+        <div className="max-w-3xl mx-auto flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-1.5 text-xs font-bold text-slate-400 shrink-0">
+            <Flag className={`w-4 h-4 ${theme.text}`} aria-hidden="true" />
+            {theme.label}
+          </div>
+          <div className="flex-1">{primaryButton}</div>
         </div>
-      </div>
+      </footer>
 
       <VideoModal
         isOpen={isVideoModalOpen}
         onClose={() => setIsVideoModalOpen(false)}
         unitTitle={unit.title}
       />
-      
+
       {lastReadingPassage && (
         <ReadingPassageModal
           isOpen={isReadingModalOpen}

@@ -343,3 +343,98 @@ html, body, #root {
 .motion-reduced .animate-bounce {
   animation: none !important;
 }
+
+/* ===== FASES — MODO MISSÃO (LessonRunner e componentes de atividade) ===== */
+
+/* Fundo profundo com brilho ambiental discreto nas bordas */
+.lesson-bg {
+  background:
+    radial-gradient(120% 60% at 0% 0%, rgba(59,130,246,0.18) 0%, transparent 55%),
+    radial-gradient(100% 50% at 100% 100%, rgba(139,92,246,0.16) 0%, transparent 60%),
+    linear-gradient(180deg, #070d1f 0%, #0a1230 45%, #0b1028 100%);
+}
+
+/* Superfície base sólida (substitui bg-white/5) */
+.lesson-surface {
+  background: linear-gradient(180deg, #16213f 0%, #121a35 100%);
+  border: 1px solid rgba(148,163,184,0.28);
+  box-shadow: 0 10px 30px -12px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* Destaque matemático (expressões como 2/10 = 0,2) */
+.lesson-math {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+@keyframes lessonCardIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes lessonBubbleIn {
+  from { opacity: 0; transform: translateX(-10px) scale(0.97); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes lessonPop {
+  0%   { transform: scale(0.6); opacity: 0; }
+  60%  { transform: scale(1.12); opacity: 1; }
+  100% { transform: scale(1); }
+}
+@keyframes lessonGlowOnce {
+  0%   { box-shadow: 0 0 0 0 rgba(255,255,255,0.0); }
+  40%  { box-shadow: 0 0 0 4px rgba(255,255,255,0.18), 0 0 24px 2px rgba(255,255,255,0.12); }
+  100% { box-shadow: 0 0 0 0 rgba(255,255,255,0.0); }
+}
+@keyframes lessonShine {
+  0%   { transform: translateX(-120%); }
+  100% { transform: translateX(220%); }
+}
+@keyframes lessonPulseCta {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.025); }
+}
+@keyframes lessonXpRise {
+  0%   { opacity: 0; transform: translateY(8px) scale(0.85); }
+  25%  { opacity: 1; transform: translateY(0) scale(1.05); }
+  80%  { opacity: 1; transform: translateY(-6px) scale(1); }
+  100% { opacity: 0; transform: translateY(-14px) scale(1); }
+}
+@keyframes lessonSpark {
+  0%   { opacity: 1; transform: translate(0,0) scale(0.6); }
+  100% { opacity: 0; transform: translate(var(--sx), var(--sy)) scale(1); }
+}
+
+.lesson-card-in   { animation: lessonCardIn 0.35s cubic-bezier(0.22,1,0.36,1) both; }
+.lesson-bubble-in { animation: lessonBubbleIn 0.4s cubic-bezier(0.22,1,0.36,1) both; }
+.lesson-pop       { animation: lessonPop 0.45s cubic-bezier(0.34,1.56,0.64,1) both; }
+.lesson-glow-once { animation: lessonGlowOnce 0.7s ease-out 1; }
+.lesson-pulse-cta { animation: lessonPulseCta 0.9s ease-in-out 2; }
+.lesson-xp-rise   { animation: lessonXpRise 1.6s ease-out forwards; }
+.lesson-spark     { animation: lessonSpark 0.75s ease-out forwards; }
+
+/* Brilho que percorre a barra de progresso uma vez a cada avanço */
+.lesson-progress-shine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+  animation: lessonShine 1.1s ease-out 1 forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lesson-card-in,
+  .lesson-bubble-in,
+  .lesson-pop,
+  .lesson-glow-once,
+  .lesson-pulse-cta,
+  .lesson-xp-rise,
+  .lesson-spark,
+  .lesson-progress-shine::after {
+    animation: none !important;
+  }
+  .lesson-spark,
+  .lesson-progress-shine::after { display: none; }
+  .lesson-xp-rise { opacity: 1; }
+}
+
