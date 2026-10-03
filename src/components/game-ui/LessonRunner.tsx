@@ -24,17 +24,17 @@ interface LessonRunnerProps {
 }
 
 const STEP_META: Record<LessonStep['type'], { label: string; emoji: string; color: string; bg: string; border: string }> = {
-  objective:              { label: '1 · Objetivo',          emoji: '🎯', color: 'text-emerald-300',  bg: 'bg-emerald-500/15',  border: 'border-emerald-400/30' },
-  explanation:            { label: '2 · Explicação',         emoji: '💡', color: 'text-sky-300',      bg: 'bg-sky-500/15',      border: 'border-sky-400/30' },
-  worked_example:         { label: '3 · Exemplo Resolvido',  emoji: '📐', color: 'text-indigo-300',   bg: 'bg-indigo-500/15',   border: 'border-indigo-400/30' },
-  notebook_demo:          { label: '4 · Caderno',            emoji: '📓', color: 'text-amber-300',    bg: 'bg-amber-500/15',    border: 'border-amber-400/30' },
-  guided_practice:        { label: '5 · Prática Guiada',     emoji: '🤝', color: 'text-blue-300',     bg: 'bg-blue-500/15',     border: 'border-blue-400/30' },
-  independent_exercise:   { label: '6 · Exercício',          emoji: '⚡', color: 'text-violet-300',   bg: 'bg-violet-500/15',   border: 'border-violet-400/30' },
-  contextualized_problem: { label: '7 · Problema Real',      emoji: '🌍', color: 'text-rose-300',     bg: 'bg-rose-500/15',     border: 'border-rose-400/30' },
-  final_challenge:        { label: '8 · Desafio Final',      emoji: '🏆', color: 'text-purple-300',   bg: 'bg-purple-500/15',   border: 'border-purple-400/30' },
-  recovery_mission:       { label: '9 · Revisão',            emoji: '🔄', color: 'text-orange-300',   bg: 'bg-orange-500/15',   border: 'border-orange-400/30' },
-  interactive_drag_drop:  { label: '10 · Prática Interativa',emoji: '👆', color: 'text-pink-300',     bg: 'bg-pink-500/15',     border: 'border-pink-400/30' },
-  dialogue:               { label: 'História',               emoji: '💬', color: 'text-slate-300',    bg: 'bg-slate-500/15',    border: 'border-slate-400/30' },
+  objective:              { label: 'Objetivo',            emoji: '🎯', color: 'text-emerald-300',  bg: 'bg-emerald-500/20',  border: 'border-emerald-400/40' },
+  explanation:            { label: 'Explicação',           emoji: '💡', color: 'text-sky-300',      bg: 'bg-sky-500/20',      border: 'border-sky-400/40' },
+  worked_example:         { label: 'Exemplo Resolvido',   emoji: '📐', color: 'text-indigo-300',   bg: 'bg-indigo-500/20',   border: 'border-indigo-400/40' },
+  notebook_demo:          { label: 'Caderno',              emoji: '📓', color: 'text-amber-300',    bg: 'bg-amber-500/20',    border: 'border-amber-400/40' },
+  guided_practice:        { label: 'Prática Guiada',       emoji: '🤝', color: 'text-blue-300',     bg: 'bg-blue-500/20',     border: 'border-blue-400/40' },
+  independent_exercise:   { label: 'Exercício',            emoji: '⚡', color: 'text-violet-300',   bg: 'bg-violet-500/20',   border: 'border-violet-400/40' },
+  contextualized_problem: { label: 'Problema Real',        emoji: '🌍', color: 'text-rose-300',     bg: 'bg-rose-500/20',     border: 'border-rose-400/40' },
+  final_challenge:        { label: 'Desafio Final',        emoji: '🏆', color: 'text-purple-300',   bg: 'bg-purple-500/20',   border: 'border-purple-400/40' },
+  recovery_mission:       { label: 'Revisão',              emoji: '🔄', color: 'text-orange-300',   bg: 'bg-orange-500/20',   border: 'border-orange-400/40' },
+  interactive_drag_drop:  { label: 'Prática Interativa',  emoji: '👆', color: 'text-pink-300',     bg: 'bg-pink-500/20',     border: 'border-pink-400/40' },
+  dialogue:               { label: 'Eraldo conta',         emoji: '💬', color: 'text-amber-200',    bg: 'bg-amber-500/15',    border: 'border-amber-400/30' },
 };
 
 export const LessonRunner: React.FC<LessonRunnerProps> = ({
@@ -246,17 +246,21 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
 
           {/* Character Dialogue Bubble */}
           {currentStep.mascotTip && (
-            <div className="flex items-end gap-3 mb-5">
-              <div className="w-12 h-12 rounded-full bg-indigo-500/20 border-2 border-indigo-400/40 flex items-center justify-center shrink-0 overflow-hidden shadow-lg">
-                {/* Aqui entrará a foto do Eraldo futuramente, por enquanto um ícone genérico de personagem */}
-                <span className="text-2xl">👤</span>
+            <div className="flex items-end gap-3 mb-5 animate-in fade-in slide-in-from-left-2 duration-300">
+              {/* Avatar do Eraldo */}
+              <div className="shrink-0 flex flex-col items-center gap-0.5">
+                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 border-2 border-amber-300/70 flex items-center justify-center shadow-lg shadow-amber-900/30">
+                  <span className="text-xl">🧑🏽</span>
+                </div>
+                <span className="text-[9px] font-black text-amber-400/90 uppercase tracking-widest">Eraldo</span>
               </div>
-              <div className="relative bg-indigo-500/10 border border-indigo-400/30 p-4 rounded-2xl rounded-bl-none shadow-md">
-                <p className="text-sm text-indigo-100/90 font-medium leading-relaxed italic">
+              {/* Balão de fala */}
+              <div className="relative bg-slate-800 border border-amber-400/30 p-3.5 rounded-2xl rounded-bl-sm shadow-lg shadow-black/30 flex-1 max-w-[calc(100%-4.5rem)]">
+                {/* Cauda do balão */}
+                <div className="absolute -left-[7px] bottom-3 w-3.5 h-3.5 bg-slate-800 border-l border-b border-amber-400/30 transform rotate-45" />
+                <p className="text-sm text-amber-50/90 leading-relaxed font-medium">
                   {currentStep.mascotTip}
                 </p>
-                {/* Triângulo do balão de fala apontando para o avatar */}
-                <div className="absolute -left-2 bottom-0 w-4 h-4 bg-indigo-500/10 border-l border-b border-indigo-400/30 transform rotate-45 translate-x-1 -translate-y-1 rounded-sm"></div>
               </div>
             </div>
           )}
@@ -602,20 +606,30 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
 
           {/* Feedback */}
           {stepFeedback.status !== 'idle' && (
-            <div className={`p-4 rounded-2xl border flex items-start gap-3 my-4 ${
+            <div className={`rounded-2xl border flex items-start gap-3 my-4 overflow-hidden ${
               stepFeedback.status === 'success'
-                ? 'bg-emerald-500/15 border-emerald-400/30 text-emerald-200'
-                : 'bg-rose-500/15 border-rose-400/30 text-rose-200'
+                ? 'bg-emerald-500/10 border-emerald-400/30'
+                : 'bg-amber-500/10 border-amber-400/30'
             }`}>
-              {stepFeedback.status === 'success'
-                ? <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                : <XCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
-              }
-              <div>
-                <p className="font-black text-sm mb-0.5">
-                  {stepFeedback.status === 'success' ? '🎉 Muito Bem!' : '💪 Vamos Tentar Novamente!'}
-                </p>
-                <p className="text-xs leading-relaxed opacity-80">{stepFeedback.message}</p>
+              {/* Barra lateral colorida */}
+              <div className={`w-1 self-stretch shrink-0 ${
+                stepFeedback.status === 'success' ? 'bg-emerald-400' : 'bg-amber-400'
+              }`} />
+              <div className="py-3.5 pr-3.5 flex items-start gap-3">
+                {stepFeedback.status === 'success'
+                  ? <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+                  : <Lightbulb className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                }
+                <div>
+                  <p className={`font-black text-sm mb-0.5 ${
+                    stepFeedback.status === 'success' ? 'text-emerald-300' : 'text-amber-300'
+                  }`}>
+                    {stepFeedback.status === 'success' ? 'Correto!' : 'Quase lá!'}
+                  </p>
+                  <p className={`text-xs leading-relaxed ${
+                    stepFeedback.status === 'success' ? 'text-emerald-100/75' : 'text-amber-100/75'
+                  }`}>{stepFeedback.message}</p>
+                </div>
               </div>
             </div>
           )}
