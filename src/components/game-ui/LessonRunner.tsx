@@ -59,6 +59,7 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
   const [mistakesThisSession, setMistakesThisSession] = useState<string[]>([]);
   const [isReadingModalOpen, setIsReadingModalOpen] = useState(false);
   const [showHint, setShowHint] = useState(false);
+  const [isChallengeExpanded, setIsChallengeExpanded] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
   const steps = unit.steps;
@@ -93,6 +94,7 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
     setSelectedOption(null);
     setUserWordProblemAnswer('');
     setShowHint(false);
+    setIsChallengeExpanded(false);
   };
 
   const handleNextStep = () => {
@@ -332,6 +334,28 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
     );
   }
 
+  const hasExplanation = !!(
+    currentStep.mascotTip ||
+    currentStep.content ||
+    currentStep.customVisual ||
+    currentStep.conceptCard ||
+    currentStep.readingPassage ||
+    currentStep.placeValueExample ||
+    currentStep.moneyExample ||
+    currentStep.mafsVisualization ||
+    currentStep.notebookGuide
+  );
+  
+  const hasChallenge = !!(
+    currentStep.quiz ||
+    currentStep.wordProblem ||
+    currentStep.writtenPrompt ||
+    currentStep.dragAndDrop ||
+    currentStep.interactiveNotebook
+  );
+  
+  const challengeVisible = !hasExplanation || isChallengeExpanded || stepFeedback.status !== 'idle';
+
   // ── Tela principal do desafio ─────────────────────────────────────────────
   return (
     <div className="fixed inset-0 z-[90] flex flex-col overflow-hidden lesson-bg">
@@ -563,25 +587,6 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
             </section>
           )}
 
-          {/* Written Prompt */}
-          {currentStep.writtenPrompt && (
-            <section className="rounded-2xl border-2 border-blue-500/50 bg-[#122148] p-4 sm:p-5 lesson-card-in">
-              <span className="text-[11px] font-black uppercase tracking-wider text-blue-300 mb-2 flex items-center gap-1.5">
-                <PenLine className="w-3.5 h-3.5" /> Atividade de registro
-              </span>
-              <p className="font-black text-sm sm:text-base text-white mb-2">{currentStep.writtenPrompt.question}</p>
-              <div className="bg-blue-500/15 p-3 rounded-xl border border-blue-400/40 text-xs text-blue-100 mb-3">
-                <strong className="text-blue-200">Como formular:</strong> {currentStep.writtenPrompt.guideline}
-              </div>
-              <textarea
-                rows={3}
-                aria-label="Sua resposta escrita"
-                placeholder="Escreva sua resposta aqui..."
-                className="trail-focus w-full text-sm text-white placeholder:text-slate-400 outline-none resize-none bg-[#0b1430] border-2 border-slate-500/60 focus:border-sky-300 rounded-xl p-3"
-              />
-            </section>
-          )}
-
           {/* Place Value Manipulative */}
           {currentStep.placeValueExample && (
             <div className="lesson-card-in">
@@ -607,16 +612,6 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
             </div>
           )}
 
-          {/* Drag and Drop Interactivity */}
-          {currentStep.dragAndDrop && (
-            <div className="lesson-card-in">
-              <DragDropGame
-                data={currentStep.dragAndDrop}
-                onComplete={() => setStepFeedback({ status: 'success', message: currentStep.dragAndDrop!.successMessage })}
-              />
-            </div>
-          )}
-
           {/* Notebook Guide */}
           {currentStep.notebookGuide && (
             <div className="lesson-card-in">
@@ -632,148 +627,200 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
             </div>
           )}
 
-          {/* Interactive Notebook */}
-          {currentStep.interactiveNotebook && (
-            <div className="lesson-card-in">
-              <NotebookGrid
-                operation={currentStep.interactiveNotebook.operation}
-                interactive={true}
-                onComplete={() => setStepFeedback({ status: 'success', message: 'Excelente! Você armou e resolveu cada coluna no caderno perfeitamente!' })}
-                onMistake={recordMistake}
-              />
+          {/* ── INTERAÇÃO DE LEITURA / EXPLICAÇÃO (BOTÃO ENTENDI) ────────── */}
+          {hasExplanation && hasChallenge && !isChallengeExpanded && stepFeedback.status === 'idle' && (
+            <div className="flex justify-center mt-6 mb-2 lesson-card-in" style={{ animationDelay: '300ms' }}>
+              <button
+                onClick={() => {
+                  setIsChallengeExpanded(true);
+                  setTimeout(() => {
+                    contentRef.current?.scrollTo({ top: contentRef.current.scrollHeight, behavior: 'smooth' });
+                  }, 100);
+                }}
+                className="group flex items-center gap-2 px-6 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 font-black uppercase tracking-wider text-sm sm:text-base rounded-2xl shadow-lg border-b-4 border-emerald-700 active:translate-y-1 active:border-b-0 transition-all"
+              >
+                <CheckCircle2 className="w-5 h-5 text-emerald-900 group-hover:scale-110 transition-transform" />
+                Entendi! Mostrar Desafio
+              </button>
             </div>
           )}
 
-          {/* ── 5. ÁREA DA ATIVIDADE: QUIZ ─────────────────────────── */}
-          {currentStep.quiz && (
-            <section className="rounded-2xl border-2 border-slate-600/70 bg-[#0e1733] p-3.5 sm:p-5 shadow-xl shadow-black/40 lesson-card-in" style={{ animationDelay: '120ms' }} aria-labelledby="quiz-question">
-              <div className="flex items-center justify-between gap-2 mb-2">
-                <span className={`text-[11px] font-black uppercase tracking-widest flex items-center gap-1.5 ${theme.text}`}>
-                  <HelpCircle className="w-4 h-4" aria-hidden="true" /> Sua vez
-                </span>
-                <span className="text-[11px] font-bold text-slate-400">
-                  {stepSucceeded ? 'Respondida' : stepFeedback.status === 'error' ? 'Tente outra alternativa' : selectedOption === null ? 'Escolha uma alternativa' : 'Pronto para verificar'}
-                </span>
-              </div>
-              <h2 id="quiz-question" className="font-black text-white text-base sm:text-lg leading-snug mb-3">
-                {currentStep.quiz.question}
-              </h2>
-
-              {lastReadingPassage && (
-                <button
-                  onClick={() => setIsReadingModalOpen(true)}
-                  className="trail-focus mb-3 inline-flex items-center gap-1.5 min-h-[40px] px-3 text-xs font-black uppercase tracking-wide bg-indigo-600/30 text-indigo-100 hover:bg-indigo-600/45 rounded-xl border border-indigo-400/60 transition-colors"
-                >
-                  <BookOpen className="w-4 h-4" />
-                  {lastReadingPassage.genre?.toLowerCase().includes('receita') ? 'Ver receita' : 'Ver texto'}
-                </button>
+          {/* ── ÁREAS DE DESAFIO ─────────────────────────── */}
+          {challengeVisible && (
+            <div className="space-y-4 pb-4 lesson-card-in">
+              {/* Written Prompt */}
+              {currentStep.writtenPrompt && (
+                <section className="rounded-2xl border-2 border-blue-500/50 bg-[#122148] p-4 sm:p-5">
+                  <span className="text-[11px] font-black uppercase tracking-wider text-blue-300 mb-2 flex items-center gap-1.5">
+                    <PenLine className="w-3.5 h-3.5" /> Atividade de registro
+                  </span>
+                  <p className="font-black text-sm sm:text-base text-white mb-2">{currentStep.writtenPrompt.question}</p>
+                  <div className="bg-blue-500/15 p-3 rounded-xl border border-blue-400/40 text-xs text-blue-100 mb-3">
+                    <strong className="text-blue-200">Como formular:</strong> {currentStep.writtenPrompt.guideline}
+                  </div>
+                  <textarea
+                    rows={3}
+                    aria-label="Sua resposta escrita"
+                    placeholder="Escreva sua resposta aqui..."
+                    className="trail-focus w-full text-sm text-white placeholder:text-slate-400 outline-none resize-none bg-[#0b1430] border-2 border-slate-500/60 focus:border-sky-300 rounded-xl p-3"
+                  />
+                </section>
               )}
 
-              <div className="grid grid-cols-1 gap-2.5" role="radiogroup" aria-labelledby="quiz-question">
-                {currentStep.quiz.options.map((option, idx) => {
-                  const isSelected = selectedOption === idx;
-                  const isCorrectShown = stepSucceeded && idx === currentStep.quiz!.correctIndex;
-                  const isWrongShown = stepFeedback.status === 'error' && isSelected;
-                  const isDimmed = stepSucceeded && !isCorrectShown;
+              {/* Drag and Drop Interactivity */}
+              {currentStep.dragAndDrop && (
+                <div>
+                  <DragDropGame
+                    data={currentStep.dragAndDrop}
+                    onComplete={() => setStepFeedback({ status: 'success', message: currentStep.dragAndDrop!.successMessage })}
+                  />
+                </div>
+              )}
 
-                  let stateCls = 'bg-[#1a2547] border-slate-500/60 text-slate-100 hover:bg-[#213060] hover:border-slate-300';
-                  let markerCls = 'bg-slate-700 border-slate-400 text-slate-100';
-                  let StateIcon: LucideIcons.LucideIcon | null = null;
-                  let stateIconCls = '';
-                  if (isCorrectShown) {
-                    stateCls = 'bg-gradient-to-r from-emerald-600/40 to-emerald-700/30 border-emerald-300 text-white shadow-lg shadow-emerald-900/40 lesson-glow-once';
-                    markerCls = 'bg-emerald-400 border-emerald-200 text-emerald-950';
-                    StateIcon = CheckCircle2; stateIconCls = 'text-emerald-300 lesson-pop';
-                  } else if (isWrongShown) {
-                    stateCls = 'bg-gradient-to-r from-amber-600/35 to-orange-700/25 border-amber-300 text-white';
-                    markerCls = 'bg-amber-400 border-amber-200 text-amber-950';
-                    StateIcon = RotateCcw; stateIconCls = 'text-amber-300 lesson-pop';
-                  } else if (isSelected) {
-                    stateCls = `bg-gradient-to-r from-blue-600/45 to-indigo-600/35 border-sky-300 text-white shadow-lg shadow-blue-900/50 ring-4 ${theme.ring} lesson-glow-once`;
-                    markerCls = 'bg-sky-300 border-white text-blue-950';
-                    StateIcon = CircleDot; stateIconCls = 'text-sky-200';
-                  } else if (isDimmed) {
-                    stateCls = 'bg-[#141c38] border-slate-700 text-slate-400 opacity-70';
-                  }
+              {/* Interactive Notebook */}
+              {currentStep.interactiveNotebook && (
+                <div>
+                  <NotebookGrid
+                    operation={currentStep.interactiveNotebook.operation}
+                    interactive={true}
+                    onComplete={() => setStepFeedback({ status: 'success', message: 'Excelente! Você armou e resolveu cada coluna no caderno perfeitamente!' })}
+                    onMistake={recordMistake}
+                  />
+                </div>
+              )}
 
-                  return (
+              {/* ── 5. ÁREA DA ATIVIDADE: QUIZ ─────────────────────────── */}
+              {currentStep.quiz && (
+                <section className="rounded-2xl border-2 border-slate-600/70 bg-[#0e1733] p-3.5 sm:p-5 shadow-xl shadow-black/40" aria-labelledby="quiz-question">
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <span className={`text-[11px] font-black uppercase tracking-widest flex items-center gap-1.5 ${theme.text}`}>
+                      <HelpCircle className="w-4 h-4" aria-hidden="true" /> Sua vez
+                    </span>
+                    <span className="text-[11px] font-bold text-slate-400">
+                      {stepSucceeded ? 'Respondida' : stepFeedback.status === 'error' ? 'Tente outra alternativa' : selectedOption === null ? 'Escolha uma alternativa' : 'Pronto para verificar'}
+                    </span>
+                  </div>
+                  <h2 id="quiz-question" className="font-black text-white text-base sm:text-lg leading-snug mb-3">
+                    {currentStep.quiz.question}
+                  </h2>
+
+                  {lastReadingPassage && (
                     <button
-                      key={idx}
-                      role="radio"
-                      aria-checked={isSelected}
-                      disabled={stepSucceeded}
-                      onClick={() => { setSelectedOption(idx); setStepFeedback({ status: 'idle', message: '' }); }}
-                      className={`trail-focus w-full min-h-[56px] px-3 py-3 text-left rounded-2xl border-2 font-semibold transition-all duration-150 active:scale-[0.98] flex items-center gap-3 text-[15px] sm:text-base disabled:cursor-default ${stateCls}`}
+                      onClick={() => setIsReadingModalOpen(true)}
+                      className="trail-focus mb-3 inline-flex items-center gap-1.5 min-h-[40px] px-3 text-xs font-black uppercase tracking-wide bg-indigo-600/30 text-indigo-100 hover:bg-indigo-600/45 rounded-xl border border-indigo-400/60 transition-colors"
                     >
-                      <span className={`w-9 h-9 rounded-xl border-2 flex items-center justify-center font-black text-sm shrink-0 transition-colors ${markerCls}`} aria-hidden="true">
-                        {String.fromCharCode(65 + idx)}
-                      </span>
-                      <span className="flex-1 min-w-0 break-words leading-snug">{cleanOption(option)}</span>
-                      {StateIcon && <StateIcon className={`w-6 h-6 shrink-0 ${stateIconCls}`} aria-hidden="true" />}
-                      {isCorrectShown && <span className="sr-only">(resposta correta)</span>}
-                      {isWrongShown && <span className="sr-only">(resposta a revisar)</span>}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {currentStep.quiz.hint && !stepSucceeded && (
-                <div className="mt-3">
-                  {showHint ? (
-                    <div className="flex items-start gap-2.5 rounded-xl bg-[#10213f] border border-sky-400/50 p-3 lesson-card-in" role="note">
-                      <Lightbulb className="w-5 h-5 text-sky-300 shrink-0 mt-0.5" aria-hidden="true" />
-                      <p className="text-sm text-sky-50 leading-relaxed"><strong className="text-sky-200">Dica: </strong>{currentStep.quiz.hint}</p>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() => setShowHint(true)}
-                      className="trail-focus inline-flex items-center gap-1.5 min-h-[40px] px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-500/70 text-sky-200 text-sm font-bold transition"
-                    >
-                      <Lightbulb className="w-4 h-4" /> Pedir uma dica
+                      <BookOpen className="w-4 h-4" />
+                      {lastReadingPassage.genre?.toLowerCase().includes('receita') ? 'Ver receita' : 'Ver texto'}
                     </button>
                   )}
-                </div>
-              )}
-            </section>
-          )}
 
-          {/* ── 5. ÁREA DA ATIVIDADE: PROBLEMA NUMÉRICO ────────────── */}
-          {currentStep.wordProblem && (
-            <section className="rounded-2xl border-2 border-slate-600/70 bg-[#0e1733] p-4 sm:p-5 space-y-4 shadow-xl shadow-black/40 lesson-card-in">
-              <div className="border-l-4 border-amber-400 pl-3">
-                <p className="text-slate-100 font-medium text-base mb-1.5">{currentStep.wordProblem.story}</p>
-                <p className="text-amber-300 font-black text-sm sm:text-base">Pergunta: {currentStep.wordProblem.question}</p>
-              </div>
-              {lastReadingPassage && (
-                <button
-                  onClick={() => setIsReadingModalOpen(true)}
-                  className="trail-focus inline-flex items-center gap-1.5 min-h-[40px] px-3 text-xs font-black uppercase tracking-wide bg-indigo-600/30 text-indigo-100 hover:bg-indigo-600/45 rounded-xl border border-indigo-400/60 transition-colors"
-                >
-                  <BookOpen className="w-4 h-4" />
-                  {lastReadingPassage.genre?.toLowerCase().includes('receita') ? 'Ver receita' : 'Ver texto'}
-                </button>
+                  <div className="grid grid-cols-1 gap-2.5" role="radiogroup" aria-labelledby="quiz-question">
+                    {currentStep.quiz.options.map((option, idx) => {
+                      const isSelected = selectedOption === idx;
+                      const isCorrectShown = stepSucceeded && idx === currentStep.quiz!.correctIndex;
+                      const isWrongShown = stepFeedback.status === 'error' && isSelected;
+                      const isDimmed = stepSucceeded && !isCorrectShown;
+
+                      let stateCls = 'bg-[#1a2547] border-slate-500/60 text-slate-100 hover:bg-[#213060] hover:border-slate-300';
+                      let markerCls = 'bg-slate-700 border-slate-400 text-slate-100';
+                      let StateIcon: LucideIcons.LucideIcon | null = null;
+                      let stateIconCls = '';
+                      if (isCorrectShown) {
+                        stateCls = 'bg-gradient-to-r from-emerald-600/40 to-emerald-700/30 border-emerald-300 text-white shadow-lg shadow-emerald-900/40 lesson-glow-once';
+                        markerCls = 'bg-emerald-400 border-emerald-200 text-emerald-950';
+                        StateIcon = CheckCircle2; stateIconCls = 'text-emerald-300 lesson-pop';
+                      } else if (isWrongShown) {
+                        stateCls = 'bg-gradient-to-r from-amber-600/35 to-orange-700/25 border-amber-300 text-white';
+                        markerCls = 'bg-amber-400 border-amber-200 text-amber-950';
+                        StateIcon = RotateCcw; stateIconCls = 'text-amber-300 lesson-pop';
+                      } else if (isSelected) {
+                        stateCls = `bg-gradient-to-r from-blue-600/45 to-indigo-600/35 border-sky-300 text-white shadow-lg shadow-blue-900/50 ring-4 ${theme.ring} lesson-glow-once`;
+                        markerCls = 'bg-sky-300 border-white text-blue-950';
+                        StateIcon = CircleDot; stateIconCls = 'text-sky-200';
+                      } else if (isDimmed) {
+                        stateCls = 'bg-[#141c38] border-slate-700 text-slate-400 opacity-70';
+                      }
+
+                      return (
+                        <button
+                          key={idx}
+                          role="radio"
+                          aria-checked={isSelected}
+                          disabled={stepSucceeded}
+                          onClick={() => { setSelectedOption(idx); setStepFeedback({ status: 'idle', message: '' }); }}
+                          className={`trail-focus w-full min-h-[56px] px-3 py-3 text-left rounded-2xl border-2 font-semibold transition-all duration-150 active:scale-[0.98] flex items-center gap-3 text-[15px] sm:text-base disabled:cursor-default ${stateCls}`}
+                        >
+                          <span className={`w-9 h-9 rounded-xl border-2 flex items-center justify-center font-black text-sm shrink-0 transition-colors ${markerCls}`} aria-hidden="true">
+                            {String.fromCharCode(65 + idx)}
+                          </span>
+                          <span className="flex-1 min-w-0 break-words leading-snug">{cleanOption(option)}</span>
+                          {StateIcon && <StateIcon className={`w-6 h-6 shrink-0 ${stateIconCls}`} aria-hidden="true" />}
+                          {isCorrectShown && <span className="sr-only">(resposta correta)</span>}
+                          {isWrongShown && <span className="sr-only">(resposta a revisar)</span>}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {currentStep.quiz.hint && !stepSucceeded && (
+                    <div className="mt-3">
+                      {showHint ? (
+                        <div className="flex items-start gap-2.5 rounded-xl bg-[#10213f] border border-sky-400/50 p-3 lesson-card-in" role="note">
+                          <Lightbulb className="w-5 h-5 text-sky-300 shrink-0 mt-0.5" aria-hidden="true" />
+                          <p className="text-sm text-sky-50 leading-relaxed"><strong className="text-sky-200">Dica: </strong>{currentStep.quiz.hint}</p>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => setShowHint(true)}
+                          className="trail-focus inline-flex items-center gap-1.5 min-h-[40px] px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-500/70 text-sky-200 text-sm font-bold transition"
+                        >
+                          <Lightbulb className="w-4 h-4" /> Pedir uma dica
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </section>
               )}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
-                <label htmlFor="word-answer" className="text-sm font-black text-slate-200">Sua resposta:</label>
-                <div className="flex items-stretch gap-2">
-                  <input
-                    id="word-answer"
-                    type="number"
-                    inputMode="numeric"
-                    value={userWordProblemAnswer}
-                    onChange={e => { setUserWordProblemAnswer(e.target.value); if (stepFeedback.status === 'error') setStepFeedback({ status: 'idle', message: '' }); }}
-                    placeholder="0"
-                    disabled={stepSucceeded}
-                    className={`trail-focus h-14 px-4 text-xl font-black bg-[#0b1430] border-2 rounded-xl outline-none focus:ring-4 w-36 text-center text-white placeholder:text-slate-500 transition ${
-                      stepSucceeded ? 'border-emerald-400 ring-emerald-400/30' : stepFeedback.status === 'error' ? 'border-amber-400 focus:ring-amber-400/30' : 'border-slate-400/70 focus:border-sky-300 focus:ring-sky-400/30'
-                    }`}
-                  />
-                  <span className="h-14 inline-flex items-center px-3 rounded-xl bg-slate-800 border border-slate-600 text-sm text-slate-200 font-bold">
-                    {currentStep.wordProblem.unitName}
-                  </span>
-                </div>
-              </div>
-            </section>
+
+              {/* ── 6. ÁREA DA ATIVIDADE: PROBLEMA NUMÉRICO ────────────── */}
+              {currentStep.wordProblem && (
+                <section className="rounded-2xl border-2 border-slate-600/70 bg-[#0e1733] p-4 sm:p-5 space-y-4 shadow-xl shadow-black/40">
+                  <div className="border-l-4 border-amber-400 pl-3">
+                    <p className="text-slate-100 font-medium text-base mb-1.5">{currentStep.wordProblem.story}</p>
+                    <p className="text-amber-300 font-black text-sm sm:text-base">Pergunta: {currentStep.wordProblem.question}</p>
+                  </div>
+                  {lastReadingPassage && (
+                    <button
+                      onClick={() => setIsReadingModalOpen(true)}
+                      className="trail-focus inline-flex items-center gap-1.5 min-h-[40px] px-3 text-xs font-black uppercase tracking-wide bg-indigo-600/30 text-indigo-100 hover:bg-indigo-600/45 rounded-xl border border-indigo-400/60 transition-colors"
+                    >
+                      <BookOpen className="w-4 h-4" />
+                      {lastReadingPassage.genre?.toLowerCase().includes('receita') ? 'Ver receita' : 'Ver texto'}
+                    </button>
+                  )}
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
+                    <label htmlFor="word-answer" className="text-sm font-black text-slate-200">Sua resposta:</label>
+                    <div className="flex items-stretch gap-2">
+                      <input
+                        id="word-answer"
+                        type="number"
+                        inputMode="numeric"
+                        value={userWordProblemAnswer}
+                        onChange={e => { setUserWordProblemAnswer(e.target.value); if (stepFeedback.status === 'error') setStepFeedback({ status: 'idle', message: '' }); }}
+                        placeholder="0"
+                        disabled={stepSucceeded}
+                        className={`trail-focus h-14 px-4 text-xl font-black bg-[#0b1430] border-2 rounded-xl outline-none focus:ring-4 w-36 text-center text-white placeholder:text-slate-500 transition ${
+                          stepSucceeded ? 'border-emerald-400 ring-emerald-400/30' : stepFeedback.status === 'error' ? 'border-amber-400 focus:ring-amber-400/30' : 'border-slate-400/70 focus:border-sky-300 focus:ring-sky-400/30'
+                        }`}
+                      />
+                      <span className="h-14 inline-flex items-center px-3 rounded-xl bg-slate-800 border border-slate-600 text-sm text-slate-200 font-bold">
+                        {currentStep.wordProblem.unitName}
+                      </span>
+                    </div>
+                  </div>
+                </section>
+              )}
+            </div>
           )}
 
           {/* ── 6. FEEDBACK ───────────────────────────────────────── */}
