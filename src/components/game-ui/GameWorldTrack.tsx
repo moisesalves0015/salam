@@ -37,6 +37,7 @@ interface GameWorldTrackProps {
   nodes: TrailNode[];
   onNodeClick: (node: TrailNode) => void;
   onRewardBonusXp?: (amount: number, reason: string) => void;
+  themeId?: string; // 'mat', 'por', 'cie', 'cul', 'fin'
 }
 
 interface ChestModalData {
@@ -49,7 +50,8 @@ export const GameWorldTrack: React.FC<GameWorldTrackProps> = ({
   trackId,
   nodes,
   onNodeClick,
-  onRewardBonusXp
+  onRewardBonusXp,
+  themeId = 'mat'
 }) => {
   const [openedChests, setOpenedChests] = useState<string[]>(() => {
     try {
@@ -70,6 +72,17 @@ export const GameWorldTrack: React.FC<GameWorldTrackProps> = ({
   const [chestModal, setChestModal] = useState<ChestModalData | null>(null);
 
   const trackCompleted = nodes.every(n => n.status === 'concluido');
+
+  // Cores dinâmicas para a "SUA VEZ"
+  const THEME_COLORS = {
+    mat: { solid: 'bg-emerald-600', ring: 'ring-emerald-300', grad: 'bg-gradient-to-tr from-emerald-500 to-teal-400', border: 'border-emerald-700', textLight: 'text-emerald-900', bgLight: 'bg-emerald-100', borderLight: 'border-emerald-300 ring-emerald-200' },
+    por: { solid: 'bg-blue-600', ring: 'ring-blue-300', grad: 'bg-gradient-to-tr from-blue-500 to-indigo-400', border: 'border-blue-700', textLight: 'text-blue-900', bgLight: 'bg-blue-100', borderLight: 'border-blue-300 ring-blue-200' },
+    cie: { solid: 'bg-orange-500', ring: 'ring-orange-300', grad: 'bg-gradient-to-tr from-amber-500 to-orange-400', border: 'border-orange-700', textLight: 'text-orange-900', bgLight: 'bg-orange-100', borderLight: 'border-orange-300 ring-orange-200' },
+    cul: { solid: 'bg-purple-600', ring: 'ring-purple-300', grad: 'bg-gradient-to-tr from-purple-500 to-pink-500', border: 'border-purple-700', textLight: 'text-purple-900', bgLight: 'bg-purple-100', borderLight: 'border-purple-300 ring-purple-200' },
+    fin: { solid: 'bg-yellow-500', ring: 'ring-yellow-300', grad: 'bg-gradient-to-tr from-yellow-400 to-amber-500', border: 'border-yellow-600', textLight: 'text-yellow-900', bgLight: 'bg-yellow-100', borderLight: 'border-yellow-300 ring-yellow-200' },
+  } as const;
+  
+  const activeTheme = THEME_COLORS[themeId as keyof typeof THEME_COLORS] || THEME_COLORS.mat;
 
   // Geometry configuration
   const SVG_WIDTH = 440;
@@ -366,14 +379,14 @@ export const GameWorldTrack: React.FC<GameWorldTrackProps> = ({
               {isCurrent && (
                 <div className="absolute -top-14 z-40 flex flex-col items-center animate-bounce pointer-events-none">
                   {/* Active Speech Tag */}
-                  <div className="bg-emerald-600 text-white px-3 py-1 rounded-full shadow-lg border-2 border-white text-xs font-bold whitespace-nowrap flex items-center gap-1.5 ring-3 ring-emerald-300">
+                  <div className={`${activeTheme.solid} text-white px-3 py-1 rounded-full shadow-lg border-2 border-white text-xs font-black whitespace-nowrap flex items-center gap-1.5 ring-3 ${activeTheme.ring}`}>
                     <Play className="w-3.5 h-3.5 fill-white" />
                     <span>SUA VEZ!</span>
                   </div>
-                  <div className="w-2.5 h-2.5 bg-emerald-600 rotate-45 -mt-1 border-r-2 border-b-2 border-white"></div>
+                  <div className={`w-2.5 h-2.5 ${activeTheme.solid} rotate-45 -mt-1 border-r-2 border-b-2 border-white`}></div>
 
                   {/* Cute Student / Explorer Pin Face */}
-                  <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 border-2 border-white shadow-md flex items-center justify-center text-white -mt-1 ring-2 ring-emerald-400">
+                  <div className={`w-9 h-9 rounded-full ${activeTheme.grad} border-2 border-white shadow-md flex items-center justify-center text-white -mt-1 ring-2 ${activeTheme.ring}`}>
                     <GraduationCap className="w-5 h-5 drop-shadow-xs" />
                   </div>
 
@@ -389,7 +402,7 @@ export const GameWorldTrack: React.FC<GameWorldTrackProps> = ({
                   isDone
                     ? 'bg-gradient-to-b from-amber-200 to-amber-300 text-amber-950 hover:scale-105 border-b-4 border-amber-500'
                     : isCurrent
-                    ? 'bg-gradient-to-b from-emerald-400 to-emerald-500 text-white hover:scale-105 ring-4 ring-emerald-300 border-b-4 border-emerald-700'
+                    ? `${activeTheme.grad} text-white hover:scale-105 ring-4 ${activeTheme.ring} border-b-4 ${activeTheme.border}`
                     : 'bg-slate-200 text-slate-400 hover:scale-100 border-b-4 border-slate-300'
                 }`}
                 title={`${node.title}`}
@@ -439,7 +452,7 @@ export const GameWorldTrack: React.FC<GameWorldTrackProps> = ({
                   isDone 
                     ? 'bg-amber-100 text-amber-900 border-amber-300'
                     : isCurrent
-                    ? 'bg-emerald-100 text-emerald-900 border-emerald-300 ring-2 ring-emerald-200'
+                    ? `${activeTheme.bgLight} ${activeTheme.textLight} ${activeTheme.borderLight}`
                     : 'bg-white/90 text-slate-500 border-slate-200'
                 }`}>
                   {node.title}

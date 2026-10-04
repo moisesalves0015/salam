@@ -263,7 +263,7 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
 
       {/* ── World Selector ───────────────────────────────────────────── */}
       <section aria-label="Selecionar mundo" className="-mx-3 sm:-mx-10 md:-mx-20">
-        <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest mb-2 px-3 sm:px-10 md:px-20">
+        <p className="text-[11px] text-white/60 font-black uppercase tracking-widest mb-2 px-3 sm:px-10 md:px-20 drop-shadow-md">
           Mundos de Aprendizagem
         </p>
         <div className="px-0 sm:px-6 md:px-16">
@@ -294,6 +294,7 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
             onContinue={nextNode ? handleContinueJourney : undefined}
             trackTitle={currentTrackTitle}
             trackDescription={currentTrackDesc}
+            themeId={selectedDiscipline}
           />
         </div>
 
@@ -317,19 +318,20 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
 
       {/* ── Track Maps ───────────────────────────────────────────────── */}
       {activeTracks.length > 0 ? (
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-10 mt-4">
           {activeTracks.map((track: any) => {
             const trackNodes = buildTrackNodes(track);
             return (
               <section key={track.id} aria-label={`Trilha: ${track.title}`}>
-                <div className="mb-3 flex items-center gap-2">
-                  <div className={`h-0.5 flex-1 bg-gradient-to-r ${currentDisc.gradient} opacity-40 rounded-full`} />
-                  <h3 className="text-sm font-black text-white/80 px-2">{track.title}</h3>
-                  <div className={`h-0.5 flex-1 bg-gradient-to-l ${currentDisc.gradient} opacity-40 rounded-full`} />
+                <div className="mb-4 flex items-center gap-3">
+                  <div className={`h-1 flex-1 bg-gradient-to-r ${currentDisc.gradient} opacity-50 rounded-full`} />
+                  <h3 className="text-[15px] sm:text-lg font-black text-white px-2 drop-shadow-lg italic uppercase tracking-wider">{track.title}</h3>
+                  <div className={`h-1 flex-1 bg-gradient-to-l ${currentDisc.gradient} opacity-50 rounded-full`} />
                 </div>
                 <GameWorldTrack
                   trackId={track.id}
                   nodes={trackNodes as any}
+                  themeId={selectedDiscipline}
                   onNodeClick={(node) => handleNodeClick(node as any)}
                 />
               </section>
@@ -341,6 +343,7 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
           <GameWorldTrack
             trackId={selectedDiscipline}
             nodes={filteredNodes as any}
+            themeId={selectedDiscipline}
             onNodeClick={(node) => handleNodeClick(node as any)}
           />
         </section>
@@ -354,19 +357,19 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
 
       {/* ── Cultural highlight (preserved) ───────────────────────────── */}
       {selectedDiscipline === 'cul' && (
-        <div className="bg-purple-900/40 border border-purple-400/25 rounded-2xl p-5 backdrop-blur-sm">
+        <div className="bg-[#1a0e2a] border-2 border-purple-500/50 rounded-2xl p-5 shadow-xl shadow-purple-900/20">
           <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-white shadow-md shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-white shadow-lg border border-white/20 shrink-0">
               <Globe className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm font-black text-purple-200 mb-1">Trilha Cultural: Formação Humana Integral</h3>
-              <p className="text-xs text-purple-300/80 leading-relaxed">
+              <h3 className="text-[13px] font-black uppercase tracking-wider text-purple-300 mb-1 drop-shadow-md">Trilha Cultural: Formação Humana Integral</h3>
+              <p className="text-sm text-purple-200/80 leading-relaxed font-medium">
                 O Mundo da Cultura vai além dos conteúdos escolares. Aqui, o estudante amplia seu repertório cultural, desenvolve pensamento crítico, conhece a diversidade do Brasil e se forma como sujeito participativo.
               </p>
-              <div className="flex flex-wrap gap-1.5 mt-2">
+              <div className="flex flex-wrap gap-2 mt-3">
                 {['Literatura', 'Música', 'Arte', 'Teatro', 'Cidadania', 'Diversidade', 'Patrimônio'].map(tag => (
-                  <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-400/20 font-bold">{tag}</span>
+                  <span key={tag} className="text-[10px] uppercase font-black px-2.5 py-1 rounded-lg bg-purple-500/20 text-purple-200 border border-purple-400/30">{tag}</span>
                 ))}
               </div>
             </div>
@@ -375,7 +378,7 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
       )}
 
       {/* ── Print missions banner (preserved) ────────────────────────── */}
-      <div className="flex items-center gap-3 bg-orange-900/30 border border-orange-400/20 rounded-2xl p-4 backdrop-blur-sm">
+      <div className="flex items-center gap-3 bg-orange-900/30 border border-orange-400/20 rounded-2xl p-4 backdrop-blur-sm mt-4">
         <div className="w-9 h-9 rounded-xl bg-orange-500/80 flex items-center justify-center shrink-0">
           <Printer className="w-4 h-4 text-white" />
         </div>
@@ -390,87 +393,97 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
       {/* ── Stage Modal (preserved + improved) ───────────────────────── */}
       {stageModal && (() => {
         const WorldIcon = currentDisc.icon;
+        
+        // Cores do CTA baseadas no theme
+        const ctaThemes = {
+          mat: { bg: 'bg-[#0d2a22]', border: 'border-emerald-400/60', shadow: 'shadow-emerald-900/20', text: 'text-emerald-400', textLight: 'text-emerald-300', btn: 'bg-emerald-500 hover:bg-emerald-400 border-emerald-700' },
+          por: { bg: 'bg-[#0d1b38]', border: 'border-blue-400/60', shadow: 'shadow-blue-900/20', text: 'text-blue-400', textLight: 'text-blue-300', btn: 'bg-blue-600 hover:bg-blue-500 border-blue-800' },
+          cie: { bg: 'bg-[#2a140b]', border: 'border-orange-400/60', shadow: 'shadow-orange-900/20', text: 'text-orange-400', textLight: 'text-orange-300', btn: 'bg-orange-500 hover:bg-orange-400 border-orange-700' },
+          cul: { bg: 'bg-[#200b2a]', border: 'border-purple-400/60', shadow: 'shadow-purple-900/20', text: 'text-purple-400', textLight: 'text-purple-300', btn: 'bg-purple-600 hover:bg-purple-500 border-purple-800' },
+          fin: { bg: 'bg-[#2a220b]', border: 'border-yellow-400/60', shadow: 'shadow-yellow-900/20', text: 'text-yellow-400', textLight: 'text-yellow-300', btn: 'bg-yellow-500 hover:bg-yellow-400 border-yellow-700' },
+        } as const;
+        const ctaTheme = ctaThemes[selectedDiscipline as keyof typeof ctaThemes] || ctaThemes.mat;
+
         return (
           <div
-            className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm"
+            className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm"
             role="dialog"
             aria-modal="true"
             aria-labelledby="stage-modal-title"
             onClick={() => setStageModal(null)}
           >
             <div
-              className="bg-slate-900/90 backdrop-blur-xl border border-white/15 rounded-2xl w-full max-w-md shadow-2xl relative overflow-hidden animate-trail-enter"
+              className="bg-[#0e1733] border-2 border-slate-500/60 rounded-3xl w-full max-w-md shadow-2xl relative overflow-hidden animate-trail-enter"
               onClick={e => e.stopPropagation()}
             >
               {/* Gradient top banner */}
-              <div className={`h-1.5 bg-gradient-to-r ${currentDisc.gradient}`} />
+              <div className={`absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r ${currentDisc.gradient}`} />
 
-              <div className="p-5 sm:p-6">
+              <div className="p-5 sm:p-6 mt-2">
                 {/* Close button */}
                 <button
                   onClick={() => setStageModal(null)}
-                  className="trail-focus absolute top-4 right-4 w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-white/60 hover:text-white flex items-center justify-center transition border border-white/10"
+                  className="trail-focus absolute top-5 right-5 w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600/80 text-slate-300 hover:text-white flex items-center justify-center transition active:scale-95 shadow-lg"
                   aria-label="Fechar"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-5 h-5" />
                 </button>
 
                 {/* Label row */}
                 <div className="flex items-center gap-2 mb-3">
                   <div className="flex items-center gap-1.5 text-[10px] font-black text-white/40 uppercase tracking-widest">
-                    <MapPin className="w-3 h-3" />
-                    Percurso de Aprendizagem Adaptativo
+                    <MapPin className="w-3.5 h-3.5" />
+                    Percurso Adaptativo
                   </div>
                 </div>
 
                 {/* World + Title */}
-                <div className="flex flex-col gap-2 mb-5">
-                  <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gradient-to-r ${currentDisc.gradient} text-white text-xs font-black self-start shadow-md`}>
-                    <WorldIcon className="w-3 h-3" />
+                <div className="flex flex-col gap-2 mb-6">
+                  <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r ${currentDisc.gradient} text-white text-[11px] font-black uppercase tracking-wider self-start shadow-lg border border-white/20`}>
+                    <WorldIcon className="w-3.5 h-3.5" />
                     {currentDisc.label}
                   </div>
-                  <h2 id="stage-modal-title" className="text-xl sm:text-2xl font-black text-white leading-tight">
+                  <h2 id="stage-modal-title" className="text-2xl sm:text-3xl font-black text-white leading-tight drop-shadow-md" style={{ textShadow: '2px 2px 0px rgba(0,0,0,0.5)' }}>
                     {stageModal.title}
                   </h2>
-                  <p className="text-xs text-white/60 mt-1 leading-relaxed">
+                  <p className="text-sm text-slate-300 mt-1 font-medium leading-relaxed">
                     {stageModal.sub || currentDisc.bncc}
                   </p>
                 </div>
 
                 {/* Progress bar matching the card */}
-                <div className="flex items-center gap-4 mb-5">
+                <div className="flex items-center gap-4 mb-6">
                   <div className="flex-1">
-                    <div className="h-2.5 bg-white/10 rounded-full overflow-hidden border border-white/5 mb-1.5">
+                    <div className="h-2.5 bg-slate-900 rounded-full overflow-hidden border border-white/5 mb-2 shadow-inner">
                       <div
                         className={`h-full bg-gradient-to-r ${currentDisc.gradient} rounded-full transition-all`}
                         style={{ width: `${progressForHud}%` }}
                       />
                     </div>
-                    <div className="flex justify-between text-[10px] text-white/40 font-medium">
-                      <span>Trilhas de Aprendizagem</span>
-                      <span className="font-black text-white/60">{completedForHud} de {totalForHud} fases dominadas</span>
+                    <div className="flex justify-between text-[10px] text-white/40 font-black uppercase tracking-wider">
+                      <span>Trilhas</span>
+                      <span className="text-white/70">{completedForHud} de {totalForHud} dominadas</span>
                     </div>
                   </div>
-                  <div className="shrink-0 text-center bg-white/10 rounded-xl px-3 py-2 border border-white/10">
-                    <div className="text-xl font-black text-white leading-none">{progressForHud}%</div>
-                    <div className="text-[9px] text-white/50 font-bold mt-0.5">{completedForHud}/{totalForHud}</div>
+                  <div className="shrink-0 text-center bg-[#141c38] rounded-xl px-3 py-2 border-2 border-slate-700 shadow-md">
+                    <div className="text-xl font-black text-white leading-none drop-shadow-md">{progressForHud}%</div>
                   </div>
                 </div>
 
                 {/* Next mission CTA (Próximo destino) */}
-                <div className="flex items-center gap-3 mb-5 p-3.5 bg-emerald-500/15 border border-emerald-400/25 rounded-xl">
-                  <Target className="w-5 h-5 text-emerald-400 shrink-0" />
+                <div className={`flex items-center gap-3 mb-5 p-4 ${ctaTheme.bg} border-2 ${ctaTheme.border} rounded-2xl shadow-lg ${ctaTheme.shadow}`}>
+                  <Target className={`w-6 h-6 ${ctaTheme.text} shrink-0`} />
                   <div className="flex-1 min-w-0">
-                    <div className="text-[9px] text-emerald-400/70 font-bold uppercase tracking-wider">Destino da Missão</div>
-                    <div className="text-sm font-black text-emerald-300 truncate">{stageModal.title}</div>
+                    <div className={`text-[10px] ${ctaTheme.textLight} font-black uppercase tracking-widest mb-0.5 opacity-80`}>Destino da Missão</div>
+                    <div className={`text-sm font-black ${ctaTheme.textLight} truncate`}>{stageModal.title}</div>
                   </div>
                   <button
                     onClick={handleStartStage}
                     disabled={stageModal.status === 'bloqueado'}
-                    className={`trail-focus shrink-0 px-5 py-2 text-white text-sm font-black rounded-xl transition-all shadow-md ${
+                    className={`trail-focus shrink-0 px-5 py-2.5 text-white text-[13px] font-black uppercase tracking-wider rounded-xl transition-all shadow-lg border-b-[3px] ${
                       stageModal.status === 'bloqueado' 
-                        ? 'bg-slate-700 text-white/40 cursor-not-allowed'
-                        : 'bg-emerald-500 hover:bg-emerald-400 active:scale-95'
+                        ? 'bg-slate-700 border-slate-800 text-white/40 cursor-not-allowed'
+                        : `${ctaTheme.btn} active:translate-y-1 active:border-b-0`
                     }`}
                   >
                     {stageModal.status === 'bloqueado' ? <Lock className="w-4 h-4 mx-auto" /> : 'Ir!'}
@@ -478,11 +491,11 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
                 </div>
 
                 {/* BNCC */}
-                <div className="bg-white/5 p-3.5 rounded-xl border border-white/10">
-                  <div className="text-[10px] font-bold text-white/40 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <BookOpen className="w-3.5 h-3.5" /> Habilidades BNCC
+                <div className="bg-[#141c38] p-4 rounded-xl border border-slate-700">
+                  <div className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                    <BookOpen className="w-4 h-4" /> Habilidades BNCC
                   </div>
-                  <div className="text-xs text-white/60 leading-relaxed font-medium">
+                  <div className="text-xs text-white/70 leading-relaxed font-medium">
                     {stageModal.habilidades.length > 0 ? stageModal.habilidades.join(', ') : currentDisc.bncc}
                   </div>
                 </div>

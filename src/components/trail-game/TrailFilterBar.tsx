@@ -35,16 +35,16 @@ export const TrailFilterBar: React.FC<TrailFilterBarProps> = ({ activeFilter, on
     <div className="relative h-full" ref={ref}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="h-full px-3 sm:px-4 bg-slate-900/80 backdrop-blur-xl border border-white/15 rounded-2xl shadow-xl flex items-center justify-center gap-2 text-white hover:bg-slate-800 transition-colors"
+        className="h-full px-3 sm:px-4 bg-[#0e1733] border-2 border-slate-600/70 rounded-2xl shadow-xl shadow-black/40 flex items-center justify-center gap-2 text-white hover:bg-[#141c38] hover:border-sky-400/50 transition-colors"
         aria-expanded={isOpen}
       >
         <Filter className="w-4 h-4 text-white/50" />
-        <span className="hidden sm:inline text-xs font-bold">{activeMeta.shortLabel}</span>
+        <span className="hidden sm:inline text-[11px] uppercase tracking-wider font-black">{activeMeta.shortLabel}</span>
         <ChevronDown className={`w-3 h-3 text-white/50 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-48 bg-slate-800 border border-white/15 rounded-xl shadow-2xl py-1 z-[100] animate-in fade-in slide-in-from-top-2">
+        <div className="absolute right-0 top-full mt-2 w-48 bg-[#0b1430] border-2 border-slate-500/60 rounded-xl shadow-2xl shadow-black/50 py-1 z-[100] animate-in fade-in slide-in-from-top-2">
           {filters.map(filter => {
              const { label, icon: Icon } = FILTER_META[filter];
              const count = countByFilter?.[filter];
