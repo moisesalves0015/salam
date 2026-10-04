@@ -430,14 +430,18 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
           {/* ── 3. ÁREA DO PERSONAGEM ─────────────────────────────── */}
           {currentStep.mascotTip && (
             <section className="flex items-end gap-2.5 sm:gap-3 lesson-bubble-in" aria-label={`Fala de ${mascotName}`}>
-              <div className="shrink-0 flex flex-col items-center gap-1">
-                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border-[3px] border-teal-300 shadow-lg shadow-teal-900/50 bg-gradient-to-br from-teal-500 to-blue-700 flex items-center justify-center">
-                  {isEraldoTrack ? (
-                    <img src="/assets/trilhas/eraldo-avatar.jpg" alt="" className="w-full h-full object-cover scale-[1.18]" />
-                  ) : (
+              <div className="shrink-0 flex flex-col items-center justify-end">
+                {isEraldoTrack ? (
+                  <img 
+                    src="/assets/trilhas/eraldo_closeup_pointing.png" 
+                    alt="Eraldo Apontando" 
+                    className="w-20 h-20 sm:w-24 sm:h-24 object-contain drop-shadow-xl -mb-1" 
+                  />
+                ) : (
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border-[3px] border-teal-300 shadow-lg shadow-teal-900/50 bg-gradient-to-br from-teal-500 to-blue-700 flex items-center justify-center">
                     <MessageCircle className="w-7 h-7 text-white" aria-hidden="true" />
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
               <div className="relative flex-1 min-w-0 rounded-2xl rounded-bl-md bg-gradient-to-br from-[#0f3a46] to-[#0d2c45] border-2 border-teal-400/70 shadow-xl shadow-teal-950/50 lesson-glow-once">
                 {/* Cauda do balão */}

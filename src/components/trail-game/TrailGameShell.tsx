@@ -92,7 +92,7 @@ export const TrailGameShell: React.FC<TrailGameShellProps> = ({
         className="absolute inset-0 z-0 md:hidden"
         aria-hidden="true"
         style={{
-          backgroundImage: "url('/assets/trilhas/fundo-trilhas-vertical.png')",
+          backgroundImage: "url('/assets/trilhas/fundo-ciep-rio-vertical.png')",
           backgroundSize: 'cover',
           backgroundPosition: 'center top',
           backgroundRepeat: 'no-repeat',
@@ -103,7 +103,7 @@ export const TrailGameShell: React.FC<TrailGameShellProps> = ({
         className="absolute inset-0 z-0 hidden md:block"
         aria-hidden="true"
         style={{
-          backgroundImage: "url('/assets/trilhas/fundo-trilhas-pc.jpg')",
+          backgroundImage: "url('/assets/trilhas/fundo-mapa-ciep-aventura-pc.jpg')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',

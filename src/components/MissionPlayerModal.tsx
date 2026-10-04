@@ -64,7 +64,7 @@ export const MissionPlayerModal: React.FC<MissionPlayerModalProps> = ({
     <div
       className="fixed inset-0 z-[90] flex items-center justify-center p-4 overflow-y-auto"
       style={{
-        backgroundImage: "url('/assets/trilhas/fundo-trilhas-vertical.png')",
+        backgroundImage: "url('/assets/trilhas/fundo-ciep-rio-vertical.png')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
