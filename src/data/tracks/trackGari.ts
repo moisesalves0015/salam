@@ -6,7 +6,7 @@ export const trackGari: Track = {
   "number": 8,
   "title": "Um dia no trabalho com um gari",
   "description": "Uma jornada interativa completa baseada no PDF de Área e Perímetro, acompanhando um gari homem em seu dia a dia urbano.",
-  "objective": "Medir, estimar e calcular área e perímetro, interpretar gráficos, calcular probabilidade e reconhecer padrões no contexto da limpeza urbana.",
+  "objective": "Aprender, na prática, como medir áreas e perímetros, calcular probabilidade e reconhecer padrões no trabalho essencial do gari.",
   "bnccSkills": [
     "EF04MA20 - Medir, estimar e comparar grandezas",
     "EF04MA21 - Área e perímetro em malha",
@@ -22,8 +22,8 @@ export const trackGari: Track = {
       "id": "gari-c1",
       "trackId": "gari-mission",
       "number": 1,
-      "title": "Capítulo 1: Planejando o percurso na malha",
-      "shortDesc": "Área e perímetro: o percurso do gari",
+      "title": "Capítulo 1: O Que é um Trajeto na Malha?",
+      "shortDesc": "Planejando o percurso do gari",
       "icon": "MapIcon",
       "xpReward": 150,
       "steps": [
@@ -32,42 +32,39 @@ export const trackGari: Track = {
           "type": "dialogue",
           "title": "Atividade 1 — Descrever o caminho",
           "content": "O aluno encontra o gari na base de limpeza. O gari espalha um grande mapa do bairro em cima da mesa. As ruas parecem uma malha quadriculada.",
-          "mascotTip": "Bom dia! Hoje você vai acompanhar meu trabalho. Antes de sairmos, precisamos planejar o percurso. Cada deslocamento nesse mapa representa uma quadra. Vamos ler o caminho juntos?"
+          "mascotTip": "Bom dia! Hoje você vai acompanhar meu trabalho. Antes de sairmos, precisamos entender o que é um trajeto neste mapa. Vamos aprender?"
         },
         {
           "id": "u1-a0-exp",
           "type": "explanation",
           "title": "Entendendo a Matemática",
-          "content": "Uma quadra é representada por um lado do quadradinho. Para descobrir o caminho, começamos no ponto inicial, contamos cada lado percorrido e anotamos a direção antes da próxima mudança.",
+          "content": "Um trajeto é o caminho que percorremos de um ponto a outro. Imagine que você está andando pela calçada e chega numa esquina. Na malha, cada segmento do quadradinho é uma quadra (ou quarteirão).",
           "conceptCard": {
             "title": "Conceito Fundamental",
             "subtitle": "Atividade 1 — Descrever o caminho",
             "points": [
               {
-                "label": "O que observar?",
-                "text": "Uma quadra é representada por um lado do quadradinho. Para descobrir o caminho, começamos no ponto inicial, contamos cada lado percorrido e anotamos a direção antes da próxima mudança.",
-                "iconName": "Info"
+                "label": "Como Funciona?",
+                "text": "Para descrever um caminho perfeitamente, precisamos de duas coisas: a DIREÇÃO (direita, esquerda, cima, baixo) e a QUANTIDADE (quantas quadras andamos). Não adianta dizer \"vá para a direita\" sem dizer por quantos quarteirões!",
+                "iconName": "BookOpen"
               },
               {
                 "label": "Exemplo Prático",
-                "text": "Para contar a distância, começo no ponto de partida e observo quantos lados percorro. Por exemplo: 1 para cima, 2 para a direita.",
+                "text": "Se eu for da padaria até a praça, conto cada \"lado\" de quadradinho que passo. Se eu passo por 3 lados subindo, digo: \"Avance 3 quadras para cima\".",
                 "iconName": "Lightbulb"
               }
             ]
           },
           "gariInteraction": {
-            "type": "path-draw",
-            "data": {
-              "perimeter": 24
-            }
+            "type": "demo-path"
           }
         },
         {
           "id": "u1-a0-practice",
           "type": "independent_exercise",
           "title": "Sua vez de agir!",
-          "content": "Descreva o caminho do gari clicando na malha interativa. Forme o caminho que o gari deve seguir!",
-          "mascotTip": "Vamos lá, mostre o que você sabe!",
+          "content": "Agora é a sua vez. Descreva o caminho do gari clicando na malha interativa. Siga a rota planejada marcando 6 quarteirões.",
+          "mascotTip": "Agora é com você. Mostre o que aprendeu!",
           "quiz": {
             "question": "Se o gari percorreu 2 quadras para a direita, qual é a próxima direção?",
             "options": [
@@ -77,14 +74,14 @@ export const trackGari: Track = {
               "Para baixo"
             ],
             "correctIndex": 1,
-            "explanationOnSuccess": "Exato! Você acompanhou o mapa perfeitamente e contou os segmentos na direção certa.",
-            "explanationOnError": "Volte ao ponto da última mudança e observe a linha subindo.",
-            "hint": "Olhe a linha se movendo para o topo da tela."
+            "explanationOnSuccess": "Exato! Você acompanhou o mapa visualmente e notou a mudança de direção.",
+            "explanationOnError": "Ao desenhar a linha, preste atenção no movimento vertical após andar para a direita.",
+            "hint": "O traçado faz uma curva subindo em direção ao topo."
           },
           "gariInteraction": {
             "type": "path-draw",
             "data": {
-              "perimeter": 24
+              "target": 6
             }
           }
         },
@@ -92,50 +89,47 @@ export const trackGari: Track = {
           "id": "u1-a0-trans",
           "type": "dialogue",
           "title": "Bom trabalho!",
-          "content": "Muito bem! Agora que sabemos ler o mapa de quadras, vamos aprender a medir as distâncias com precisão.",
-          "mascotTip": "Isso aí! Vamos avançar para o próximo desafio do dia."
+          "content": "Sensacional! Entender trajetos é essencial não só para garis, mas para entregadores, motoristas e pedestres.",
+          "mascotTip": "Isso aí! O aprendizado de hoje ajuda a construir uma cidade melhor."
         },
         {
           "id": "u1-a1-intro",
           "type": "dialogue",
           "title": "Atividade 2 — Estimar e medir",
-          "content": "O gari pega seus instrumentos de medição. Ele aponta para um canteiro no mapa.",
-          "mascotTip": "Os lados dos quadradinhos têm o mesmo tamanho. Você consegue estimar quantos centímetros cada lado apresenta? E usando a régua, fica mais fácil?"
+          "content": "O gari pega uma trena (fita métrica gigante). Ele aponta para o primeiro trecho.",
+          "mascotTip": "Às vezes não temos a fita na mão. Você consegue \"estimar\" quantos metros tem aquele muro antes de medirmos?"
         },
         {
           "id": "u1-a1-exp",
           "type": "explanation",
           "title": "Entendendo a Matemática",
-          "content": "Estimar é pensar num valor aproximado observando o tamanho. Medir é usar um instrumento para encontrar o número exato. A distância total é a soma dos pedaços medidos.",
+          "content": "Estimar é o ato de prever uma medida baseando-se no que já conhecemos. Não é chutar! É olhar e comparar. Por exemplo, se sei que meu passo tem quase 1 metro, e dei 10 passos, estimo que o muro tenha 10 metros.",
           "conceptCard": {
             "title": "Conceito Fundamental",
             "subtitle": "Atividade 2 — Estimar e medir",
             "points": [
               {
-                "label": "O que observar?",
-                "text": "Estimar é pensar num valor aproximado observando o tamanho. Medir é usar um instrumento para encontrar o número exato. A distância total é a soma dos pedaços medidos.",
-                "iconName": "Info"
+                "label": "Como Funciona?",
+                "text": "Depois da estimativa, usamos a ferramenta real (régua, fita métrica, trena) para obter a MEDIDA EXATA. A diferença entre a sua estimativa e a medida exata mostra o quão treinado está o seu \"olho matemático\".",
+                "iconName": "BookOpen"
               },
               {
                 "label": "Exemplo Prático",
-                "text": "Se estimamos 2 cm por trecho e temos 5 trechos, nossa estimativa total será 10 cm. Depois, a régua dirá a verdade!",
+                "text": "Eu estimo que essa vassoura tenha 1 metro de altura. Quando pego a trena, descubro que ela tem 1m e 20cm. Minha estimativa foi boa!",
                 "iconName": "Lightbulb"
               }
             ]
           },
           "gariInteraction": {
-            "type": "measure",
-            "data": {
-              "expectedCm": 10
-            }
+            "type": "demo-path"
           }
         },
         {
           "id": "u1-a1-practice",
           "type": "independent_exercise",
           "title": "Sua vez de agir!",
-          "content": "Utilize a Régua Interativa para conferir o tamanho do objeto.",
-          "mascotTip": "Vamos lá, mostre o que você sabe!",
+          "content": "Utilize a Régua Interativa para cobrir exatamente o objeto e encontrar a medida.",
+          "mascotTip": "Agora é com você. Mostre o que aprendeu!",
           "gariInteraction": {
             "type": "measure",
             "data": {
@@ -143,18 +137,18 @@ export const trackGari: Track = {
             }
           },
           "writtenPrompt": {
-            "question": "Explique com suas palavras a diferença entre ESTIMAR uma medida e MEDIR com uma régua.",
+            "question": "Explique com suas palavras a diferença entre ESTIMAR uma medida e MEDIR usando um instrumento.",
             "linesNeeded": 2,
-            "suggestedAnswer": "Estimar é adivinhar o tamanho olhando, e medir é usar a régua para achar o tamanho exato.",
-            "guideline": "Use as palavras \"adivinhar\" e \"exato\"."
+            "suggestedAnswer": "Estimar é tentar prever o valor usando a lógica visual. Medir é usar a régua para achar o tamanho com exatidão.",
+            "guideline": "A palavra-chave é \"exatidão\"."
           }
         },
         {
           "id": "u1-a1-trans",
           "type": "dialogue",
           "title": "Bom trabalho!",
-          "content": "O caminho está planejado e medido. Está na hora de pegar os equipamentos e ir para a praça!",
-          "mascotTip": "Isso aí! Vamos avançar para o próximo desafio do dia."
+          "content": "Viu como a trena não mente? Estimativas guiam, ferramentas confirmam!",
+          "mascotTip": "Isso aí! O aprendizado de hoje ajuda a construir uma cidade melhor."
         }
       ]
     },
@@ -162,7 +156,7 @@ export const trackGari: Track = {
       "id": "gari-c2",
       "trackId": "gari-mission",
       "number": 2,
-      "title": "Capítulo 2: Medindo espaços da cidade",
+      "title": "Capítulo 2: A Diferença Entre Perímetro e Área",
       "shortDesc": "Área como medida de superfície",
       "icon": "Square",
       "xpReward": 150,
@@ -170,45 +164,41 @@ export const trackGari: Track = {
         {
           "id": "u2-a0-intro",
           "type": "dialogue",
-          "title": "Atividade 3 — Pintar e contar regiões",
-          "content": "Vocês chegam a uma grande praça dividida em canteiros de diferentes formatos (retangulares, esticados, quadrados).",
-          "mascotTip": "Agora vamos descobrir quanto espaço existe em cada região da praça. Cada quadradinho é uma unidade de área."
+          "title": "Atividade 3 e 4 — O que é Área?",
+          "content": "Vocês chegam a uma grande praça dividida em canteiros de diferentes formatos.",
+          "mascotTip": "A praça é gigante! Eu preciso saber a ÁREA para calcular quanto tempo vou demorar varrendo o centro dela."
         },
         {
           "id": "u2-a0-exp",
           "type": "explanation",
           "title": "Entendendo a Matemática",
-          "content": "Área é o espaço que fica dentro da figura. Se duas figuras diferentes cobrirem a mesma quantidade de quadradinhos, elas têm a MESMA área!",
+          "content": "A Área é a quantidade de superfície plana que existe DENTRO do contorno de uma figura. Se a gente quadricular a praça, calcular a área é o mesmo que contar quantos quadrados preenchem o chão.",
           "conceptCard": {
             "title": "Conceito Fundamental",
-            "subtitle": "Atividade 3 — Pintar e contar regiões",
+            "subtitle": "Atividade 3 e 4 — O que é Área?",
             "points": [
               {
-                "label": "O que observar?",
-                "text": "Área é o espaço que fica dentro da figura. Se duas figuras diferentes cobrirem a mesma quantidade de quadradinhos, elas têm a MESMA área!",
-                "iconName": "Info"
+                "label": "Como Funciona?",
+                "text": "O mais fascinante é que figuras com formatos totalmente diferentes podem ter a mesma área. Uma quadra de esporte comprida e um pátio quadrado podem ter os mesmos 100 metros quadrados (m²) de área!",
+                "iconName": "BookOpen"
               },
               {
                 "label": "Exemplo Prático",
-                "text": "Um canteiro 2x3 (6 quadrados) tem a mesma área de um canteiro comprido de 1x6 (6 quadrados).",
+                "text": "Um canteiro no formato \"2x3\" abriga 6 quadrados. Uma faixa estreita no formato \"1x6\" também abriga 6 quadrados. Ambas as áreas são iguais a 6!",
                 "iconName": "Lightbulb"
               }
             ]
           },
           "gariInteraction": {
-            "type": "paint",
-            "data": {
-              "totalRegions": 15,
-              "paintedRegions": 6
-            }
+            "type": "demo-area"
           }
         },
         {
           "id": "u2-a0-practice",
           "type": "independent_exercise",
           "title": "Sua vez de agir!",
-          "content": "Pinte as regiões da praça e conte quantas unidades preenchem cada canteiro.",
-          "mascotTip": "Vamos lá, mostre o que você sabe!",
+          "content": "Pinte as regiões da praça e conte os canteiros.",
+          "mascotTip": "Agora é com você. Mostre o que aprendeu!",
           "gariInteraction": {
             "type": "paint",
             "data": {
@@ -217,8 +207,8 @@ export const trackGari: Track = {
             }
           },
           "dragAndDrop": {
-            "title": "Combine as áreas iguais",
-            "instruction": "Arraste os formatos para as categorias que possuem a mesma área.",
+            "title": "Formas Diferentes, Áreas Iguais",
+            "instruction": "Arraste os formatos para as categorias baseando-se apenas na quantidade de quadrados internos.",
             "items": [
               {
                 "id": "i1",
@@ -226,7 +216,7 @@ export const trackGari: Track = {
               },
               {
                 "id": "i2",
-                "content": "Fila reta 1x6"
+                "content": "Linha Reta 1x6"
               },
               {
                 "id": "i3",
@@ -240,11 +230,11 @@ export const trackGari: Track = {
             "categories": [
               {
                 "id": "c1",
-                "title": "Área = 6 quadrados"
+                "title": "Tem 6 quadradinhos de Área"
               },
               {
                 "id": "c2",
-                "title": "Área = 4 quadrados"
+                "title": "Tem 4 quadradinhos de Área"
               }
             ],
             "correctMapping": {
@@ -253,76 +243,71 @@ export const trackGari: Track = {
               "i3": "c2",
               "i4": "c2"
             },
-            "successMessage": "Perfeito! Figuras diferentes podem sim ter a mesma área."
+            "successMessage": "Genial! A forma não importa se a quantidade de espaço interno for a mesma."
           }
         },
         {
           "id": "u2-a0-trans",
           "type": "dialogue",
           "title": "Bom trabalho!",
-          "content": "Entendeu? O formato muda, mas o espaço que ocupa pode ser o mesmo.",
-          "mascotTip": "Isso aí! Vamos avançar para o próximo desafio do dia."
+          "content": "Compreender a área nos ajuda a saber a quantidade de grama que precisamos comprar!",
+          "mascotTip": "Isso aí! O aprendizado de hoje ajuda a construir uma cidade melhor."
         },
         {
           "id": "u2-a1-intro",
           "type": "dialogue",
-          "title": "Atividade 4 e 5 — Investigando o m²",
-          "content": "O gari entra na escola municipal ao lado da praça para ajudar na montagem de um evento de reciclagem.",
-          "mascotTip": "Para organizar as mesas de reciclagem, é importante saber a área da sala. Quando o espaço é grande, não contamos centímetros."
+          "title": "Atividade 6 e 7 — E o Perímetro?",
+          "content": "Agora, o gari precisa isolar um pedaço da calçada com fita amarela e preta.",
+          "mascotTip": "Mas espere! A área é o chão... e o contorno externo, como chamamos? Isso é o perímetro!"
         },
         {
           "id": "u2-a1-exp",
           "type": "explanation",
           "title": "Entendendo a Matemática",
-          "content": "Em espaços grandes como salas, calçadas ou ruas, usamos o Metro Quadrado (m²). Um m² é o espaço ocupado por um quadrado de 1 metro de lado.",
+          "content": "O Perímetro é a medida apenas da borda. Imagine uma formiga caminhando pelas linhas externas do retângulo. O caminho completo que ela fizer até voltar ao início é o perímetro.",
           "conceptCard": {
             "title": "Conceito Fundamental",
-            "subtitle": "Atividade 4 e 5 — Investigando o m²",
+            "subtitle": "Atividade 6 e 7 — E o Perímetro?",
             "points": [
               {
-                "label": "O que observar?",
-                "text": "Em espaços grandes como salas, calçadas ou ruas, usamos o Metro Quadrado (m²). Um m² é o espaço ocupado por um quadrado de 1 metro de lado.",
-                "iconName": "Info"
+                "label": "Como Funciona?",
+                "text": "Para encontrar o perímetro de qualquer figura com lados retos, a regra é uma só: SOMAR TODOS OS LADOS. Num retângulo, você sempre terá 4 lados para somar (comprimento + largura + comprimento + largura).",
+                "iconName": "BookOpen"
               },
               {
                 "label": "Exemplo Prático",
-                "text": "Se o chão da sala cabem 30 quadrados de 1m x 1m, a área é de 30 m².",
+                "text": "Se o canteiro mede 4 metros por 2 metros, o perímetro será 4 + 2 + 4 + 2 = 12 metros de fita isolante necessários.",
                 "iconName": "Lightbulb"
               }
             ]
           },
           "gariInteraction": {
-            "type": "paint",
-            "data": {
-              "totalRegions": 30,
-              "paintedRegions": 10
-            }
+            "type": "demo-perimeter"
           }
         },
         {
           "id": "u2-a1-practice",
           "type": "independent_exercise",
           "title": "Sua vez de agir!",
-          "content": "Qual é a unidade certa e qual o valor da área para espaços grandes?",
-          "mascotTip": "Vamos lá, mostre o que você sabe!",
+          "content": "Sabendo dessa diferença crucial, resolva o problema da área vs perímetro do nosso espaço 6x3.",
+          "mascotTip": "Agora é com você. Mostre o que aprendeu!",
           "quiz": {
-            "question": "Sabendo que a sala comporta exatos 30 quadrados de piso (onde cada piso mede 1m de lado), qual é a área da sala?",
+            "question": "Num retângulo com 6m de comprimento e 3m de largura, qual o valor correto da Área e por quê?",
             "options": [
-              "30 metros",
-              "30 cm²",
-              "30 m²",
-              "30 m³"
+              "18 m², porque Área = Comprimento × Largura",
+              "18 m, porque o Perímetro = 6 + 3",
+              "36 m², porque é o dobro de 18",
+              "12 m, porque eu sumei os lados."
             ],
-            "correctIndex": 2,
-            "explanationOnSuccess": "Isso! Se os quadrados têm 1 metro de lado, estamos medindo em metros quadrados (m²).",
-            "explanationOnError": "Preste atenção na unidade! Se o quadrado tem 1 metro, a área é medida em m².",
-            "hint": "A unidade usada para áreas com base no metro leva \"²\"."
+            "correctIndex": 0,
+            "explanationOnSuccess": "Irretocável! Área multiplica (6x3), Perímetro soma os lados (6+3+6+3). E a unidade da área carrega o ² (m²)!",
+            "explanationOnError": "Lembre-se da explicação: Área usa multiplicação (6 vezes 3) e o símbolo \"²\".",
+            "hint": "A área é o recheio: 6 vezes 3."
           },
           "gariInteraction": {
-            "type": "paint",
+            "type": "path-draw",
             "data": {
-              "totalRegions": 30,
-              "paintedRegions": 10
+              "target": 12
             }
           }
         },
@@ -330,8 +315,8 @@ export const trackGari: Track = {
           "id": "u2-a1-trans",
           "type": "dialogue",
           "title": "Bom trabalho!",
-          "content": "Excelente, já sabemos calcular as grandes áreas onde vamos trabalhar!",
-          "mascotTip": "Isso aí! Vamos avançar para o próximo desafio do dia."
+          "content": "Você aprendeu os dois conceitos mais fortes da Geometria do dia a dia!",
+          "mascotTip": "Isso aí! O aprendizado de hoje ajuda a construir uma cidade melhor."
         }
       ]
     },
@@ -339,660 +324,131 @@ export const trackGari: Track = {
       "id": "gari-c3",
       "trackId": "gari-mission",
       "number": 3,
-      "title": "Capítulo 3: Área, perímetro e probabilidade",
-      "shortDesc": "Retângulos e Sorteios",
-      "icon": "Dice5",
+      "title": "Capítulo 3: Como Funciona a Probabilidade?",
+      "shortDesc": "Eventos Aleatórios",
+      "icon": "PlayCircle",
       "xpReward": 150,
       "steps": [
         {
           "id": "u3-a0-intro",
           "type": "dialogue",
-          "title": "Atividade 6 e 7 — Área vs Perímetro",
-          "content": "O gari precisa cercar uma área retangular com fita amarela de segurança.",
-          "mascotTip": "Se eu for passar a fita ao redor do espaço, preciso do PERÍMETRO. Se eu quiser saber o chão que vamos varrer, preciso da ÁREA. Não confunda!"
+          "title": "Atividade 8 — Compreendendo a Chance (Probabilidade)",
+          "content": "Para engajar os moradores, a subprefeitura montou uma roleta gigante de prêmios ecológicos.",
+          "mascotTip": "Muita gente acha que \"sorte\" não tem regra matemática. Mas tem sim! O nome disso é probabilidade."
         },
         {
           "id": "u3-a0-exp",
           "type": "explanation",
           "title": "Entendendo a Matemática",
-          "content": "Perímetro é o contorno (soma de todos os lados). Área é a superfície (espaço interno, comprimento × largura).",
+          "content": "A probabilidade mede a \"chance\" matemática de algo acontecer. Nós calculamos isso contando os \"Casos que queremos\" e dividindo por \"Tudo que é possível\".",
           "conceptCard": {
             "title": "Conceito Fundamental",
-            "subtitle": "Atividade 6 e 7 — Área vs Perímetro",
+            "subtitle": "Atividade 8 — Compreendendo a Chance (Probabilidade)",
             "points": [
               {
-                "label": "O que observar?",
-                "text": "Perímetro é o contorno (soma de todos os lados). Área é a superfície (espaço interno, comprimento × largura).",
-                "iconName": "Info"
+                "label": "Como Funciona?",
+                "text": "Pense numa sacola de doces. Se você tem 1 bala vermelha e 4 verdes, o total é 5. A chance de tirar uma vermelha de olhos vendados é apenas 1 em 5. A probabilidade nunca mente sobre quem está em maior quantidade!",
+                "iconName": "BookOpen"
               },
               {
                 "label": "Exemplo Prático",
-                "text": "Um retângulo de 6 m por 3 m. Área = 6 × 3 = 18 m². Perímetro = 6+3+6+3 = 18 m.",
+                "text": "Se você jogar uma moeda (Cara ou Coroa), o total é 2. A chance de sair Cara é 1 em 2. Ou seja, metade das vezes!",
                 "iconName": "Lightbulb"
               }
             ]
           },
           "gariInteraction": {
-            "type": "path-draw",
-            "data": {
-              "perimeter": 18
-            }
+            "type": "demo-prob"
           }
         },
         {
           "id": "u3-a0-practice",
           "type": "independent_exercise",
           "title": "Sua vez de agir!",
-          "content": "Use o mapa para traçar o contorno (perímetro) da área de segurança.",
-          "mascotTip": "Vamos lá, mostre o que você sabe!",
+          "content": "Gire a Roleta Interativa de Sorteios. A roleta tem 3 partes azuis (Varrer), 2 rosas (Pintar) e 1 amarela (Lavar).",
+          "mascotTip": "Agora é com você. Mostre o que aprendeu!",
           "quiz": {
-            "question": "A área desse espaço de 6m × 3m é de:",
+            "question": "Ao girar a roleta descrita (3 azuis, 2 rosas, 1 amarela), qual a probabilidade matemática de cair no amarelo (Lavar)?",
             "options": [
-              "18 m",
-              "9 m²",
-              "18 m²",
-              "12 m²"
+              "1 chance em 6",
+              "1 chance em 3",
+              "3 chances em 6",
+              "6 chances em 6"
             ],
-            "correctIndex": 2,
-            "explanationOnSuccess": "Correto! 6 × 3 = 18 m². A unidade m² confirma que é área.",
-            "explanationOnError": "Multiplique as duas medidas e escolha a alternativa com m².",
-            "hint": "6 x 3 e olhe a unidade de área."
+            "correctIndex": 0,
+            "explanationOnSuccess": "Exato! A fatia amarela é apenas 1. O total de fatias é 6. A chance é rigorosamente 1/6 (um sexto).",
+            "explanationOnError": "Conte o total de fatias (3 + 2 + 1). Depois verifique quantas dessas fatias são amarelas.",
+            "hint": "Amarela é apenas uma fatia no total de 6."
           },
           "gariInteraction": {
-            "type": "path-draw",
-            "data": {
-              "perimeter": 18
-            }
+            "type": "roulette",
+            "data": {}
           }
         },
         {
           "id": "u3-a0-trans",
           "type": "dialogue",
           "title": "Bom trabalho!",
-          "content": "Agora que cercamos o local, como decidimos qual tarefa vem primeiro? Sorteio!",
-          "mascotTip": "Isso aí! Vamos avançar para o próximo desafio do dia."
+          "content": "O mais bacana da probabilidade é prever as tendências sem precisar advinhar.",
+          "mascotTip": "Isso aí! O aprendizado de hoje ajuda a construir uma cidade melhor."
         },
         {
           "id": "u3-a1-intro",
           "type": "dialogue",
-          "title": "Atividade 8 e 9 — Combinando dois dados",
-          "content": "O gari senta no banco e tira dois dados do bolso.",
-          "mascotTip": "Vamos lançar dois dados para decidir a ordem das tarefas da equipe. Quantas combinações podemos ter?"
+          "title": "Atividade 29 — Laboratório de Visão 3D e Cubos",
+          "content": "Dentro do galpão da base, o gari brinca com blocos conectores, aqueles blocos parecidos com tijolinhos.",
+          "mascotTip": "A matemática também estuda o espaço 3D (tridimensional). O cérebro precisa imaginar coisas escondidas."
         },
         {
           "id": "u3-a1-exp",
           "type": "explanation",
           "title": "Entendendo a Matemática",
-          "content": "O dado 1 tem 6 opções. O dado 2 também tem 6 opções. O total de combinações é 6 × 6 = 36. A chance de sair dois números iguais (ex: 3 e 3) acontece 6 vezes.",
+          "content": "Quando construímos algo usando blocos duplos rígidos (peças formadas por 2 cubos colados, inquebráveis), somos obrigados a preencher o espaço em pares.",
           "conceptCard": {
             "title": "Conceito Fundamental",
-            "subtitle": "Atividade 8 e 9 — Combinando dois dados",
+            "subtitle": "Atividade 29 — Laboratório de Visão 3D e Cubos",
             "points": [
               {
-                "label": "O que observar?",
-                "text": "O dado 1 tem 6 opções. O dado 2 também tem 6 opções. O total de combinações é 6 × 6 = 36. A chance de sair dois números iguais (ex: 3 e 3) acontece 6 vezes.",
-                "iconName": "Info"
+                "label": "Como Funciona?",
+                "text": "O raciocínio espacial permite que os arquitetos, engenheiros ou garis projetem como caixas caberão num caminhão. Se você tem apenas blocos de tamanho 2, nunca conseguirá construir algo que tenha espaços apertados tamanho 1 ou pontas flutuantes de 1 cubo.",
+                "iconName": "BookOpen"
               },
               {
                 "label": "Exemplo Prático",
-                "text": "A probabilidade se escreve como Casos Favoráveis / Total de Casos. 6 chances em 36 = 6/36.",
+                "text": "Uma torre alta pode ser feita empilhando os blocos de 2. Mas uma pirâmide fina de topo pontiagudo com 1 bloquinho solitário é impossível com essas peças.",
                 "iconName": "Lightbulb"
               }
             ]
           },
           "gariInteraction": {
-            "type": "roulette",
-            "data": {}
+            "type": "demo-area"
           }
         },
         {
           "id": "u3-a1-practice",
           "type": "independent_exercise",
           "title": "Sua vez de agir!",
-          "content": "Determine a probabilidade e, se possível, sua forma simplificada.",
-          "mascotTip": "Vamos lá, mostre o que você sabe!",
-          "quiz": {
-            "question": "Observando os dados, a probabilidade de cair com números iguais (duplas) é de:",
-            "options": [
-              "6/36 ou 1/6",
-              "12/36 ou 1/3",
-              "1/36",
-              "6/6"
-            ],
-            "correctIndex": 0,
-            "explanationOnSuccess": "Brilhante! Você percebeu que as 6 duplas representam 6 casos favoráveis num total de 36.",
-            "explanationOnError": "O total é 36. As duplas são (1,1), (2,2), (3,3), (4,4), (5,5), (6,6). São 6 casos.",
-            "hint": "6 casos em 36 possíveis."
-          },
+          "content": "Arraste o Visualizador 3D para entender como a rotação expõe faces ocultas do objeto. Depois justifique.",
+          "mascotTip": "Agora é com você. Mostre o que aprendeu!",
           "gariInteraction": {
-            "type": "roulette",
-            "data": {}
+            "type": "cubes",
+            "data": {
+              "count": 8
+            }
+          },
+          "writtenPrompt": {
+            "question": "A partir do que o Gari ensinou sobre espaço, por que é importante visualizar os objetos 3D girando antes de guardar caixas num caminhão?",
+            "linesNeeded": 2,
+            "suggestedAnswer": "Porque caixas têm profundidade, e se não considerarmos todas as faces, a carga não vai se encaixar direito ou vai ficar com pontas penduradas.",
+            "guideline": "Fale sobre como os blocos precisam se encaixar sem deixar \"buracos\" soltos de tamanho errado."
           }
         },
         {
           "id": "u3-a1-trans",
           "type": "dialogue",
           "title": "Bom trabalho!",
-          "content": "Legal! O sorteio foi justo e o trabalho pode continuar.",
-          "mascotTip": "Isso aí! Vamos avançar para o próximo desafio do dia."
-        }
-      ]
-    },
-    {
-      "id": "gari-c4",
-      "trackId": "gari-mission",
-      "number": 4,
-      "title": "Capítulo 4: Eventos cotidianos e Coleta",
-      "shortDesc": "Análise de objetos e roletas",
-      "icon": "Recycle",
-      "xpReward": 150,
-      "steps": [
-        {
-          "id": "u4-a0-intro",
-          "type": "dialogue",
-          "title": "Atividade 18 — Roleta de tarefas",
-          "content": "Para engajar os moradores, o gari instalou uma roleta de brindes e tarefas sustentáveis.",
-          "mascotTip": "Olha a roleta! Quanto mais espaços uma tarefa tiver na roda, maior é a chance de ela sair no sorteio."
-        },
-        {
-          "id": "u4-a0-exp",
-          "type": "explanation",
-          "title": "Entendendo a Matemática",
-          "content": "Probabilidade visual: as fatias da roleta representam a chance.",
-          "conceptCard": {
-            "title": "Conceito Fundamental",
-            "subtitle": "Atividade 18 — Roleta de tarefas",
-            "points": [
-              {
-                "label": "O que observar?",
-                "text": "Probabilidade visual: as fatias da roleta representam a chance.",
-                "iconName": "Info"
-              },
-              {
-                "label": "Exemplo Prático",
-                "text": "Se a roleta tem 4 fatias azuis e 1 vermelha, é muito mais provável sair azul.",
-                "iconName": "Lightbulb"
-              }
-            ]
-          },
-          "gariInteraction": {
-            "type": "roulette",
-            "data": {}
-          }
-        },
-        {
-          "id": "u4-a0-practice",
-          "type": "independent_exercise",
-          "title": "Sua vez de agir!",
-          "content": "Gire a Roleta Interativa e veja a probabilidade em ação.",
-          "mascotTip": "Vamos lá, mostre o que você sabe!",
-          "quiz": {
-            "question": "Se a roleta oferece 3 chances para varrer, 1 para lavar e 2 para pintar, qual tarefa o gari tem MAIOR probabilidade de fazer?",
-            "options": [
-              "Varrer",
-              "Lavar",
-              "Pintar",
-              "Nenhuma, é tudo igual"
-            ],
-            "correctIndex": 0,
-            "explanationOnSuccess": "Isso! \"Varrer\" tem mais chances porque domina os espaços da roleta.",
-            "explanationOnError": "A opção com o maior número de chances é a mais provável.",
-            "hint": "O número 3 é maior que 1 e 2."
-          },
-          "gariInteraction": {
-            "type": "roulette",
-            "data": {}
-          }
-        },
-        {
-          "id": "u4-a0-trans",
-          "type": "dialogue",
-          "title": "Bom trabalho!",
-          "content": "Você aprendeu probabilidade só olhando a roleta! E os materiais recicláveis?",
-          "mascotTip": "Isso aí! Vamos avançar para o próximo desafio do dia."
-        },
-        {
-          "id": "u4-a1-intro",
-          "type": "dialogue",
-          "title": "Atividade 19 e 20 — Sacola de Recicláveis",
-          "content": "O gari mostra uma sacola cheia de materiais que os moradores entregaram: garrafas de plástico, vidro e papel.",
-          "mascotTip": "Vou retirar um material aleatoriamente. Qual é a chance de eu puxar um plástico?"
-        },
-        {
-          "id": "u4-a1-exp",
-          "type": "explanation",
-          "title": "Entendendo a Matemática",
-          "content": "A contagem é simples: conte os plásticos (casos favoráveis) e divida pelo total de itens na sacola (casos possíveis).",
-          "conceptCard": {
-            "title": "Conceito Fundamental",
-            "subtitle": "Atividade 19 e 20 — Sacola de Recicláveis",
-            "points": [
-              {
-                "label": "O que observar?",
-                "text": "A contagem é simples: conte os plásticos (casos favoráveis) e divida pelo total de itens na sacola (casos possíveis).",
-                "iconName": "Info"
-              },
-              {
-                "label": "Exemplo Prático",
-                "text": "Se há 5 plásticos em 20 itens, a chance é 5 em 20.",
-                "iconName": "Lightbulb"
-              }
-            ]
-          },
-          "gariInteraction": {
-            "type": "roulette",
-            "data": {}
-          }
-        },
-        {
-          "id": "u4-a1-practice",
-          "type": "independent_exercise",
-          "title": "Sua vez de agir!",
-          "content": "Sabendo que há 5 plásticos, 3 papéis e 2 vidros na sacola, determine a probabilidade.",
-          "mascotTip": "Vamos lá, mostre o que você sabe!",
-          "gariInteraction": {
-            "type": "roulette",
-            "data": {}
-          },
-          "writtenPrompt": {
-            "question": "Explique por que é mais provável o gari puxar um plástico do que um vidro dessa sacola.",
-            "linesNeeded": 2,
-            "suggestedAnswer": "Porque tem 5 pedaços de plástico e apenas 2 de vidro. Como tem mais plástico, a chance de pegar ele é maior.",
-            "guideline": "Foque em qual material tem a maior quantidade."
-          }
-        },
-        {
-          "id": "u4-a1-trans",
-          "type": "dialogue",
-          "title": "Bom trabalho!",
-          "content": "Você é um ótimo assistente. Vamos registrar esses dados.",
-          "mascotTip": "Isso aí! Vamos avançar para o próximo desafio do dia."
-        }
-      ]
-    },
-    {
-      "id": "gari-c5",
-      "trackId": "gari-mission",
-      "number": 5,
-      "title": "Capítulo 5: Frações e toneladas",
-      "shortDesc": "Matemática e meio ambiente",
-      "icon": "PieChart",
-      "xpReward": 150,
-      "steps": [
-        {
-          "id": "u5-a0-intro",
-          "type": "dialogue",
-          "title": "Atividade 24 — As Frações na pausa para a pizza",
-          "content": "Durante uma pausa, a equipe de limpeza dividiu uma pizza em 10 fatias. Sobrou 1.",
-          "mascotTip": "O que sobra também é importante registrar, ainda mais quando falamos de resíduos orgânicos e frações!"
-        },
-        {
-          "id": "u5-a0-exp",
-          "type": "explanation",
-          "title": "Entendendo a Matemática",
-          "content": "Uma pizza dividida em 10 partes tem o denominador 10. A fatia que sobrou é 1 parte de 10. Em número decimal, isso se escreve 0,1 (um décimo).",
-          "conceptCard": {
-            "title": "Conceito Fundamental",
-            "subtitle": "Atividade 24 — As Frações na pausa para a pizza",
-            "points": [
-              {
-                "label": "O que observar?",
-                "text": "Uma pizza dividida em 10 partes tem o denominador 10. A fatia que sobrou é 1 parte de 10. Em número decimal, isso se escreve 0,1 (um décimo).",
-                "iconName": "Info"
-              },
-              {
-                "label": "Exemplo Prático",
-                "text": "2 fatias de 10 seriam 2/10 ou 0,2.",
-                "iconName": "Lightbulb"
-              }
-            ]
-          },
-          "gariInteraction": {
-            "type": "paint",
-            "data": {
-              "totalRegions": 10,
-              "paintedRegions": 1
-            }
-          }
-        },
-        {
-          "id": "u5-a0-practice",
-          "type": "independent_exercise",
-          "title": "Sua vez de agir!",
-          "content": "Selecione a representação correta dessa sobra.",
-          "mascotTip": "Vamos lá, mostre o que você sabe!",
-          "quiz": {
-            "question": "Se sobrou 1 fatia de uma pizza cortada em 10, qual é a fração e sua representação em decimal?",
-            "options": [
-              "1/1 e 1,0",
-              "1/10 e 0,1",
-              "10/10 e 1,0",
-              "10/1 e 10,0"
-            ],
-            "correctIndex": 1,
-            "explanationOnSuccess": "Brilhante! 1 sobre 10 é igual a 0,1 décimos.",
-            "explanationOnError": "Lembre-se: o total (10) vai embaixo na fração. 1/10 equivale a 0,1.",
-            "hint": "O total de fatias fica no denominador."
-          },
-          "gariInteraction": {
-            "type": "paint",
-            "data": {
-              "totalRegions": 10,
-              "paintedRegions": 1
-            }
-          }
-        },
-        {
-          "id": "u5-a0-trans",
-          "type": "dialogue",
-          "title": "Bom trabalho!",
-          "content": "Pizza de lado, vamos para pesos pesados e levinhos.",
-          "mascotTip": "Isso aí! Vamos avançar para o próximo desafio do dia."
-        },
-        {
-          "id": "u5-a1-intro",
-          "type": "dialogue",
-          "title": "Atividade 25, 26 e 27 — Gramas e Toneladas",
-          "content": "O gari exibe um gráfico anual de garrafas PET do Brasil (em toneladas) e depois aponta para uma formiga na calçada.",
-          "mascotTip": "No nosso trabalho medimos de tudo! O lixo pesado da cidade e a vida minúscula das calçadas."
-        },
-        {
-          "id": "u5-a1-exp",
-          "type": "explanation",
-          "title": "Entendendo a Matemática",
-          "content": "A unidade deve combinar com o peso. Usamos miligrama (mg) para a formiga, grama (g) para um lápis, quilo (kg) para lixo comum e Tonelada (t) para o caminhão inteiro! (1 t = 1.000 kg).",
-          "conceptCard": {
-            "title": "Conceito Fundamental",
-            "subtitle": "Atividade 25, 26 e 27 — Gramas e Toneladas",
-            "points": [
-              {
-                "label": "O que observar?",
-                "text": "A unidade deve combinar com o peso. Usamos miligrama (mg) para a formiga, grama (g) para um lápis, quilo (kg) para lixo comum e Tonelada (t) para o caminhão inteiro! (1 t = 1.000 kg).",
-                "iconName": "Info"
-              },
-              {
-                "label": "Exemplo Prático",
-                "text": "Para transformar 3 toneladas em kg, fazemos 3 × 1.000 = 3.000 kg.",
-                "iconName": "Lightbulb"
-              }
-            ]
-          },
-          "gariInteraction": {
-            "type": "measure",
-            "data": {
-              "expectedCm": 10
-            }
-          }
-        },
-        {
-          "id": "u5-a1-practice",
-          "type": "independent_exercise",
-          "title": "Sua vez de agir!",
-          "content": "Assinale a unidade certa para a formiga e faça a conversão do gráfico do PET (26 t).",
-          "mascotTip": "Vamos lá, mostre o que você sabe!",
-          "gariInteraction": {
-            "type": "measure",
-            "data": {
-              "expectedCm": 10
-            }
-          },
-          "dragAndDrop": {
-            "title": "Cada peso em seu lugar",
-            "instruction": "Arraste a medida correta para o objeto certo.",
-            "items": [
-              {
-                "id": "i1",
-                "content": "Peso de uma Formiga"
-              },
-              {
-                "id": "i2",
-                "content": "Peso da Coleta de PET Nacional (2017)"
-              }
-            ],
-            "categories": [
-              {
-                "id": "c1",
-                "title": "3 mg (miligramas)"
-              },
-              {
-                "id": "c2",
-                "title": "26.000 kg (26 toneladas)"
-              }
-            ],
-            "correctMapping": {
-              "i1": "c1",
-              "i2": "c2"
-            },
-            "successMessage": "Incrível! Você compreendeu as diferentes escalas de peso."
-          }
-        },
-        {
-          "id": "u5-a1-trans",
-          "type": "dialogue",
-          "title": "Bom trabalho!",
-          "content": "Ótimo trabalho! O sol está se pondo, vamos voltar para a base para os desafios finais.",
-          "mascotTip": "Isso aí! Vamos avançar para o próximo desafio do dia."
-        }
-      ]
-    },
-    {
-      "id": "gari-c6",
-      "trackId": "gari-mission",
-      "number": 6,
-      "title": "Capítulo 6: Raciocínio Lógico e Padrões",
-      "shortDesc": "Desafios Finais",
-      "icon": "Award",
-      "xpReward": 150,
-      "steps": [
-        {
-          "id": "u6-a0-intro",
-          "type": "dialogue",
-          "title": "Atividade 28 — O Padrão das Placas",
-          "content": "No caminho de volta, vocês reparam que as placas \"Separar, Reduzir, Reutilizar e Reciclar\" se repetem nos postes.",
-          "mascotTip": "Veja, é um ciclo de 4 placas que se repete a rua toda! Você consegue descobrir qual será a 27ª placa lá no fim da avenida?"
-        },
-        {
-          "id": "u6-a0-exp",
-          "type": "explanation",
-          "title": "Entendendo a Matemática",
-          "content": "Divida a posição que você quer pelo tamanho do ciclo. O resto da divisão indica a resposta exata!",
-          "conceptCard": {
-            "title": "Conceito Fundamental",
-            "subtitle": "Atividade 28 — O Padrão das Placas",
-            "points": [
-              {
-                "label": "O que observar?",
-                "text": "Divida a posição que você quer pelo tamanho do ciclo. O resto da divisão indica a resposta exata!",
-                "iconName": "Info"
-              },
-              {
-                "label": "Exemplo Prático",
-                "text": "Se fossem só 3 placas e eu quisesse a 5ª, faria 5÷3, resto 2. Então é a placa nº 2!",
-                "iconName": "Lightbulb"
-              }
-            ]
-          },
-          "gariInteraction": {
-            "type": "path-draw",
-            "data": {
-              "perimeter": 4
-            }
-          }
-        },
-        {
-          "id": "u6-a0-practice",
-          "type": "independent_exercise",
-          "title": "Sua vez de agir!",
-          "content": "O ciclo é de 4. A posição procurada é a 27ª.",
-          "mascotTip": "Vamos lá, mostre o que você sabe!",
-          "quiz": {
-            "question": "Dividindo 27 por 4, qual é o resto e qual figura isso representa?",
-            "options": [
-              "Resto 1 (Separar)",
-              "Resto 2 (Reduzir)",
-              "Resto 3 (Reutilizar)",
-              "Resto 0 (Reciclar)"
-            ],
-            "correctIndex": 2,
-            "explanationOnSuccess": "Mestre da divisão! 27 dividido por 4 dá 6 blocos inteiros, sobrando 3. A placa é Reutilizar.",
-            "explanationOnError": "Faça a conta: 4 × 6 = 24. Faltam quantos para chegar no 27? Esse é o resto.",
-            "hint": "A tabuada do 4 passa pelo 24. A diferença de 27 para 24 é o resto."
-          },
-          "gariInteraction": {
-            "type": "path-draw",
-            "data": {
-              "perimeter": 4
-            }
-          }
-        },
-        {
-          "id": "u6-a0-trans",
-          "type": "dialogue",
-          "title": "Bom trabalho!",
-          "content": "A mente está afiada! Última tarefa do dia no galpão.",
-          "mascotTip": "Isso aí! Vamos avançar para o próximo desafio do dia."
-        },
-        {
-          "id": "u6-a1-intro",
-          "type": "dialogue",
-          "title": "Atividade 29 — Laboratório 3D do Gari",
-          "content": "Dentro do galpão da base, o gari brinca com blocos conectores para bolar a arrumação das caixas grandes.",
-          "mascotTip": "Eu tenho blocos formados por 2 cubos grudados cada um. Não posso cortá-los. Qual estrutura é impossível montar se eu tiver 4 blocos (8 cubinhos totais)?"
-        },
-        {
-          "id": "u6-a1-exp",
-          "type": "explanation",
-          "title": "Entendendo a Matemática",
-          "content": "Você não pode montar estruturas que tenham espaços ímpares pendurados ou pontas sozinhas se suas peças originais são \"gêmeas\" (grudadas de 2 em 2).",
-          "conceptCard": {
-            "title": "Conceito Fundamental",
-            "subtitle": "Atividade 29 — Laboratório 3D do Gari",
-            "points": [
-              {
-                "label": "O que observar?",
-                "text": "Você não pode montar estruturas que tenham espaços ímpares pendurados ou pontas sozinhas se suas peças originais são \"gêmeas\" (grudadas de 2 em 2).",
-                "iconName": "Info"
-              },
-              {
-                "label": "Exemplo Prático",
-                "text": "Uma torre de 3 cubinhos é impossível com bloquinhos de 2.",
-                "iconName": "Lightbulb"
-              }
-            ]
-          },
-          "gariInteraction": {
-            "type": "cubes",
-            "data": {
-              "count": 8
-            }
-          }
-        },
-        {
-          "id": "u6-a1-practice",
-          "type": "independent_exercise",
-          "title": "Sua vez de agir!",
-          "content": "Interaja com os blocos no Laboratório 3D para entender o espaço.",
-          "mascotTip": "Vamos lá, mostre o que você sabe!",
-          "gariInteraction": {
-            "type": "cubes",
-            "data": {
-              "count": 8
-            }
-          },
-          "writtenPrompt": {
-            "question": "Explique por que uma escada com degraus de tamanho \"1 cubo\" não pode ser construída se o gari só tem blocos rígidos de \"2 cubos\".",
-            "linesNeeded": 2,
-            "suggestedAnswer": "Porque o bloco não pode ser partido. Onde precisa só de 1 cubo, o bloco de 2 cubos não encaixa ou vai sobrar uma ponta flutuando.",
-            "guideline": "Mencione que a peça é de tamanho par e não pode ser cortada."
-          }
-        },
-        {
-          "id": "u6-a1-trans",
-          "type": "dialogue",
-          "title": "Bom trabalho!",
-          "content": "O galpão está organizado. É hora de fechar o expediente!",
-          "mascotTip": "Isso aí! Vamos avançar para o próximo desafio do dia."
-        }
-      ]
-    },
-    {
-      "id": "gari-c7",
-      "trackId": "gari-mission",
-      "number": 7,
-      "title": "Capítulo 7: O Grande Resumo do Expediente",
-      "shortDesc": "Fim do dia",
-      "icon": "Star",
-      "xpReward": 150,
-      "steps": [
-        {
-          "id": "u7-a0-intro",
-          "type": "dialogue",
-          "title": "O Fim do Expediente",
-          "content": "O gari e o aluno sentam no banco da base de limpeza. A cidade está organizada, as ruas medidas e o lixo pesado devidamente convertido em toneladas e probabilidades.",
-          "mascotTip": "Terminamos! Hoje você ajudou a planejar uma rota, mediu distâncias com a régua, calculou áreas, analisou as roletas, leu gráficos enormes e reconheceu padrões nas placas."
-        },
-        {
-          "id": "u7-a0-exp",
-          "type": "explanation",
-          "title": "Entendendo a Matemática",
-          "content": "A matemática não serve só para resolver continhas em um papel. Ela serve para o nosso dia a dia, desde como organizar as ruas de uma cidade inteira, até calcular a logística pesada que um gari faz.",
-          "conceptCard": {
-            "title": "Conceito Fundamental",
-            "subtitle": "O Fim do Expediente",
-            "points": [
-              {
-                "label": "O que observar?",
-                "text": "A matemática não serve só para resolver continhas em um papel. Ela serve para o nosso dia a dia, desde como organizar as ruas de uma cidade inteira, até calcular a logística pesada que um gari faz.",
-                "iconName": "Info"
-              },
-              {
-                "label": "Exemplo Prático",
-                "text": "Lembre-se: cuidar da cidade é responsabilidade de todos nós, e a matemática é nossa maior ferramenta!",
-                "iconName": "Lightbulb"
-              }
-            ]
-          },
-          "gariInteraction": {
-            "type": "paint",
-            "data": {
-              "totalRegions": 6,
-              "paintedRegions": 6
-            }
-          }
-        },
-        {
-          "id": "u7-a0-practice",
-          "type": "independent_exercise",
-          "title": "Sua vez de agir!",
-          "content": "Reflita sobre o que vivemos hoje. Missão Concluída!",
-          "mascotTip": "Vamos lá, mostre o que você sabe!",
-          "quiz": {
-            "question": "Qual dessas afirmações melhor resume o que você aprendeu com o gari hoje?",
-            "options": [
-              "A matemática é feita de atividades chatas e sem sentido prático.",
-              "O trabalho do gari é apenas varrer a rua.",
-              "O trabalho do gari envolve muito planejamento, áreas, unidades de medida e a matemática é essencial para a limpeza e organização da cidade.",
-              "Probabilidade e gráfico só servem para brincadeiras de escola."
-            ],
-            "correctIndex": 2,
-            "explanationOnSuccess": "Parabéns! Você captou a essência do nosso projeto. O Gari é um especialista urbano e a matemática mora nas ruas.",
-            "explanationOnError": "Tente pensar em como o Gari usou as contas hoje. Não foi só para a escola, foi para trabalhar.",
-            "hint": "O foco principal dessa trilha foi valorizar a matemática no trabalho real."
-          },
-          "gariInteraction": {
-            "type": "paint",
-            "data": {
-              "totalRegions": 6,
-              "paintedRegions": 6
-            }
-          }
-        },
-        {
-          "id": "u7-a0-trans",
-          "type": "dialogue",
-          "title": "Bom trabalho!",
-          "content": "Expediente encerrado. Você ganhou a medalha \"Especialista em Logística Urbana\"!",
-          "mascotTip": "Isso aí! Vamos avançar para o próximo desafio do dia."
+          "content": "Com a visão espacial treinada, nenhuma caixa ficará sobrando no galpão!",
+          "mascotTip": "Isso aí! O aprendizado de hoje ajuda a construir uma cidade melhor."
         }
       ]
     }
