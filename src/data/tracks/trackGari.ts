@@ -54,6 +54,12 @@ export const trackGari: Track = {
                 "iconName": "Lightbulb"
               }
             ]
+          },
+          "gariInteraction": {
+            "type": "path-draw",
+            "data": {
+              "perimeter": 24
+            }
           }
         },
         {
@@ -116,6 +122,12 @@ export const trackGari: Track = {
                 "iconName": "Lightbulb"
               }
             ]
+          },
+          "gariInteraction": {
+            "type": "measure",
+            "data": {
+              "expectedCm": 10
+            }
           }
         },
         {
@@ -182,6 +194,13 @@ export const trackGari: Track = {
                 "iconName": "Lightbulb"
               }
             ]
+          },
+          "gariInteraction": {
+            "type": "paint",
+            "data": {
+              "totalRegions": 15,
+              "paintedRegions": 6
+            }
           }
         },
         {
@@ -193,8 +212,8 @@ export const trackGari: Track = {
           "gariInteraction": {
             "type": "paint",
             "data": {
-              "totalRegions": 10,
-              "paintedRegions": 4
+              "totalRegions": 15,
+              "paintedRegions": 6
             }
           },
           "dragAndDrop": {
@@ -271,6 +290,13 @@ export const trackGari: Track = {
                 "iconName": "Lightbulb"
               }
             ]
+          },
+          "gariInteraction": {
+            "type": "paint",
+            "data": {
+              "totalRegions": 30,
+              "paintedRegions": 10
+            }
           }
         },
         {
@@ -291,6 +317,13 @@ export const trackGari: Track = {
             "explanationOnSuccess": "Isso! Se os quadrados têm 1 metro de lado, estamos medindo em metros quadrados (m²).",
             "explanationOnError": "Preste atenção na unidade! Se o quadrado tem 1 metro, a área é medida em m².",
             "hint": "A unidade usada para áreas com base no metro leva \"²\"."
+          },
+          "gariInteraction": {
+            "type": "paint",
+            "data": {
+              "totalRegions": 30,
+              "paintedRegions": 10
+            }
           }
         },
         {
@@ -338,13 +371,19 @@ export const trackGari: Track = {
                 "iconName": "Lightbulb"
               }
             ]
+          },
+          "gariInteraction": {
+            "type": "path-draw",
+            "data": {
+              "perimeter": 18
+            }
           }
         },
         {
           "id": "u3-a0-practice",
           "type": "independent_exercise",
           "title": "Sua vez de agir!",
-          "content": "Se um espaço tem forma de retângulo medindo 6 m de comprimento por 3 m de largura:",
+          "content": "Use o mapa para traçar o contorno (perímetro) da área de segurança.",
           "mascotTip": "Vamos lá, mostre o que você sabe!",
           "quiz": {
             "question": "A área desse espaço de 6m × 3m é de:",
@@ -358,6 +397,12 @@ export const trackGari: Track = {
             "explanationOnSuccess": "Correto! 6 × 3 = 18 m². A unidade m² confirma que é área.",
             "explanationOnError": "Multiplique as duas medidas e escolha a alternativa com m².",
             "hint": "6 x 3 e olhe a unidade de área."
+          },
+          "gariInteraction": {
+            "type": "path-draw",
+            "data": {
+              "perimeter": 18
+            }
           }
         },
         {
@@ -394,6 +439,10 @@ export const trackGari: Track = {
                 "iconName": "Lightbulb"
               }
             ]
+          },
+          "gariInteraction": {
+            "type": "roulette",
+            "data": {}
           }
         },
         {
@@ -414,6 +463,10 @@ export const trackGari: Track = {
             "explanationOnSuccess": "Brilhante! Você percebeu que as 6 duplas representam 6 casos favoráveis num total de 36.",
             "explanationOnError": "O total é 36. As duplas são (1,1), (2,2), (3,3), (4,4), (5,5), (6,6). São 6 casos.",
             "hint": "6 casos em 36 possíveis."
+          },
+          "gariInteraction": {
+            "type": "roulette",
+            "data": {}
           }
         },
         {
@@ -461,6 +514,10 @@ export const trackGari: Track = {
                 "iconName": "Lightbulb"
               }
             ]
+          },
+          "gariInteraction": {
+            "type": "roulette",
+            "data": {}
           }
         },
         {
@@ -521,6 +578,10 @@ export const trackGari: Track = {
                 "iconName": "Lightbulb"
               }
             ]
+          },
+          "gariInteraction": {
+            "type": "roulette",
+            "data": {}
           }
         },
         {
@@ -529,6 +590,10 @@ export const trackGari: Track = {
           "title": "Sua vez de agir!",
           "content": "Sabendo que há 5 plásticos, 3 papéis e 2 vidros na sacola, determine a probabilidade.",
           "mascotTip": "Vamos lá, mostre o que você sabe!",
+          "gariInteraction": {
+            "type": "roulette",
+            "data": {}
+          },
           "writtenPrompt": {
             "question": "Explique por que é mais provável o gari puxar um plástico do que um vidro dessa sacola.",
             "linesNeeded": 2,
@@ -581,6 +646,13 @@ export const trackGari: Track = {
                 "iconName": "Lightbulb"
               }
             ]
+          },
+          "gariInteraction": {
+            "type": "paint",
+            "data": {
+              "totalRegions": 10,
+              "paintedRegions": 1
+            }
           }
         },
         {
@@ -601,6 +673,13 @@ export const trackGari: Track = {
             "explanationOnSuccess": "Brilhante! 1 sobre 10 é igual a 0,1 décimos.",
             "explanationOnError": "Lembre-se: o total (10) vai embaixo na fração. 1/10 equivale a 0,1.",
             "hint": "O total de fatias fica no denominador."
+          },
+          "gariInteraction": {
+            "type": "paint",
+            "data": {
+              "totalRegions": 10,
+              "paintedRegions": 1
+            }
           }
         },
         {
@@ -637,6 +716,12 @@ export const trackGari: Track = {
                 "iconName": "Lightbulb"
               }
             ]
+          },
+          "gariInteraction": {
+            "type": "measure",
+            "data": {
+              "expectedCm": 10
+            }
           }
         },
         {
@@ -645,6 +730,12 @@ export const trackGari: Track = {
           "title": "Sua vez de agir!",
           "content": "Assinale a unidade certa para a formiga e faça a conversão do gráfico do PET (26 t).",
           "mascotTip": "Vamos lá, mostre o que você sabe!",
+          "gariInteraction": {
+            "type": "measure",
+            "data": {
+              "expectedCm": 10
+            }
+          },
           "dragAndDrop": {
             "title": "Cada peso em seu lugar",
             "instruction": "Arraste a medida correta para o objeto certo.",
@@ -720,6 +811,12 @@ export const trackGari: Track = {
                 "iconName": "Lightbulb"
               }
             ]
+          },
+          "gariInteraction": {
+            "type": "path-draw",
+            "data": {
+              "perimeter": 4
+            }
           }
         },
         {
@@ -740,6 +837,12 @@ export const trackGari: Track = {
             "explanationOnSuccess": "Mestre da divisão! 27 dividido por 4 dá 6 blocos inteiros, sobrando 3. A placa é Reutilizar.",
             "explanationOnError": "Faça a conta: 4 × 6 = 24. Faltam quantos para chegar no 27? Esse é o resto.",
             "hint": "A tabuada do 4 passa pelo 24. A diferença de 27 para 24 é o resto."
+          },
+          "gariInteraction": {
+            "type": "path-draw",
+            "data": {
+              "perimeter": 4
+            }
           }
         },
         {
@@ -776,6 +879,12 @@ export const trackGari: Track = {
                 "iconName": "Lightbulb"
               }
             ]
+          },
+          "gariInteraction": {
+            "type": "cubes",
+            "data": {
+              "count": 8
+            }
           }
         },
         {
@@ -842,6 +951,13 @@ export const trackGari: Track = {
                 "iconName": "Lightbulb"
               }
             ]
+          },
+          "gariInteraction": {
+            "type": "paint",
+            "data": {
+              "totalRegions": 6,
+              "paintedRegions": 6
+            }
           }
         },
         {
@@ -862,6 +978,13 @@ export const trackGari: Track = {
             "explanationOnSuccess": "Parabéns! Você captou a essência do nosso projeto. O Gari é um especialista urbano e a matemática mora nas ruas.",
             "explanationOnError": "Tente pensar em como o Gari usou as contas hoje. Não foi só para a escola, foi para trabalhar.",
             "hint": "O foco principal dessa trilha foi valorizar a matemática no trabalho real."
+          },
+          "gariInteraction": {
+            "type": "paint",
+            "data": {
+              "totalRegions": 6,
+              "paintedRegions": 6
+            }
           }
         },
         {

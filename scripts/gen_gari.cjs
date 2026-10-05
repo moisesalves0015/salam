@@ -55,7 +55,9 @@ function createUnit(number, title, shortDesc, icon, activities) {
               iconName: 'Lightbulb' 
             }
           ]
-        }
+        },
+        // ADD VISUAL INTERACTION TO EXPLANATION AS WELL
+        gariInteraction: act.interaction
       });
     }
     
@@ -70,7 +72,6 @@ function createUnit(number, title, shortDesc, icon, activities) {
       gariInteraction: act.interaction
     };
 
-    // Add extra rich interactions
     if (act.dragAndDrop) practiceStep.dragAndDrop = act.dragAndDrop;
     if (act.writtenPrompt) practiceStep.writtenPrompt = act.writtenPrompt;
     
@@ -143,7 +144,7 @@ track.units.push(createUnit(2, 'Medindo espaços da cidade', 'Área como medida 
     explicacao: 'Área é o espaço que fica dentro da figura. Se duas figuras diferentes cobrirem a mesma quantidade de quadradinhos, elas têm a MESMA área!',
     microexemplo: 'Um canteiro 2x3 (6 quadrados) tem a mesma área de um canteiro comprido de 1x6 (6 quadrados).',
     comando: 'Pinte as regiões da praça e conte quantas unidades preenchem cada canteiro.',
-    interaction: { type: 'paint', data: { totalRegions: 10, paintedRegions: 4 } },
+    interaction: { type: 'paint', data: { totalRegions: 15, paintedRegions: 6 } },
     dragAndDrop: {
       title: 'Combine as áreas iguais',
       instruction: 'Arraste os formatos para as categorias que possuem a mesma área.',
@@ -169,6 +170,7 @@ track.units.push(createUnit(2, 'Medindo espaços da cidade', 'Área como medida 
     explicacao: 'Em espaços grandes como salas, calçadas ou ruas, usamos o Metro Quadrado (m²). Um m² é o espaço ocupado por um quadrado de 1 metro de lado.',
     microexemplo: 'Se o chão da sala cabem 30 quadrados de 1m x 1m, a área é de 30 m².',
     comando: 'Qual é a unidade certa e qual o valor da área para espaços grandes?',
+    interaction: { type: 'paint', data: { totalRegions: 30, paintedRegions: 10 } },
     quiz: {
       question: 'Sabendo que a sala comporta exatos 30 quadrados de piso (onde cada piso mede 1m de lado), qual é a área da sala?',
       options: ['30 metros', '30 cm²', '30 m²', '30 m³'],
@@ -188,7 +190,8 @@ track.units.push(createUnit(3, 'Área, perímetro e probabilidade', 'Retângulos
     fala: 'Se eu for passar a fita ao redor do espaço, preciso do PERÍMETRO. Se eu quiser saber o chão que vamos varrer, preciso da ÁREA. Não confunda!',
     explicacao: 'Perímetro é o contorno (soma de todos os lados). Área é a superfície (espaço interno, comprimento × largura).',
     microexemplo: 'Um retângulo de 6 m por 3 m. Área = 6 × 3 = 18 m². Perímetro = 6+3+6+3 = 18 m.',
-    comando: 'Se um espaço tem forma de retângulo medindo 6 m de comprimento por 3 m de largura:',
+    comando: 'Use o mapa para traçar o contorno (perímetro) da área de segurança.',
+    interaction: { type: 'path-draw', data: { perimeter: 18 } },
     quiz: {
       question: 'A área desse espaço de 6m × 3m é de:',
       options: ['18 m', '9 m²', '18 m²', '12 m²'],
@@ -206,6 +209,7 @@ track.units.push(createUnit(3, 'Área, perímetro e probabilidade', 'Retângulos
     explicacao: 'O dado 1 tem 6 opções. O dado 2 também tem 6 opções. O total de combinações é 6 × 6 = 36. A chance de sair dois números iguais (ex: 3 e 3) acontece 6 vezes.',
     microexemplo: 'A probabilidade se escreve como Casos Favoráveis / Total de Casos. 6 chances em 36 = 6/36.',
     comando: 'Determine a probabilidade e, se possível, sua forma simplificada.',
+    interaction: { type: 'roulette', data: {} },
     quiz: {
       question: 'Observando os dados, a probabilidade de cair com números iguais (duplas) é de:',
       options: ['6/36 ou 1/6', '12/36 ou 1/3', '1/36', '6/6'],
@@ -244,6 +248,7 @@ track.units.push(createUnit(4, 'Eventos cotidianos e Coleta', 'Análise de objet
     explicacao: 'A contagem é simples: conte os plásticos (casos favoráveis) e divida pelo total de itens na sacola (casos possíveis).',
     microexemplo: 'Se há 5 plásticos em 20 itens, a chance é 5 em 20.',
     comando: 'Sabendo que há 5 plásticos, 3 papéis e 2 vidros na sacola, determine a probabilidade.',
+    interaction: { type: 'roulette', data: {} },
     writtenPrompt: {
       question: 'Explique por que é mais provável o gari puxar um plástico do que um vidro dessa sacola.',
       linesNeeded: 2,
@@ -262,6 +267,7 @@ track.units.push(createUnit(5, 'Frações e toneladas', 'Matemática e meio ambi
     explicacao: 'Uma pizza dividida em 10 partes tem o denominador 10. A fatia que sobrou é 1 parte de 10. Em número decimal, isso se escreve 0,1 (um décimo).',
     microexemplo: '2 fatias de 10 seriam 2/10 ou 0,2.',
     comando: 'Selecione a representação correta dessa sobra.',
+    interaction: { type: 'paint', data: { totalRegions: 10, paintedRegions: 1 } },
     quiz: {
       question: 'Se sobrou 1 fatia de uma pizza cortada em 10, qual é a fração e sua representação em decimal?',
       options: ['1/1 e 1,0', '1/10 e 0,1', '10/10 e 1,0', '10/1 e 10,0'],
@@ -279,6 +285,7 @@ track.units.push(createUnit(5, 'Frações e toneladas', 'Matemática e meio ambi
     explicacao: 'A unidade deve combinar com o peso. Usamos miligrama (mg) para a formiga, grama (g) para um lápis, quilo (kg) para lixo comum e Tonelada (t) para o caminhão inteiro! (1 t = 1.000 kg).',
     microexemplo: 'Para transformar 3 toneladas em kg, fazemos 3 × 1.000 = 3.000 kg.',
     comando: 'Assinale a unidade certa para a formiga e faça a conversão do gráfico do PET (26 t).',
+    interaction: { type: 'measure', data: { expectedCm: 10 } },
     dragAndDrop: {
       title: 'Cada peso em seu lugar',
       instruction: 'Arraste a medida correta para o objeto certo.',
@@ -305,6 +312,7 @@ track.units.push(createUnit(6, 'Raciocínio Lógico e Padrões', 'Desafios Finai
     explicacao: 'Divida a posição que você quer pelo tamanho do ciclo. O resto da divisão indica a resposta exata!',
     microexemplo: 'Se fossem só 3 placas e eu quisesse a 5ª, faria 5÷3, resto 2. Então é a placa nº 2!',
     comando: 'O ciclo é de 4. A posição procurada é a 27ª.',
+    interaction: { type: 'path-draw', data: { perimeter: 4 } },
     quiz: {
       question: 'Dividindo 27 por 4, qual é o resto e qual figura isso representa?',
       options: [
@@ -346,6 +354,7 @@ track.units.push(createUnit(7, 'O Grande Resumo do Expediente', 'Fim do dia', 'S
     explicacao: 'A matemática não serve só para resolver continhas em um papel. Ela serve para o nosso dia a dia, desde como organizar as ruas de uma cidade inteira, até calcular a logística pesada que um gari faz.',
     microexemplo: 'Lembre-se: cuidar da cidade é responsabilidade de todos nós, e a matemática é nossa maior ferramenta!',
     comando: 'Reflita sobre o que vivemos hoje. Missão Concluída!',
+    interaction: { type: 'paint', data: { totalRegions: 6, paintedRegions: 6 } },
     quiz: {
       question: 'Qual dessas afirmações melhor resume o que você aprendeu com o gari hoje?',
       options: [
