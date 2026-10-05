@@ -311,8 +311,8 @@ export interface LessonStep {
 
   // Explicações customizadas desenhadas em código (ex: tabelas, barras)
   customVisual?: {
-    type: 'fraction-box-10' | 'price-table' | 'vertical-math';
-    data: any;
+    type: 'fraction-box-10' | 'price-table' | 'vertical-math' | 'path-grid' | 'colored-regions-grid' | 'paint-grid';
+    data?: any;
   };
 
   // Interação de Arrastar e Soltar
@@ -359,6 +359,7 @@ export interface LessonStep {
     correctPieces: number[];
   };
 
+  gariInteraction?: { type: 'path-draw' | 'measure' | 'paint' | 'cubes' | 'roulette'; data: any; onComplete: () => void; };
   wordProblem?: {
     story: string;
     question: string;

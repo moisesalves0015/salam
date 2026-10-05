@@ -6,6 +6,7 @@ import { MoneyManipulator } from './MoneyManipulator';
 import { VideoModal } from './VideoModal';
 import { MathVisuals } from './MathVisuals';
 import { DragDropGame } from './DragDropGame';
+import { GariInteraction } from '../gari-mission/GariInteraction';
 import { ReadingPassageModal } from './ReadingPassageModal';
 import { DecimalNumber, RichLessonText, DecimalLegend } from './LessonMath';
 import { STEP_THEME, prefersReducedMotion } from '../../theme/lessonTheme';
@@ -685,6 +686,28 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
                     interactive={true}
                     onComplete={() => setStepFeedback({ status: 'success', message: 'Excelente! Você armou e resolveu cada coluna no caderno perfeitamente!' })}
                     onMistake={recordMistake}
+                  />
+                </div>
+              )}
+
+              {/* Gari Interaction */}
+              {currentStep.gariInteraction && (
+                <div>
+                  <GariInteraction
+                    type={currentStep.gariInteraction.type}
+                    data={currentStep.gariInteraction.data}
+                    onComplete={() => setStepFeedback({ status: 'success', message: 'Muito bem! Você concluiu a tarefa do gari!' })}
+                  />
+                </div>
+              )}
+
+              {/* Gari Interaction */}
+              {currentStep.gariInteraction && (
+                <div>
+                  <GariInteraction
+                    type={currentStep.gariInteraction.type}
+                    data={currentStep.gariInteraction.data}
+                    onComplete={() => setStepFeedback({ status: 'success', message: 'Muito bem! Você concluiu a tarefa do gari!' })}
                   />
                 </div>
               )}

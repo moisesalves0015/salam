@@ -6,6 +6,7 @@ import { track4 } from './tracks/track4';
 import { track5 } from './tracks/track5';
 import { track6 } from './tracks/track6';
 import { trackMatDecimais } from './tracks/trackMatDecimais';
+import { trackGari } from './tracks/trackGari';
 import { trackPortugues } from './tracks/trackPortugues';
 import { trackPortuguesMural } from './tracks/trackPortuguesMural';
 import { trackCiencias } from './tracks/trackCiencias';
@@ -34,7 +35,7 @@ export const subjects: CurriculumSubject[] = [
     icon: 'Calculator',
     color: 'emerald',
     available: true,
-    totalTracks: 7
+    totalTracks: 8
   },
   {
     id: 'portugues',
@@ -100,6 +101,7 @@ export const mathTracks: Track[] = [
   track5,
   track6,
   trackMatDecimais,
+  trackGari
 ];
 
 export const subjectTracksMap: Record<SubjectId, Track[]> = {
