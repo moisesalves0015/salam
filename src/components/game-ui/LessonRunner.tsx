@@ -383,7 +383,8 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
     currentStep.wordProblem ||
     currentStep.writtenPrompt ||
     currentStep.dragAndDrop ||
-    currentStep.interactiveNotebook
+    currentStep.interactiveNotebook ||
+    currentStep.gariInteraction
   );
   
   const challengeVisible = !hasExplanation || isChallengeExpanded || stepFeedback.status !== 'idle';

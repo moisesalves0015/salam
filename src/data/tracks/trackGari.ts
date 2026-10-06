@@ -27,7 +27,6 @@ export const trackGari: Track = {
       shortDesc: "Planejamento da varrição",
       icon: 'MapIcon',
       xpReward: 50,
-      color: 'emerald',
       steps: [
         {
           id: 'step-1-1-a',
@@ -47,20 +46,17 @@ export const trackGari: Track = {
               { label: 'Dica de Ouro', text: "A direção (direita, cima) muda a cada esquina. Conte apenas os lados, não os vértices.", iconName: 'Star' }
             ]
           },
-          explanation: {
-            text: "Se passamos por 3 lados subindo, avançamos 3 quadras para cima.",
-            interaction: { type: 'demo-path', data: {} }
-          },
         },
         {
           id: 'step-1-1-c',
-          type: 'challenge',
+          type: 'independent_exercise',
           title: 'Mão na Massa!',
           content: "Siga a rota planejada marcando 6 quarteirões.",
           gariInteraction: { type: 'path-draw', data: {"target":6} },
           notebookGuide: {
+            title: 'Dica do Gari',
             tips: ["O primeiro trajeto está mapeado! Agora precisamos medir as distâncias com mais cuidado."],
-            showBorders: false
+            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }
           }
         },
         {
@@ -81,20 +77,17 @@ export const trackGari: Track = {
               { label: 'Dica de Ouro', text: "Depois usamos o instrumento (régua) para achar a medida exata. O perímetro total é a soma dessas medidas.", iconName: 'Star' }
             ]
           },
-          explanation: {
-            text: "Se eu estimo 1m, mas a trena marca 1,2m, minha estimativa foi boa!",
-            interaction: { type: 'demo-path', data: {} }
-          },
         },
         {
           id: 'step-1-2-c',
-          type: 'challenge',
+          type: 'independent_exercise',
           title: 'Mão na Massa!',
           content: "Use a régua para achar o valor real e depois some as distâncias.",
           gariInteraction: { type: 'measure', data: {} },
           notebookGuide: {
+            title: 'Dica do Gari',
             tips: ["Medidas anotadas! A trena não mente nunca."],
-            showBorders: false
+            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }
           }
         },
         {
@@ -115,20 +108,17 @@ export const trackGari: Track = {
               { label: 'Dica de Ouro', text: "Figuras de formatos diferentes podem ter exatamente a mesma área se possuírem a mesma quantidade de quadrados.", iconName: 'Star' }
             ]
           },
-          explanation: {
-            text: "Um retângulo 2x3 e outro 1x6 têm a mesma área (6 quadradinhos).",
-            interaction: { type: 'demo-area', data: {} }
-          },
         },
         {
           id: 'step-1-3-c',
-          type: 'challenge',
+          type: 'independent_exercise',
           title: 'Mão na Massa!',
           content: "Pinte a região central e conte.",
           gariInteraction: { type: 'paint', data: {"target":12} },
           notebookGuide: {
+            title: 'Dica do Gari',
             tips: ["Isso é muito útil para calcular quanta água o caminhão pipa vai usar."],
-            showBorders: false
+            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }
           }
         }
       ]
@@ -141,7 +131,6 @@ export const trackGari: Track = {
       shortDesc: "Unidades grandes",
       icon: 'Maximize',
       xpReward: 50,
-      color: 'emerald',
       steps: [
         {
           id: 'step-2-1-a',
@@ -161,20 +150,17 @@ export const trackGari: Track = {
               { label: 'Dica de Ouro', text: "Se a área do piso for coberta por 30 desses quadrados de 1 metro, a área total é 30 m².", iconName: 'Star' }
             ]
           },
-          explanation: {
-            text: "Um tapete pequeno usa cm². O chão do pátio usa m².",
-            interaction: { type: 'demo-area', data: {} }
-          },
         },
         {
           id: 'step-2-1-c',
-          type: 'challenge',
+          type: 'independent_exercise',
           title: 'Mão na Massa!',
           content: "Observe o chão da sala.",
           gariInteraction: { type: 'area-perimeter-toggle', data: {} },
           notebookGuide: {
+            title: 'Dica do Gari',
             tips: ["Sabendo o tamanho exato, as lixeiras vão caber direitinho."],
-            showBorders: false
+            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }
           }
         },
         {
@@ -195,20 +181,17 @@ export const trackGari: Track = {
               { label: 'Dica de Ouro', text: "Multiplicar 6 por 3 significa que temos 3 fileiras de 6 quadrados de 1m².", iconName: 'Star' }
             ]
           },
-          explanation: {
-            text: "6 vezes 3 é igual a 18.",
-            interaction: { type: 'demo-area', data: {} }
-          },
         },
         {
           id: 'step-2-2-c',
-          type: 'challenge',
+          type: 'independent_exercise',
           title: 'Mão na Massa!',
           content: "Qual a área de um retângulo de 6m por 3m?",
           gariInteraction: { type: 'grid-compare', data: {"target1":18,"target2":18} },
           notebookGuide: {
+            title: 'Dica do Gari',
             tips: ["Matemática rápida! A fita vai cobrir o lugar certinho."],
-            showBorders: false
+            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }
           }
         },
         {
@@ -229,20 +212,17 @@ export const trackGari: Track = {
               { label: 'Dica de Ouro', text: "Nunca confunda! Para perímetro somamos (ex: 2+3+2+3). Para área multiplicamos (2x3).", iconName: 'Star' }
             ]
           },
-          explanation: {
-            text: "O contorno é a linha. A área é o miolo.",
-            interaction: { type: 'demo-perimeter', data: {} }
-          },
         },
         {
           id: 'step-2-3-c',
-          type: 'challenge',
+          type: 'independent_exercise',
           title: 'Mão na Massa!',
           content: "Separe o que é Perímetro do que é Área.",
           gariInteraction: { type: 'area-perimeter-toggle', data: {} },
           notebookGuide: {
+            title: 'Dica do Gari',
             tips: ["Trabalho físico feito. Vamos decidir as tarefas de amanhã por sorteio."],
-            showBorders: false
+            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }
           }
         }
       ]
@@ -255,7 +235,6 @@ export const trackGari: Track = {
       shortDesc: "Retângulos e formatos",
       icon: 'Grid',
       xpReward: 50,
-      color: 'emerald',
       steps: [
         {
           id: 'step-3-1-a',
@@ -275,20 +254,17 @@ export const trackGari: Track = {
               { label: 'Dica de Ouro', text: "Os casos favoráveis de duplas são (1,1), (2,2), (3,3), (4,4), (5,5), (6,6). São 6 chances em 36.", iconName: 'Star' }
             ]
           },
-          explanation: {
-            text: "A probabilidade é 6/36, que simplificando dá 1/6.",
-            interaction: { type: 'demo-prob', data: {} }
-          },
         },
         {
           id: 'step-3-1-c',
-          type: 'challenge',
+          type: 'independent_exercise',
           title: 'Mão na Massa!',
           content: "Determine a probabilidade na tabela.",
           gariInteraction: { type: 'dice', data: {} },
           notebookGuide: {
+            title: 'Dica do Gari',
             tips: ["Dados guardados, mas e a tabela de áreas?"],
-            showBorders: false
+            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }
           }
         },
         {
@@ -309,20 +285,17 @@ export const trackGari: Track = {
               { label: 'Dica de Ouro', text: "Se a base tem 5 quadradinhos e a altura tem 2, a área é 10. Mas o perímetro é 5+2+5+2 = 14.", iconName: 'Star' }
             ]
           },
-          explanation: {
-            text: "Base = 5, Lado = 2. Perímetro = 14.",
-            interaction: { type: 'demo-area', data: {} }
-          },
         },
         {
           id: 'step-3-2-c',
-          type: 'challenge',
+          type: 'independent_exercise',
           title: 'Mão na Massa!',
           content: "Para um retângulo de 5 por 2, qual é o seu perímetro e área?",
           gariInteraction: { type: 'path-draw', data: {} },
           notebookGuide: {
+            title: 'Dica do Gari',
             tips: ["Você enxerga geometria em qualquer lugar."],
-            showBorders: false
+            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }
           }
         },
         {
@@ -343,20 +316,17 @@ export const trackGari: Track = {
               { label: 'Dica de Ouro', text: "A Figura 1 pode ter 12 quadradinhos agrupados em um quadrado grosso, e a Figura 2 pode ter 14 esticados. A Figura 2 vence.", iconName: 'Star' }
             ]
           },
-          explanation: {
-            text: "Conte sempre os tijolinhos da área interna.",
-            interaction: { type: 'demo-area', data: {} }
-          },
         },
         {
           id: 'step-3-3-c',
-          type: 'challenge',
+          type: 'independent_exercise',
           title: 'Mão na Massa!',
           content: "Como temos certeza de qual figura possui maior área?",
           gariInteraction: { type: 'grid-compare', data: {"target1":25,"target2":21} },
           notebookGuide: {
+            title: 'Dica do Gari',
             tips: ["O gari confia apenas na matemática exata."],
-            showBorders: false
+            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }
           }
         },
         {
@@ -377,20 +347,17 @@ export const trackGari: Track = {
               { label: 'Dica de Ouro', text: "Eles podem ter perímetros iguais (ambos 20cm), mas áreas diferentes (25cm² e 21cm²).", iconName: 'Star' }
             ]
           },
-          explanation: {
-            text: "Quadrado (5,5) -> P=20, A=25. Retângulo (7,3) -> P=20, A=21.",
-            interaction: { type: 'demo-perimeter', data: {} }
-          },
         },
         {
           id: 'step-3-4-c',
-          type: 'challenge',
+          type: 'independent_exercise',
           title: 'Mão na Massa!',
           content: "Compare as duas figuras matemáticas desenhadas pelo gari.",
           gariInteraction: { type: 'paint', data: {} },
           notebookGuide: {
+            title: 'Dica do Gari',
             tips: ["Desenhar formas é a melhor maneira de visualizar cálculos complexos."],
-            showBorders: false
+            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }
           }
         }
       ]
@@ -403,7 +370,6 @@ export const trackGari: Track = {
       shortDesc: "Formas complexas",
       icon: 'Puzzle',
       xpReward: 50,
-      color: 'emerald',
       steps: [
         {
           id: 'step-4-1-a',
@@ -423,20 +389,17 @@ export const trackGari: Track = {
               { label: 'Dica de Ouro', text: "Não se apresse. Figuras parecendo estrelas ou com muitos degraus costumam ter os maiores perímetros, pois ziguezagueiam muito.", iconName: 'Star' }
             ]
           },
-          explanation: {
-            text: "Uma cruz tem área pequena, mas um perímetro enorme.",
-            interaction: { type: 'demo-path', data: {} }
-          },
         },
         {
           id: 'step-4-1-c',
-          type: 'challenge',
+          type: 'independent_exercise',
           title: 'Mão na Massa!',
           content: "Para achar a figura com o maior contorno, o que você deve focar?",
           gariInteraction: { type: 'paint', data: {} },
           notebookGuide: {
+            title: 'Dica do Gari',
             tips: ["Excelente observação espacial!"],
-            showBorders: false
+            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }
           }
         },
         {
@@ -457,20 +420,17 @@ export const trackGari: Track = {
               { label: 'Dica de Ouro', text: "A área Azul = 15. A Amarela = 8. Se elas se juntam, não se sobrepõem, logo a área da nova figura seria 15 + 8 = 23.", iconName: 'Star' }
             ]
           },
-          explanation: {
-            text: "Isso se chama Conservação de Área e Decomposição de Figuras.",
-            interaction: { type: 'demo-area', data: {} }
-          },
         },
         {
           id: 'step-4-2-c',
-          type: 'challenge',
+          type: 'independent_exercise',
           title: 'Mão na Massa!',
           content: "Resolva a decomposição da figura.",
           gariInteraction: { type: 'paint', data: {} },
           notebookGuide: {
+            title: 'Dica do Gari',
             tips: ["Esse mosaico foi calculado sem estresse!"],
-            showBorders: false
+            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }
           }
         },
         {
@@ -491,20 +451,17 @@ export const trackGari: Track = {
               { label: 'Dica de Ouro', text: "Dois triângulos retângulos idênticos formam um quadrado. Conte as partes inteiras e some as frações que formam inteiros.", iconName: 'Star' }
             ]
           },
-          explanation: {
-            text: "Se há 4 quadrados inteiros e 4 metades (triângulos), o total são 4 + 2 = 6 quadrados.",
-            interaction: { type: 'demo-area', data: {} }
-          },
         },
         {
           id: 'step-4-3-c',
-          type: 'challenge',
+          type: 'independent_exercise',
           title: 'Mão na Massa!',
           content: "Observe as partes cortadas e conte o total equivalente de quadrados.",
           gariInteraction: { type: 'roulette', data: {} },
           notebookGuide: {
+            title: 'Dica do Gari',
             tips: ["A geometria ajuda até na hora de limpar papéis picados."],
-            showBorders: false
+            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }
           }
         }
       ]
@@ -517,7 +474,6 @@ export const trackGari: Track = {
       shortDesc: "Roletas e balões",
       icon: 'Target',
       xpReward: 50,
-      color: 'emerald',
       steps: [
         {
           id: 'step-5-1-a',
@@ -537,20 +493,17 @@ export const trackGari: Track = {
               { label: 'Dica de Ouro', text: "Se a tarefa de \"varrer\" ocupa 3 setores, e a de \"lavar\" apenas 1, a maior chance é varrer.", iconName: 'Star' }
             ]
           },
-          explanation: {
-            text: "A área maior na roleta domina o sorteio.",
-            interaction: { type: 'demo-prob', data: {} }
-          },
         },
         {
           id: 'step-5-1-c',
-          type: 'challenge',
+          type: 'independent_exercise',
           title: 'Mão na Massa!',
           content: "Gire a roleta e analise a chance.",
           gariInteraction: { type: 'roulette', data: {} },
           notebookGuide: {
+            title: 'Dica do Gari',
             tips: ["O sorteio foi feito! Que os jogos comecem."],
-            showBorders: false
+            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }
           }
         },
         {
@@ -571,20 +524,17 @@ export const trackGari: Track = {
               { label: 'Dica de Ouro', text: "Se temos 10 balões no total e 3 vermelhos, a chance é \"3 em 10\".", iconName: 'Star' }
             ]
           },
-          explanation: {
-            text: "Frações e probabilidades são amigas inseparáveis.",
-            interaction: { type: 'demo-prob', data: {} }
-          },
         },
         {
           id: 'step-5-2-c',
-          type: 'challenge',
+          type: 'independent_exercise',
           title: 'Mão na Massa!',
           content: "Analise os balões que o gari está juntando.",
           gariInteraction: { type: 'roulette', data: {} },
           notebookGuide: {
+            title: 'Dica do Gari',
             tips: ["Tudo limpo, e a probabilidade confirmada."],
-            showBorders: false
+            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }
           }
         },
         {
@@ -605,20 +555,17 @@ export const trackGari: Track = {
               { label: 'Dica de Ouro', text: "A categoria com a maior quantidade (frequência) dentro da sacola é a que tem maior probabilidade de ser retirada aleatoriamente.", iconName: 'Star' }
             ]
           },
-          explanation: {
-            text: "Se há 20 latinhas e 5 papéis, é quase certo puxar uma latinha.",
-            interaction: { type: 'demo-prob', data: {} }
-          },
         },
         {
           id: 'step-5-3-c',
-          type: 'challenge',
+          type: 'independent_exercise',
           title: 'Mão na Massa!',
           content: "Identifique o evento mais provável no saco do gari.",
           gariInteraction: { type: 'fraction-pie', data: {} },
           notebookGuide: {
+            title: 'Dica do Gari',
             tips: ["Reciclar exige separar bem os materiais."],
-            showBorders: false
+            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }
           }
         },
         {
@@ -639,20 +586,17 @@ export const trackGari: Track = {
               { label: 'Dica de Ouro', text: "Apenas uma ficha tem o número 7 (um caso favorável). O total de fichas é 10. A chance é 1/10.", iconName: 'Star' }
             ]
           },
-          explanation: {
-            text: "Chance = Favoráveis / Possíveis.",
-            interaction: { type: 'demo-prob', data: {} }
-          },
         },
         {
           id: 'step-5-4-c',
-          type: 'challenge',
+          type: 'independent_exercise',
           title: 'Mão na Massa!',
           content: "Calcule a chance do número 7.",
           gariInteraction: { type: 'fraction-pie', data: {"slices":10,"target":5} },
           notebookGuide: {
+            title: 'Dica do Gari',
             tips: ["As crianças aplaudem a aula de estatística improvisada."],
-            showBorders: false
+            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }
           }
         }
       ]
@@ -665,7 +609,6 @@ export const trackGari: Track = {
       shortDesc: "Frações e massas",
       icon: 'PieChart',
       xpReward: 50,
-      color: 'emerald',
       steps: [
         {
           id: 'step-6-1-a',
@@ -685,20 +628,17 @@ export const trackGari: Track = {
               { label: 'Dica de Ouro', text: "Soma total = 20 + 12 + 10 + 5 = 47. Se eu sorteasse um saco desses 47, a chance do verde seria 5/47.", iconName: 'Star' }
             ]
           },
-          explanation: {
-            text: "O total é o denominador.",
-            interaction: { type: 'demo-area', data: {} }
-          },
         },
         {
           id: 'step-6-1-c',
-          type: 'challenge',
+          type: 'independent_exercise',
           title: 'Mão na Massa!',
           content: "Ajude a calcular o total e a fração.",
           gariInteraction: { type: 'bar-chart', data: {"categories":["Papel","Plástico","Vidro","Metal"],"targets":[20,12,10,5]} },
           notebookGuide: {
+            title: 'Dica do Gari',
             tips: ["Planilha preenchida com sucesso."],
-            showBorders: false
+            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }
           }
         },
         {
@@ -719,20 +659,17 @@ export const trackGari: Track = {
               { label: 'Dica de Ouro', text: "A fração 1/10 corresponde a um décimo, que se escreve 0,1. Se sobrar uma fatia, sobra 0,1.", iconName: 'Star' }
             ]
           },
-          explanation: {
-            text: "1/10 = 0,1. 5/10 = 0,5.",
-            interaction: { type: 'demo-prob', data: {} }
-          },
         },
         {
           id: 'step-6-2-c',
-          type: 'challenge',
+          type: 'independent_exercise',
           title: 'Mão na Massa!',
           content: "Faça a conversão da fatia que sobrou.",
           gariInteraction: { type: 'bar-chart', data: {} },
           notebookGuide: {
+            title: 'Dica do Gari',
             tips: ["Depois do lanche, de volta ao trabalho pesado."],
-            showBorders: false
+            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }
           }
         },
         {
@@ -753,20 +690,17 @@ export const trackGari: Track = {
               { label: 'Dica de Ouro', text: "Uma formiga pesa em torno de 3 miligramas (mg), não 3 kg.", iconName: 'Star' }
             ]
           },
-          explanation: {
-            text: "1 kg = 1000 g. 1 g = 1000 mg.",
-            interaction: { type: 'demo-area', data: {} }
-          },
         },
         {
           id: 'step-6-3-c',
-          type: 'challenge',
+          type: 'independent_exercise',
           title: 'Mão na Massa!',
           content: "Selecione a unidade correta para uma formiga.",
           gariInteraction: { type: 'fraction-pie', data: {} },
           notebookGuide: {
+            title: 'Dica do Gari',
             tips: ["Até os menores seres da natureza têm sua matemática."],
-            showBorders: false
+            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }
           }
         },
         {
@@ -787,20 +721,17 @@ export const trackGari: Track = {
               { label: 'Dica de Ouro', text: "Para transformar 26 toneladas em quilos, multiplicamos 26 por 1.000.", iconName: 'Star' }
             ]
           },
-          explanation: {
-            text: "26 x 1000 = 26.000 kg.",
-            interaction: { type: 'demo-area', data: {} }
-          },
         },
         {
           id: 'step-6-4-c',
-          type: 'challenge',
+          type: 'independent_exercise',
           title: 'Mão na Massa!',
           content: "Faça a conversão do gráfico.",
           gariInteraction: { type: 'bar-chart', data: {"categories":["Seg","Ter","Qua","Qui"],"targets":[15,10,20,5]} },
           notebookGuide: {
+            title: 'Dica do Gari',
             tips: ["Números impressionantes! E a reciclagem salva a cidade."],
-            showBorders: false
+            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }
           }
         }
       ]
@@ -813,7 +744,6 @@ export const trackGari: Track = {
       shortDesc: "Padrões e 3D",
       icon: 'CheckSquare',
       xpReward: 50,
-      color: 'emerald',
       steps: [
         {
           id: 'step-7-1-a',
@@ -833,20 +763,17 @@ export const trackGari: Track = {
               { label: 'Dica de Ouro', text: "27 dividido por 4 dá 6 ciclos completos (24) e sobram 3. O resto (3) indica que o objeto é o terceiro da sequência básica.", iconName: 'Star' }
             ]
           },
-          explanation: {
-            text: "Posição 27 -> Resto 3. É o terceiro elemento.",
-            interaction: { type: 'demo-prob', data: {} }
-          },
         },
         {
           id: 'step-7-1-c',
-          type: 'challenge',
+          type: 'independent_exercise',
           title: 'Mão na Massa!',
           content: "Encontre o resto da divisão de 27 por 4 e responda.",
           gariInteraction: { type: 'cubes', data: {} },
           notebookGuide: {
+            title: 'Dica do Gari',
             tips: ["Com matemática, a gente prevê o futuro dos cones."],
-            showBorders: false
+            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }
           }
         },
         {
@@ -867,20 +794,17 @@ export const trackGari: Track = {
               { label: 'Dica de Ouro', text: "Estruturas com pontas isoladas de 1 cubinho são impossíveis de formar com blocos inteiros de 2.", iconName: 'Star' }
             ]
           },
-          explanation: {
-            text: "Você não quebra o bloco!",
-            interaction: { type: 'demo-area', data: {} }
-          },
         },
         {
           id: 'step-7-2-c',
-          type: 'challenge',
+          type: 'independent_exercise',
           title: 'Mão na Massa!',
           content: "Identifique a estrutura impossível.",
           gariInteraction: { type: 'paint', data: {"target":24} },
           notebookGuide: {
+            title: 'Dica do Gari',
             tips: ["O caminhão vai amassar tudo isso de qualquer jeito."],
-            showBorders: false
+            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }
           }
         },
         {
@@ -901,20 +825,17 @@ export const trackGari: Track = {
               { label: 'Dica de Ouro', text: "Se a figura tiver 12 quadrados inteiros e 4 metades, a área total pintada será 14 unidades quadradas.", iconName: 'Star' }
             ]
           },
-          explanation: {
-            text: "12 inteiros + (4 metades = 2 inteiros) = 14.",
-            interaction: { type: 'demo-area', data: {} }
-          },
         },
         {
           id: 'step-7-3-c',
-          type: 'challenge',
+          type: 'independent_exercise',
           title: 'Mão na Massa!',
           content: "Para contar a área final, qual é a alternativa correta se o total contado for 14?",
           gariInteraction: { type: 'paint', data: {} },
           notebookGuide: {
+            title: 'Dica do Gari',
             tips: ["O expediente do Gari chega ao fim. E com ele, toda essa imersão na matemática do dia a dia!"],
-            showBorders: false
+            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }
           }
         }
       ]

@@ -42,7 +42,7 @@ allUnits.forEach((u, uIndex) => {
   lines.push(`      shortDesc: ${JSON.stringify(u.shortDesc)},`);
   lines.push(`      icon: '${u.icon}',`);
   lines.push(`      xpReward: 50,`);
-  lines.push(`      color: 'emerald',`);
+
   lines.push(`      steps: [`);
   
   u.activities.forEach((act, actIndex) => {
@@ -78,19 +78,14 @@ allUnits.forEach((u, uIndex) => {
     lines.push(`          },`);
 
     if (act.demoInteraction || act.microexemplo) {
-      lines.push(`          explanation: {`);
-      lines.push(`            text: ${JSON.stringify(act.microexemplo || 'Veja o exemplo visual.')},`);
-      if (act.demoInteraction) {
-        lines.push(`            interaction: { type: '${act.demoInteraction.type}', data: ${JSON.stringify(act.demoInteraction.data || {})} }`);
-      }
-      lines.push(`          },`);
+      // microexemplo e demoInteraction ignorados pois a tipagem não suporta a chave 'explanation'
     }
     lines.push(`        },`);
 
     // STEP 3: CHALLENGE
     lines.push(`        {`);
     lines.push(`          id: 'step-${uIndex + 1}-${actIndex + 1}-c',`);
-    lines.push(`          type: 'challenge',`);
+    lines.push(`          type: 'independent_exercise',`);
     lines.push(`          title: 'Mão na Massa!',`);
     lines.push(`          content: ${JSON.stringify(act.comando || 'Resolva o problema a seguir:')},`);
     
@@ -145,8 +140,9 @@ allUnits.forEach((u, uIndex) => {
     }
 
     lines.push(`          notebookGuide: {`);
-    lines.push(`            tips: [${JSON.stringify(act.transicao)}],`);
-    lines.push(`            showBorders: false`);
+    lines.push(`            title: 'Dica do Gari',`);
+    lines.push(`            tips: [${JSON.stringify(act.transicao || 'Faça no seu caderno.')}],`);
+    lines.push(`            operation: { op1: 0, op2: 0, operator: '+', steps: [], alignmentTarget: { op1Columns: {}, op2Columns: {} }, totalResult: 0 }`);
     lines.push(`          }`);
 
     lines.push(`        }${actIndex === u.activities.length - 1 ? '' : ','}`);
