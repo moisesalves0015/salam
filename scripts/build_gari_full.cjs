@@ -14,7 +14,7 @@ const lines = [];
 
 lines.push(`import { Track } from '../../types';`);
 lines.push(``);
-lines.push(`export const MISSION_DATA: Track = {`);
+lines.push(`export const trackGari: Track = {`);
 lines.push(`  id: 'gari-mission',`);
 lines.push(`  title: 'Área e Perímetro',`);
 lines.push(`  subtitle: 'Um dia de trabalho com um gari',`);

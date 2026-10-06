@@ -1,6 +1,6 @@
 import { Track } from '../../types';
 
-export const MISSION_DATA: Track = {
+export const trackGari: Track = {
   id: 'gari-mission',
   title: 'Área e Perímetro',
   subtitle: 'Um dia de trabalho com um gari',
