@@ -68,7 +68,9 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
   const theme = STEP_THEME[currentStep?.type] ?? STEP_THEME.explanation;
   const StepIcon = theme.Icon;
   const isEraldoTrack = unit.trackId === 'trilha-mat-7';
-  const mascotName = isEraldoTrack ? 'Eraldo' : 'Guia da Missão';
+  const isGariTrack = unit.trackId === 'gari-mission' || unit.id.startsWith('gari');
+  const usesAvatar = isEraldoTrack || isGariTrack;
+  const mascotName = isGariTrack ? 'Gari' : isEraldoTrack ? 'Eraldo' : 'Guia da Missão';
 
   // Encontra o texto/receita mais recente para poder consultar
   const lastReadingPassage = [...steps].slice(0, currentStepIndex + 1).reverse().find(s => s.readingPassage)?.readingPassage;
@@ -490,10 +492,10 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
           {currentStep.mascotTip && (
             <section className="flex items-end gap-2.5 sm:gap-3 lesson-bubble-in" aria-label={`Fala de ${mascotName}`}>
               <div className="shrink-0 flex flex-col items-center justify-end">
-                {isEraldoTrack ? (
+                {usesAvatar ? (
                   <img 
                     src="/assets/trilhas/eraldo_closeup_pointing.png" 
-                    alt="Eraldo Apontando" 
+                    alt={`${mascotName} Apontando`}
                     className="w-20 h-20 sm:w-24 sm:h-24 object-contain drop-shadow-xl -mb-1" 
                   />
                 ) : (
@@ -657,8 +659,10 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
                 {currentStep.notebookGuide.tips.map((tip, i) => (
                   <p key={i} className="text-sky-100/90">• {tip}</p>
                 ))}
-              </div>
-              <NotebookGrid operation={currentStep.notebookGuide.operation} interactive={false} />
+                </div>
+              {currentStep.notebookGuide.operation && (
+                <NotebookGrid operation={currentStep.notebookGuide.operation} interactive={false} />
+              )}
             </div>
           )}
 
