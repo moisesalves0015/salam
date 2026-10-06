@@ -115,5 +115,5 @@ allUnits.forEach((u, uIndex) => {
 lines.push(`  ]`);
 lines.push(`};`);
 
-fs.writeFileSync(path.join(__dirname, '../src/data/tracks/trackGari.ts'), lines.join('\\n'));
+fs.writeFileSync(path.join(__dirname, '../src/data/tracks/trackGari.ts'), lines.join('\n'));
 console.log('Successfully generated 24-phase trackGari.ts');

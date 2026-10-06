@@ -1,1 +1,968 @@
-import { Track } from '../../types';\n\nexport const MISSION_DATA: Track = {\n  id: 'gari-mission',\n  title: 'Área e Perímetro',\n  subtitle: 'Um dia de trabalho com um gari',\n  theme: {\n    primary: 'from-amber-600 to-orange-500',\n    secondary: 'from-yellow-500 to-amber-500',\n    accent: 'bg-amber-400',\n    background: 'bg-[#10213f]',\n    cardBg: 'bg-[#1a2b54]',\n    textMain: 'text-amber-50',\n    textMuted: 'text-amber-200/60',\n  },\n  worldName: 'CIEP',\n  units: [\n    {\n      id: 'gari-unit-1',\n      number: 1,\n      title: "O mapa da rota",\n      shortDesc: "Planejamento da varrição",\n      icon: 'MapIcon',\n      xpReward: 50,\n      color: 'emerald',\n      steps: [\n        {\n          id: 'step-1-1',\n          title: "Atividade 1 — Descrever o caminho",\n          mascotTip: "O gari espalha um mapa quadriculado na mesa. \"Hoje a nossa rota vai ser desenhada passo a passo!\"",\n          conceptCard: {\n            title: 'No dia a dia do Gari...',\n            paragraphs: [\n              "O gari diz: \"Cada segmento do quadrado é uma quadra. Para onde vamos?\"",\n              "💡 Um trajeto precisa de quantidade e direção. Contamos os lados percorridos na malha.",\n              "A direção (direita, cima) muda a cada esquina. Conte apenas os lados, não os vértices."\n            ]\n          },\n          explanation: {\n            text: "Se passamos por 3 lados subindo, avançamos 3 quadras para cima.",\n            interaction: { type: 'demo-path', data: {} }\n          },\n          gariInteraction: {\n            type: 'path-draw',\n            data: {"target":6}\n          },\n          notebookGuide: {\n            instruction: "O primeiro trajeto está mapeado! Agora precisamos medir as distâncias com mais cuidado.",\n            example: 'Avançando...',\n            showBorders: false\n          }\n        }\n      ]\n    },\n    {\n      id: 'gari-unit-2',\n      number: 2,\n      title: "Estimativa e régua",\n      shortDesc: "Instrumentos de medida",\n      icon: 'Ruler',\n      xpReward: 50,\n      color: 'emerald',\n      steps: [\n        {\n          id: 'step-2-1',\n          title: "Atividade 2 — A régua do Gari",\n          mascotTip: "O gari saca uma trena do cinto e olha para um canteiro.",\n          conceptCard: {\n            title: 'No dia a dia do Gari...',\n            paragraphs: [\n              "O gari diz: \"Sem a régua, quanto você acha que mede o lado desse canteirinho? Estime!\"",\n              "💡 Estimar é tentar chegar próximo ao valor real com base na intuição.",\n              "Depois usamos o instrumento (régua) para achar a medida exata. O perímetro total é a soma dessas medidas."\n            ]\n          },\n          explanation: {\n            text: "Se eu estimo 1m, mas a trena marca 1,2m, minha estimativa foi boa!",\n            interaction: { type: 'demo-path', data: {} }\n          },\n          gariInteraction: {\n            type: 'measure',\n            data: {"expectedCm":10}\n          },\n          notebookGuide: {\n            instruction: "Medidas anotadas! A trena não mente nunca.",\n            example: 'Avançando...',\n            showBorders: false\n          }\n        }\n      ]\n    },\n    {\n      id: 'gari-unit-3',\n      number: 3,\n      title: "Regiões coloridas da praça",\n      shortDesc: "Contagem de superfície",\n      icon: 'Square',\n      xpReward: 50,\n      color: 'emerald',\n      steps: [\n        {\n          id: 'step-3-1',\n          title: "Atividade 3 — Pintando a área",\n          mascotTip: "A praça central é dividida em canteiros de formatos exóticos.",\n          conceptCard: {\n            title: 'No dia a dia do Gari...',\n            paragraphs: [\n              "O gari diz: \"O contorno já sabemos, mas quanto de grama cabe aqui dentro?\"",\n              "💡 Área é a quantidade de superfície interna de uma figura.",\n              "Figuras de formatos diferentes podem ter exatamente a mesma área se possuírem a mesma quantidade de quadrados."\n            ]\n          },\n          explanation: {\n            text: "Um retângulo 2x3 e outro 1x6 têm a mesma área (6 quadradinhos).",\n            interaction: { type: 'demo-area', data: {} }\n          },\n          gariInteraction: {\n            type: 'paint',\n            data: {"totalRegions":15,"paintedRegions":6}\n          },\n          notebookGuide: {\n            instruction: "Isso é muito útil para calcular quanta água o caminhão pipa vai usar.",\n            example: 'Avançando...',\n            showBorders: false\n          }\n        }\n      ]\n    },\n    {\n      id: 'gari-unit-4',\n      number: 4,\n      title: "O m² da sala de aula",\n      shortDesc: "Unidades grandes",\n      icon: 'Maximize',\n      xpReward: 50,\n      color: 'emerald',\n      steps: [\n        {\n          id: 'step-4-1',\n          title: "Atividade 4 — O tamanho das coisas",\n          mascotTip: "O gari entra na escola para ajudar a arrastar as mesas de reciclagem.",\n          conceptCard: {\n            title: 'No dia a dia do Gari...',\n            paragraphs: [\n              "O gari diz: \"Aqui dentro a gente não mede em centímetros. Vamos usar o Metro!\"",\n              "💡 Em espaços grandes usamos o Metro Quadrado (m²), que é um quadrado de 1m por 1m.",\n              "Se a área do piso for coberta por 30 desses quadrados de 1 metro, a área total é 30 m²."\n            ]\n          },\n          explanation: {\n            text: "Um tapete pequeno usa cm². O chão do pátio usa m².",\n            interaction: { type: 'demo-area', data: {} }\n          },\n          quiz: {\n            question: "Se cabem 30 quadrados de 1m de lado no chão, qual a área da sala?",\n            options: ["30 cm²","30 m²","30 metros","3 m²"],\n            correctIndex: 1,\n            explanationOnSuccess: "M² é a unidade oficial para áreas de salas e terrenos!",\n            explanationOnError: "Lembre-se da unidade quadrada do metro."\n          },\n          notebookGuide: {\n            instruction: "Sabendo o tamanho exato, as lixeiras vão caber direitinho.",\n            example: 'Avançando...',\n            showBorders: false\n          }\n        }\n      ]\n    },\n    {\n      id: 'gari-unit-5',\n      number: 5,\n      title: "Retângulo 6 m × 3 m",\n      shortDesc: "Multiplicação de Área",\n      icon: 'RectangleHorizontal',\n      xpReward: 50,\n      color: 'emerald',\n      steps: [\n        {\n          id: 'step-5-1',\n          title: "Atividade 5 — Área do isolamento",\n          mascotTip: "O gari estende a faixa em uma área retangular de asfalto recém pintado.",\n          conceptCard: {\n            title: 'No dia a dia do Gari...',\n            paragraphs: [\n              "O gari diz: \"A área mede 6 metros de comprimento por 3 metros de largura. E agora?\"",\n              "💡 A área de um retângulo é calculada multiplicando o comprimento pela largura.",\n              "Multiplicar 6 por 3 significa que temos 3 fileiras de 6 quadrados de 1m²."\n            ]\n          },\n          explanation: {\n            text: "6 vezes 3 é igual a 18.",\n            interaction: { type: 'demo-area', data: {} }\n          },\n          quiz: {\n            question: "A área desse espaço de 6m × 3m é de:",\n            options: ["18 m","9 m²","18 m²","12 m²"],\n            correctIndex: 2,\n            explanationOnSuccess: "Correto! 6 × 3 = 18 m².",\n            explanationOnError: "Multiplique as medidas."\n          },\n          notebookGuide: {\n            instruction: "Matemática rápida! A fita vai cobrir o lugar certinho.",\n            example: 'Avançando...',\n            showBorders: false\n          }\n        }\n      ]\n    },\n    {\n      id: 'gari-unit-6',\n      number: 6,\n      title: "Área e perímetro das regiões",\n      shortDesc: "Contorno vs Superfície",\n      icon: 'Scaling',\n      xpReward: 50,\n      color: 'emerald',\n      steps: [\n        {\n          id: 'step-6-1',\n          title: "Atividade 6 — A diferença definitiva",\n          mascotTip: "O gari coloca a fita na borda e depois varre o meio.",\n          conceptCard: {\n            title: 'No dia a dia do Gari...',\n            paragraphs: [\n              "O gari diz: \"A fita preta fica na borda (Perímetro). A vassoura passa no chão (Área).\"",\n              "💡 Perímetro soma os lados externos. Área conta o espaço de dentro.",\n              "Nunca confunda! Para perímetro somamos (ex: 2+3+2+3). Para área multiplicamos (2x3)."\n            ]\n          },\n          explanation: {\n            text: "O contorno é a linha. A área é o miolo.",\n            interaction: { type: 'demo-perimeter', data: {} }\n          },\n          dragAndDrop: {\n            title: "Classifique a tarefa",\n            instruction: "Arraste para a categoria correta.",\n            items: [{"id":"i1","content":"Contorno da cerca"},{"id":"i2","content":"Grama do chão"}],\n            categories: [{"id":"c1","title":"Perímetro"},{"id":"c2","title":"Área"}],\n            correctMapping: {"i1":"c1","i2":"c2"},\n            successMessage: "Você não vai mais se confundir com isso!"\n          },\n          notebookGuide: {\n            instruction: "Trabalho físico feito. Vamos decidir as tarefas de amanhã por sorteio.",\n            example: 'Avançando...',\n            showBorders: false\n          }\n        }\n      ]\n    },\n    {\n      id: 'gari-unit-7',\n      number: 7,\n      title: "Dois dados e combinações",\n      shortDesc: "Probabilidade de pares",\n      icon: 'Dices',\n      xpReward: 50,\n      color: 'emerald',\n      steps: [\n        {\n          id: 'step-7-1',\n          title: "Atividade 7 — Probabilidade e dados",\n          mascotTip: "O gari senta num caixote, puxa 2 dados e brinca com a equipe.",\n          conceptCard: {\n            title: 'No dia a dia do Gari...',\n            paragraphs: [\n              "O gari diz: \"Vamos lançar dois dados. O total de combinações é 36. Quantas duplas de números iguais existem?\"",\n              "💡 A probabilidade compara os Casos Favoráveis com o Total de Casos (36).",\n              "Os casos favoráveis de duplas são (1,1), (2,2), (3,3), (4,4), (5,5), (6,6). São 6 chances em 36."\n            ]\n          },\n          explanation: {\n            text: "A probabilidade é 6/36, que simplificando dá 1/6.",\n            interaction: { type: 'demo-prob', data: {} }\n          },\n          quiz: {\n            question: "A probabilidade de cair com números iguais (duplas) em dois dados é de:",\n            options: ["6/36 ou 1/6","12/36 ou 1/3","1/36","36/36"],\n            correctIndex: 0,\n            explanationOnSuccess: "Incrível! Há 6 combinações de duplas.",\n            explanationOnError: "Há 6 duplas possíveis num total de 36."\n          },\n          notebookGuide: {\n            instruction: "Dados guardados, mas e a tabela de áreas?",\n            example: 'Avançando...',\n            showBorders: false\n          }\n        }\n      ]\n    },\n    {\n      id: 'gari-unit-8',\n      number: 8,\n      title: "Retângulo com 10 quadradinhos",\n      shortDesc: "Leitura na malha",\n      icon: 'Grid',\n      xpReward: 50,\n      color: 'emerald',\n      steps: [\n        {\n          id: 'step-8-1',\n          title: "Atividade 8 — Contando lados",\n          mascotTip: "No galpão, uma grande prateleira tem o formato de um retângulo feito de 10 quadradinhos (5x2).",\n          conceptCard: {\n            title: 'No dia a dia do Gari...',\n            paragraphs: [\n              "O gari diz: \"Olhando para este retângulo de caixas, qual é o comprimento e a largura?\"",\n              "💡 Comprimento é o número de quadradinhos na base. Largura é a altura lateral.",\n              "Se a base tem 5 quadradinhos e a altura tem 2, a área é 10. Mas o perímetro é 5+2+5+2 = 14."\n            ]\n          },\n          explanation: {\n            text: "Base = 5, Lado = 2. Perímetro = 14.",\n            interaction: { type: 'demo-area', data: {} }\n          },\n          quiz: {\n            question: "Se o retângulo tem base 5 e altura 2, seu perímetro e área são, respectivamente:",\n            options: ["10 e 10","14 e 10","10 e 14","7 e 10"],\n            correctIndex: 1,\n            explanationOnSuccess: "Exato! Perímetro é a soma 5+2+5+2=14, e Área é 5x2=10.",\n            explanationOnError: "O perímetro é a soma de TODOS os quatro lados. A área é a multiplicação."\n          },\n          notebookGuide: {\n            instruction: "Você enxerga geometria em qualquer lugar.",\n            example: 'Avançando...',\n            showBorders: false\n          }\n        }\n      ]\n    },\n    {\n      id: 'gari-unit-9',\n      number: 9,\n      title: "Comparação de duas figuras",\n      shortDesc: "Qual é maior?",\n      icon: 'Scale',\n      xpReward: 50,\n      color: 'emerald',\n      steps: [\n        {\n          id: 'step-9-1',\n          title: "Atividade 9 — Ilusão de ótica",\n          mascotTip: "O gari aponta para dois canteiros na calçada. Um é comprido, o outro é gordo.",\n          conceptCard: {\n            title: 'No dia a dia do Gari...',\n            paragraphs: [\n              "O gari diz: \"O comprido parece maior, né? Mas a matemática não se deixa enganar pela aparência.\"",\n              "💡 Para saber qual figura tem MAIOR área, você deve contar o número de quadradinhos de cada uma.",\n              "A Figura 1 pode ter 12 quadradinhos agrupados em um quadrado grosso, e a Figura 2 pode ter 14 esticados. A Figura 2 vence."\n            ]\n          },\n          explanation: {\n            text: "Conte sempre os tijolinhos da área interna.",\n            interaction: { type: 'demo-area', data: {} }\n          },\n          quiz: {\n            question: "Como se determina com precisão a maior área entre duas figuras em uma malha?",\n            options: ["Olhando qual é mais comprida.","Contando e comparando o número total de quadradinhos internos de cada figura.","Medindo apenas a altura.","Somando os lados."],\n            correctIndex: 1,\n            explanationOnSuccess: "Correto! A contagem da superfície interna é o método mais preciso.",\n            explanationOnError: "Não confie na aparência. O espaço ocupado se revela contando o interior."\n          },\n          notebookGuide: {\n            instruction: "O gari confia apenas na matemática exata.",\n            example: 'Avançando...',\n            showBorders: false\n          }\n        }\n      ]\n    },\n    {\n      id: 'gari-unit-10',\n      number: 10,\n      title: "Quadrado 5cm e Retângulo 7x3",\n      shortDesc: "Comparação avançada",\n      icon: 'PenTool',\n      xpReward: 50,\n      color: 'emerald',\n      steps: [\n        {\n          id: 'step-10-1',\n          title: "Atividade 10 — O desafio do desenho",\n          mascotTip: "Ele desenha no chão de giz: um quadrado de 5cm de lado e um retângulo de 7cm por 3cm.",\n          conceptCard: {\n            title: 'No dia a dia do Gari...',\n            paragraphs: [\n              "O gari diz: \"Os formatos são diferentes, os lados também. Mas vamos comparar a área e o perímetro deles!\"",\n              "💡 Quadrado: Área = 5x5=25, Perímetro = 5x4=20. Retângulo: Área = 7x3=21, Perímetro = 7+3+7+3=20.",\n              "Eles podem ter perímetros iguais (ambos 20cm), mas áreas diferentes (25cm² e 21cm²)."\n            ]\n          },\n          explanation: {\n            text: "Quadrado (5,5) -> P=20, A=25. Retângulo (7,3) -> P=20, A=21.",\n            interaction: { type: 'demo-perimeter', data: {} }\n          },\n          dragAndDrop: {\n            title: "Resultados cruzados",\n            instruction: "Arraste os valores para as categorias certas.",\n            items: [{"id":"i1","content":"25 cm²"},{"id":"i2","content":"20 cm"},{"id":"i3","content":"21 cm²"}],\n            categories: [{"id":"c1","title":"Área do Quadrado 5x5"},{"id":"c2","title":"Perímetro (dos dois!)"},{"id":"c3","title":"Área do Retângulo 7x3"}],\n            correctMapping: {"i1":"c1","i2":"c2","i3":"c3"},\n            successMessage: "Percebeu como o formato quadrangular maximiza a área com o mesmo contorno?"\n          },\n          notebookGuide: {\n            instruction: "Desenhar formas é a melhor maneira de visualizar cálculos complexos.",\n            example: 'Avançando...',\n            showBorders: false\n          }\n        }\n      ]\n    },\n    {\n      id: 'gari-unit-11',\n      number: 11,\n      title: "Maior contorno",\n      shortDesc: "Caminho mais longo",\n      icon: 'Milestone',\n      xpReward: 50,\n      color: 'emerald',\n      steps: [\n        {\n          id: 'step-11-1',\n          title: "Atividade 11 — Cinco figuras",\n          mascotTip: "Há 5 poças d'água diferentes na rua. O gari precisa cercar a maior.",\n          conceptCard: {\n            title: 'No dia a dia do Gari...',\n            paragraphs: [\n              "O gari diz: \"A que der a volta mais demorada é a que tem o maior contorno, ou seja, maior perímetro.\"",\n              "💡 Para achar o maior perímetro numa malha cheia de curvas e degraus, é preciso somar absolutamente todos os lados de contato com o exterior.",\n              "Não se apresse. Figuras parecendo estrelas ou com muitos degraus costumam ter os maiores perímetros, pois ziguezagueiam muito."\n            ]\n          },\n          explanation: {\n            text: "Uma cruz tem área pequena, mas um perímetro enorme.",\n            interaction: { type: 'demo-path', data: {} }\n          },\n          writtenPrompt: {\n            question: "Para encontrar o maior CONTORNO, por que contar as pontas em zigue-zague é importante?",\n            linesNeeded: 2,\n            suggestedAnswer: "Porque o zigue-zague aumenta a quantidade de linhas na borda, aumentando o perímetro.",\n            guideline: "O contorno é o caminho pela borda, cada curva adiciona tamanho."\n          },\n          notebookGuide: {\n            instruction: "Excelente observação espacial!",\n            example: 'Avançando...',\n            showBorders: false\n          }\n        }\n      ]\n    },\n    {\n      id: 'gari-unit-12',\n      number: 12,\n      title: "Figura composta colorida",\n      shortDesc: "Decompondo áreas",\n      icon: 'Puzzle',\n      xpReward: 50,\n      color: 'emerald',\n      steps: [\n        {\n          id: 'step-12-1',\n          title: "Atividade 12 — Blocos lógicos",\n          mascotTip: "A praça nova tem uma pintura com partes azuis, amarelas e rosas, formando mosaicos.",\n          conceptCard: {\n            title: 'No dia a dia do Gari...',\n            paragraphs: [\n              "O gari diz: \"Essa figura enorme é composta por peças menores. Se a parte azul vale 15 quadrados e a amarela 8...\"",\n              "💡 Em figuras complexas compostas por retângulos diferentes, a área total é a soma das áreas parciais.",\n              "A área Azul = 15. A Amarela = 8. Se elas se juntam, não se sobrepõem, logo a área da nova figura seria 15 + 8 = 23."\n            ]\n          },\n          explanation: {\n            text: "Isso se chama Conservação de Área e Decomposição de Figuras.",\n            interaction: { type: 'demo-area', data: {} }\n          },\n          quiz: {\n            question: "Se a figura composta for formada exatamente pela parte azul (15) e a amarela (8), qual sua área total?",\n            options: ["15","8","23","7"],\n            correctIndex: 2,\n            explanationOnSuccess: "Correto! 15 + 8 = 23. Somamos as áreas das partes.",\n            explanationOnError: "A área total é a soma de todos os quadradinhos de cada cor."\n          },\n          notebookGuide: {\n            instruction: "Esse mosaico foi calculado sem estresse!",\n            example: 'Avançando...',\n            showBorders: false\n          }\n        }\n      ]\n    },\n    {\n      id: 'gari-unit-13',\n      number: 13,\n      title: "Folha quadrada pontilhada",\n      shortDesc: "Recorte e reagrupamento",\n      icon: 'Scissors',\n      xpReward: 50,\n      color: 'emerald',\n      steps: [\n        {\n          id: 'step-13-1',\n          title: "Atividade 13 — Montando o que sobrou",\n          mascotTip: "O gari encontra restos de um cartaz de festa junina, recortados em formato de triângulos e quadrados menores.",\n          conceptCard: {\n            title: 'No dia a dia do Gari...',\n            paragraphs: [\n              "O gari diz: \"Se eu juntar esses triângulos pontilhados, formo quadrados do mesmo tamanho do centro!\"",\n              "💡 Quando cortamos formas geométricas pelas diagonais, as metades podem ser reagrupadas.",\n              "Dois triângulos retângulos idênticos formam um quadrado. Conte as partes inteiras e some as frações que formam inteiros."\n            ]\n          },\n          explanation: {\n            text: "Se há 4 quadrados inteiros e 4 metades (triângulos), o total são 4 + 2 = 6 quadrados.",\n            interaction: { type: 'demo-area', data: {} }\n          },\n          quiz: {\n            question: "Juntando as pontas (triângulos), qual é a área total equivalente da folha em quadrados?",\n            options: ["5","6","7","8"],\n            correctIndex: 3,\n            explanationOnSuccess: "Exato! Contamos os centrais e juntamos os externos aos pares.",\n            explanationOnError: "Lembre-se que cada 2 triângulos formam 1 quadrado inteiro."\n          },\n          notebookGuide: {\n            instruction: "A geometria ajuda até na hora de limpar papéis picados.",\n            example: 'Avançando...',\n            showBorders: false\n          }\n        }\n      ]\n    },\n    {\n      id: 'gari-unit-14',\n      number: 14,\n      title: "Roleta de tarefas",\n      shortDesc: "Sorteio justo",\n      icon: 'Loader2',\n      xpReward: 50,\n      color: 'emerald',\n      steps: [\n        {\n          id: 'step-14-1',\n          title: "Atividade 14 — A roleta do turno",\n          mascotTip: "Na garagem, o chefe puxa uma roleta de madeira. Nela estão pintadas as tarefas do dia.",\n          conceptCard: {\n            title: 'No dia a dia do Gari...',\n            paragraphs: [\n              "O gari diz: \"A roleta tem setores coloridos de tamanhos diferentes. Aonde a seta vai parar?\"",\n              "💡 A chance de sorteio é proporcional à quantidade de setores com a mesma tarefa.",\n              "Se a tarefa de \"varrer\" ocupa 3 setores, e a de \"lavar\" apenas 1, a maior chance é varrer."\n            ]\n          },\n          explanation: {\n            text: "A área maior na roleta domina o sorteio.",\n            interaction: { type: 'demo-prob', data: {} }\n          },\n          gariInteraction: {\n            type: 'roulette',\n            data: {"options":["Varrer","Lavar","Varrer","Coletar"]}\n          },\n          notebookGuide: {\n            instruction: "O sorteio foi feito! Que os jogos comecem.",\n            example: 'Avançando...',\n            showBorders: false\n          }\n        }\n      ]\n    },\n    {\n      id: 'gari-unit-15',\n      number: 15,\n      title: "Balões de campanha",\n      shortDesc: "Contagem de casos",\n      icon: 'Target',\n      xpReward: 50,\n      color: 'emerald',\n      steps: [\n        {\n          id: 'step-15-1',\n          title: "Atividade 15 — Limpando a festa",\n          mascotTip: "Houve uma festa na praça. Sobraram muitos balões estourados e murchos pelo chão.",\n          conceptCard: {\n            title: 'No dia a dia do Gari...',\n            paragraphs: [\n              "O gari diz: \"Tem balão azul, amarelo e vermelho. Qual a chance de eu recolher um vermelho de olhos fechados?\"",\n              "💡 A probabilidade é a divisão do número de balões daquela cor pelo total de balões no chão.",\n              "Se temos 10 balões no total e 3 vermelhos, a chance é \"3 em 10\"."\n            ]\n          },\n          explanation: {\n            text: "Frações e probabilidades são amigas inseparáveis.",\n            interaction: { type: 'demo-prob', data: {} }\n          },\n          writtenPrompt: {\n            question: "Se há 3 balões vermelhos em um total de 10, como você escreve essa chance?",\n            linesNeeded: 2,\n            suggestedAnswer: "A chance é de 3 em 10, ou a fração 3/10.",\n            guideline: "O formato correto é casos favoráveis sobre casos totais."\n          },\n          notebookGuide: {\n            instruction: "Tudo limpo, e a probabilidade confirmada.",\n            example: 'Avançando...',\n            showBorders: false\n          }\n        }\n      ]\n    },\n    {\n      id: 'gari-unit-16',\n      number: 16,\n      title: "Sacola de materiais",\n      shortDesc: "Tirando às cegas",\n      icon: 'Briefcase',\n      xpReward: 50,\n      color: 'emerald',\n      steps: [\n        {\n          id: 'step-16-1',\n          title: "Atividade 16 — O saco de recicláveis",\n          mascotTip: "O gari carrega um saco opaco de materiais recicláveis: latinhas, papel e plástico.",\n          conceptCard: {\n            title: 'No dia a dia do Gari...',\n            paragraphs: [\n              "O gari diz: \"Sem olhar, vou puxar um material. Qual tem mais chance de sair?\"",\n              "💡 A probabilidade se baseia na contagem de cada tipo dentro do saco.",\n              "A categoria com a maior quantidade (frequência) dentro da sacola é a que tem maior probabilidade de ser retirada aleatoriamente."\n            ]\n          },\n          explanation: {\n            text: "Se há 20 latinhas e 5 papéis, é quase certo puxar uma latinha.",\n            interaction: { type: 'demo-prob', data: {} }\n          },\n          dragAndDrop: {\n            title: "Classifique a chance",\n            instruction: "Arraste o tipo de material para sua classificação (sabendo que há 20 latinhas, 10 vidros e 5 plásticos).",\n            items: [{"id":"i1","content":"Latinhas (20)"},{"id":"i2","content":"Plástico (5)"}],\n            categories: [{"id":"c1","title":"Maior Probabilidade"},{"id":"c2","title":"Menor Probabilidade"}],\n            correctMapping: {"i1":"c1","i2":"c2"},\n            successMessage: "Você compreende perfeitamente a relação de quantidade e chance!"\n          },\n          notebookGuide: {\n            instruction: "Reciclar exige separar bem os materiais.",\n            example: 'Avançando...',\n            showBorders: false\n          }\n        }\n      ]\n    },\n    {\n      id: 'gari-unit-17',\n      number: 17,\n      title: "Dado e sorteio de 1 a 10",\n      shortDesc: "Eventos independentes",\n      icon: 'Hash',\n      xpReward: 50,\n      color: 'emerald',\n      steps: [\n        {\n          id: 'step-17-1',\n          title: "Atividade 17 — Número 7 no sorteio",\n          mascotTip: "No intervalo, o gari vê crianças brincando com fichas numeradas de 1 a 10.",\n          conceptCard: {\n            title: 'No dia a dia do Gari...',\n            paragraphs: [\n              "O gari diz: \"Em um dado normal, a chance de sair o número 5 é 1 em 6. Mas e nesse sorteio de 1 a 10, qual a chance de puxar o 7?\"",\n              "💡 Para calcular a chance de um evento, contamos quantos resultados favoráveis existem e dividimos pelo total.",\n              "Apenas uma ficha tem o número 7 (um caso favorável). O total de fichas é 10. A chance é 1/10."\n            ]\n          },\n          explanation: {\n            text: "Chance = Favoráveis / Possíveis.",\n            interaction: { type: 'demo-prob', data: {} }\n          },\n          quiz: {\n            question: "Em um sorteio de fichas de 1 a 10, qual é a probabilidade de sair exatamente a ficha com o número 7?",\n            options: ["7/10","1/10","1/7","10/10"],\n            correctIndex: 1,\n            explanationOnSuccess: "Correto! Só há uma ficha \"7\" num total de dez fichas.",\n            explanationOnError: "A pergunta não pede 7 fichas, mas sim a ÚNICA ficha que tem o desenho do 7."\n          },\n          notebookGuide: {\n            instruction: "As crianças aplaudem a aula de estatística improvisada.",\n            example: 'Avançando...',\n            showBorders: false\n          }\n        }\n      ]\n    },\n    {\n      id: 'gari-unit-18',\n      number: 18,\n      title: "Frequências 20, 12, 10 e 5",\n      shortDesc: "Estatística básica",\n      icon: 'BarChart2',\n      xpReward: 50,\n      color: 'emerald',\n      steps: [\n        {\n          id: 'step-18-1',\n          title: "Atividade 18 — Registro da coleta",\n          mascotTip: "Fim do dia. O gari precisa registrar quantos sacos de cada cor ele recolheu na planilha.",\n          conceptCard: {\n            title: 'No dia a dia do Gari...',\n            paragraphs: [\n              "O gari diz: \"Recolhi 20 azuis, 12 vermelhos, 10 amarelos e 5 verdes. Qual foi o total?\"",\n              "💡 A soma das frequências individuais dá o tamanho total da nossa amostra estatística.",\n              "Soma total = 20 + 12 + 10 + 5 = 47. Se eu sorteasse um saco desses 47, a chance do verde seria 5/47."\n            ]\n          },\n          explanation: {\n            text: "O total é o denominador.",\n            interaction: { type: 'demo-area', data: {} }\n          },\n          quiz: {\n            question: "Se o total é 47, qual é a probabilidade estatística de se sortear exatamente um dos sacos verdes (foram 5 coletados)?",\n            options: ["5/47","20/47","47/5","1/5"],\n            correctIndex: 0,\n            explanationOnSuccess: "Isso mesmo! 5 sacos verdes dentro de 47.",\n            explanationOnError: "A fração se escreve: Quantidade Verde sobre a Quantidade Total."\n          },\n          notebookGuide: {\n            instruction: "Planilha preenchida com sucesso.",\n            example: 'Avançando...',\n            showBorders: false\n          }\n        }\n      ]\n    },\n    {\n      id: 'gari-unit-19',\n      number: 19,\n      title: "Pizza em dez partes",\n      shortDesc: "Fração e decimal",\n      icon: 'PieChart',\n      xpReward: 50,\n      color: 'emerald',\n      steps: [\n        {\n          id: 'step-19-1',\n          title: "Atividade 19 — O lanche da equipe",\n          mascotTip: "A equipe pediu uma pizza gigante de 10 pedaços para dividir na hora do lanche.",\n          conceptCard: {\n            title: 'No dia a dia do Gari...',\n            paragraphs: [\n              "O gari diz: \"Se eu comer um pedaço de 10, eu comi a fração 1/10. E como escrevemos isso em decimal?\"",\n              "💡 Uma fração decimal com denominador 10 pode ser escrita com uma casa após a vírgula.",\n              "A fração 1/10 corresponde a um décimo, que se escreve 0,1. Se sobrar uma fatia, sobra 0,1."\n            ]\n          },\n          explanation: {\n            text: "1/10 = 0,1. 5/10 = 0,5.",\n            interaction: { type: 'demo-prob', data: {} }\n          },\n          quiz: {\n            question: "A fatia que sobrou (1/10 da pizza) é representada por qual número decimal?",\n            options: ["0,01","1,0","0,1","10,0"],\n            correctIndex: 2,\n            explanationOnSuccess: "Exato! 1/10 = 0,1.",\n            explanationOnError: "Se temos décimos, a vírgula anda uma casa: 0,1."\n          },\n          notebookGuide: {\n            instruction: "Depois do lanche, de volta ao trabalho pesado.",\n            example: 'Avançando...',\n            showBorders: false\n          }\n        }\n      ]\n    },\n    {\n      id: 'gari-unit-20',\n      number: 20,\n      title: "Medida de massa",\n      shortDesc: "mg, g, kg",\n      icon: 'Scale3d',\n      xpReward: 50,\n      color: 'emerald',\n      steps: [\n        {\n          id: 'step-20-1',\n          title: "Atividade 20 — Formiga ou caminhão?",\n          mascotTip: "O gari encontra uma formiguinha carregando uma folha perto do caminhão de lixo.",\n          conceptCard: {\n            title: 'No dia a dia do Gari...',\n            paragraphs: [\n              "O gari diz: \"Olha o peso desse caminhão... e o peso dessa formiga! Tudo tem sua unidade.\"",\n              "💡 Usamos miligrama (mg) para coisas ínfimas, grama (g) para médias, e quilograma (kg) para pesadas.",\n              "Uma formiga pesa em torno de 3 miligramas (mg), não 3 kg."\n            ]\n          },\n          explanation: {\n            text: "1 kg = 1000 g. 1 g = 1000 mg.",\n            interaction: { type: 'demo-area', data: {} }\n          },\n          quiz: {\n            question: "Qual é a massa mais provável para uma formiga pequena?",\n            options: ["3 mg","3 g","3 dag","3 kg"],\n            correctIndex: 0,\n            explanationOnSuccess: "Correto! mg é a menor unidade.",\n            explanationOnError: "A formiga é levíssima. Precisamos da menor unidade possível."\n          },\n          notebookGuide: {\n            instruction: "Até os menores seres da natureza têm sua matemática.",\n            example: 'Avançando...',\n            showBorders: false\n          }\n        }\n      ]\n    },\n    {\n      id: 'gari-unit-21',\n      number: 21,\n      title: "Gráfico PET",\n      shortDesc: "Toneladas e quilogramas",\n      icon: 'BarChart',\n      xpReward: 50,\n      color: 'emerald',\n      steps: [\n        {\n          id: 'step-21-1',\n          title: "Atividade 21 — Relatório anual",\n          mascotTip: "No painel da empresa, há um gráfico de barras das garrafas PET recicladas de 2014 a 2018.",\n          conceptCard: {\n            title: 'No dia a dia do Gari...',\n            paragraphs: [\n              "O gari diz: \"Em 2017 recolhemos 26 toneladas de PET. Mas o gerente quer esse número em quilogramas!\"",\n              "💡 Uma tonelada (t) é igual a mil quilogramas (kg).",\n              "Para transformar 26 toneladas em quilos, multiplicamos 26 por 1.000."\n            ]\n          },\n          explanation: {\n            text: "26 x 1000 = 26.000 kg.",\n            interaction: { type: 'demo-area', data: {} }\n          },\n          quiz: {\n            question: "Sabendo que 1 tonelada = 1000 kg, 26 toneladas de garrafa PET equivalem a:",\n            options: ["2 600 kg","26 000 kg","260 000 kg","2 600 000 kg"],\n            correctIndex: 1,\n            explanationOnSuccess: "Exatamente! Basta acrescentar três zeros (multiplicar por mil).",\n            explanationOnError: "Lembre-se: 26 vezes 1000. Adicione três zeros ao número 26."\n          },\n          notebookGuide: {\n            instruction: "Números impressionantes! E a reciclagem salva a cidade.",\n            example: 'Avançando...',\n            showBorders: false\n          }\n        }\n      ]\n    },\n    {\n      id: 'gari-unit-22',\n      number: 22,\n      title: "Sequência repetitiva",\n      shortDesc: "Padrões",\n      icon: 'Repeat',\n      xpReward: 50,\n      color: 'emerald',\n      steps: [\n        {\n          id: 'step-22-1',\n          title: "Atividade 22 — Os cones na avenida",\n          mascotTip: "Para isolar uma rua, o gari organizou cones e placas em uma fila padronizada: Cone, Placa, Placa, Pneu...",\n          conceptCard: {\n            title: 'No dia a dia do Gari...',\n            paragraphs: [\n              "O gari diz: \"Esse padrão se repete a cada 4 objetos. Se eu continuar assim, qual objeto vai ficar na posição 27?\"",\n              "💡 Em um padrão repetitivo (ciclo de 4), dividimos a posição desejada pelo tamanho do ciclo.",\n              "27 dividido por 4 dá 6 ciclos completos (24) e sobram 3. O resto (3) indica que o objeto é o terceiro da sequência básica."\n            ]\n          },\n          explanation: {\n            text: "Posição 27 -> Resto 3. É o terceiro elemento.",\n            interaction: { type: 'demo-prob', data: {} }\n          },\n          writtenPrompt: {\n            question: "Explique por que saber o \"resto da divisão\" ajuda a descobrir a posição 27.",\n            linesNeeded: 2,\n            suggestedAnswer: "O resto mostra exatamente qual é o passo da sequência após os ciclos completos terminarem.",\n            guideline: "Diga que o resto (3) aponta para o terceiro objeto do ciclo."\n          },\n          notebookGuide: {\n            instruction: "Com matemática, a gente prevê o futuro dos cones.",\n            example: 'Avançando...',\n            showBorders: false\n          }\n        }\n      ]\n    },\n    {\n      id: 'gari-unit-23',\n      number: 23,\n      title: "Blocos de cubinhos",\n      shortDesc: "Raciocínio Espacial",\n      icon: 'Box',\n      xpReward: 50,\n      color: 'emerald',\n      steps: [\n        {\n          id: 'step-23-1',\n          title: "Atividade 23 — A sucata volumétrica",\n          mascotTip: "Ele acha 4 pedaços idênticos de isopor. Cada pedaço é formado por 2 cubinhos colados (como um paralelepípedo).",\n          conceptCard: {\n            title: 'No dia a dia do Gari...',\n            paragraphs: [\n              "O gari diz: \"Esses blocos têm volume. Se eu juntar os 4, terei uma estrutura com 8 cubinhos. Será que eu posso montar qualquer forma?\"",\n              "💡 Com 4 blocos de 2, você só pode montar estruturas cujas metades ou partes possam ser divididas por blocos retos de 2.",\n              "Estruturas com pontas isoladas de 1 cubinho são impossíveis de formar com blocos inteiros de 2."\n            ]\n          },\n          explanation: {\n            text: "Você não quebra o bloco!",\n            interaction: { type: 'demo-area', data: {} }\n          },\n          dragAndDrop: {\n            title: "Montagem de isopor",\n            instruction: "Separe o que PODE e o que NÃO PODE ser montado com 4 peças duplas.",\n            items: [{"id":"i1","content":"Cubo 2x2x2"},{"id":"i2","content":"Pirâmide com 1 no topo"}],\n            categories: [{"id":"c1","title":"Possível"},{"id":"c2","title":"Impossível"}],\n            correctMapping: {"i1":"c1","i2":"c2"},\n            successMessage: "Exato! A peça de isopor não se dobra nem se quebra."\n          },\n          notebookGuide: {\n            instruction: "O caminhão vai amassar tudo isso de qualquer jeito.",\n            example: 'Avançando...',\n            showBorders: false\n          }\n        }\n      ]\n    },\n    {\n      id: 'gari-unit-24',\n      number: 24,\n      title: "Quadrados pintados",\n      shortDesc: "Revisão final",\n      icon: 'CheckSquare',\n      xpReward: 50,\n      color: 'emerald',\n      steps: [\n        {\n          id: 'step-24-1',\n          title: "Atividade 24 — A pintura no fim do dia",\n          mascotTip: "O gari termina o turno olhando para a parede pintada do refeitório. A figura sobre a malha de tijolos tem partes pintadas inteiras e metades.",\n          conceptCard: {\n            title: 'No dia a dia do Gari...',\n            paragraphs: [\n              "O gari diz: \"Pra encerrar o expediente: vamos aplicar a mesma regra de juntar os triângulos para descobrir a área colorida final.\"",\n              "💡 Conte os quadrados preenchidos por completo. Depois junte os triângulos formando pares de 1 unidade inteira.",\n              "Se a figura tiver 12 quadrados inteiros e 4 metades, a área total pintada será 14 unidades quadradas."\n            ]\n          },\n          explanation: {\n            text: "12 inteiros + (4 metades = 2 inteiros) = 14.",\n            interaction: { type: 'demo-area', data: {} }\n          },\n          quiz: {\n            question: "Contando os quadrados pintados da malha (12 inteiros e 4 metades), a área total é:",\n            options: ["12","13","14","15"],\n            correctIndex: 2,\n            explanationOnSuccess: "Exato! 12 inteiros + 2 pares formam 14 de área.",\n            explanationOnError: "Lembre-se de juntar as partes triangulares."\n          },\n          notebookGuide: {\n            instruction: "O expediente do Gari chega ao fim. E com ele, toda essa imersão na matemática do dia a dia!",\n            example: 'Avançando...',\n            showBorders: false\n          }\n        }\n      ]\n    }\n  ]\n};
+import { Track } from '../../types';
+
+export const MISSION_DATA: Track = {
+  id: 'gari-mission',
+  title: 'Área e Perímetro',
+  subtitle: 'Um dia de trabalho com um gari',
+  theme: {
+    primary: 'from-amber-600 to-orange-500',
+    secondary: 'from-yellow-500 to-amber-500',
+    accent: 'bg-amber-400',
+    background: 'bg-[#10213f]',
+    cardBg: 'bg-[#1a2b54]',
+    textMain: 'text-amber-50',
+    textMuted: 'text-amber-200/60',
+  },
+  worldName: 'CIEP',
+  units: [
+    {
+      id: 'gari-unit-1',
+      number: 1,
+      title: "O mapa da rota",
+      shortDesc: "Planejamento da varrição",
+      icon: 'MapIcon',
+      xpReward: 50,
+      color: 'emerald',
+      steps: [
+        {
+          id: 'step-1-1',
+          title: "Atividade 1 — Descrever o caminho",
+          mascotTip: "O gari espalha um mapa quadriculado na mesa. \"Hoje a nossa rota vai ser desenhada passo a passo!\"",
+          conceptCard: {
+            title: 'No dia a dia do Gari...',
+            paragraphs: [
+              "O gari diz: \"Cada segmento do quadrado é uma quadra. Para onde vamos?\"",
+              "💡 Um trajeto precisa de quantidade e direção. Contamos os lados percorridos na malha.",
+              "A direção (direita, cima) muda a cada esquina. Conte apenas os lados, não os vértices."
+            ]
+          },
+          explanation: {
+            text: "Se passamos por 3 lados subindo, avançamos 3 quadras para cima.",
+            interaction: { type: 'demo-path', data: {} }
+          },
+          gariInteraction: {
+            type: 'path-draw',
+            data: {"target":6}
+          },
+          notebookGuide: {
+            instruction: "O primeiro trajeto está mapeado! Agora precisamos medir as distâncias com mais cuidado.",
+            example: 'Avançando...',
+            showBorders: false
+          }
+        }
+      ]
+    },
+    {
+      id: 'gari-unit-2',
+      number: 2,
+      title: "Estimativa e régua",
+      shortDesc: "Instrumentos de medida",
+      icon: 'Ruler',
+      xpReward: 50,
+      color: 'emerald',
+      steps: [
+        {
+          id: 'step-2-1',
+          title: "Atividade 2 — A régua do Gari",
+          mascotTip: "O gari saca uma trena do cinto e olha para um canteiro.",
+          conceptCard: {
+            title: 'No dia a dia do Gari...',
+            paragraphs: [
+              "O gari diz: \"Sem a régua, quanto você acha que mede o lado desse canteirinho? Estime!\"",
+              "💡 Estimar é tentar chegar próximo ao valor real com base na intuição.",
+              "Depois usamos o instrumento (régua) para achar a medida exata. O perímetro total é a soma dessas medidas."
+            ]
+          },
+          explanation: {
+            text: "Se eu estimo 1m, mas a trena marca 1,2m, minha estimativa foi boa!",
+            interaction: { type: 'demo-path', data: {} }
+          },
+          gariInteraction: {
+            type: 'measure',
+            data: {"expectedCm":10}
+          },
+          notebookGuide: {
+            instruction: "Medidas anotadas! A trena não mente nunca.",
+            example: 'Avançando...',
+            showBorders: false
+          }
+        }
+      ]
+    },
+    {
+      id: 'gari-unit-3',
+      number: 3,
+      title: "Regiões coloridas da praça",
+      shortDesc: "Contagem de superfície",
+      icon: 'Square',
+      xpReward: 50,
+      color: 'emerald',
+      steps: [
+        {
+          id: 'step-3-1',
+          title: "Atividade 3 — Pintando a área",
+          mascotTip: "A praça central é dividida em canteiros de formatos exóticos.",
+          conceptCard: {
+            title: 'No dia a dia do Gari...',
+            paragraphs: [
+              "O gari diz: \"O contorno já sabemos, mas quanto de grama cabe aqui dentro?\"",
+              "💡 Área é a quantidade de superfície interna de uma figura.",
+              "Figuras de formatos diferentes podem ter exatamente a mesma área se possuírem a mesma quantidade de quadrados."
+            ]
+          },
+          explanation: {
+            text: "Um retângulo 2x3 e outro 1x6 têm a mesma área (6 quadradinhos).",
+            interaction: { type: 'demo-area', data: {} }
+          },
+          gariInteraction: {
+            type: 'paint',
+            data: {"totalRegions":15,"paintedRegions":6}
+          },
+          notebookGuide: {
+            instruction: "Isso é muito útil para calcular quanta água o caminhão pipa vai usar.",
+            example: 'Avançando...',
+            showBorders: false
+          }
+        }
+      ]
+    },
+    {
+      id: 'gari-unit-4',
+      number: 4,
+      title: "O m² da sala de aula",
+      shortDesc: "Unidades grandes",
+      icon: 'Maximize',
+      xpReward: 50,
+      color: 'emerald',
+      steps: [
+        {
+          id: 'step-4-1',
+          title: "Atividade 4 — O tamanho das coisas",
+          mascotTip: "O gari entra na escola para ajudar a arrastar as mesas de reciclagem.",
+          conceptCard: {
+            title: 'No dia a dia do Gari...',
+            paragraphs: [
+              "O gari diz: \"Aqui dentro a gente não mede em centímetros. Vamos usar o Metro!\"",
+              "💡 Em espaços grandes usamos o Metro Quadrado (m²), que é um quadrado de 1m por 1m.",
+              "Se a área do piso for coberta por 30 desses quadrados de 1 metro, a área total é 30 m²."
+            ]
+          },
+          explanation: {
+            text: "Um tapete pequeno usa cm². O chão do pátio usa m².",
+            interaction: { type: 'demo-area', data: {} }
+          },
+          quiz: {
+            question: "Se cabem 30 quadrados de 1m de lado no chão, qual a área da sala?",
+            options: ["30 cm²","30 m²","30 metros","3 m²"],
+            correctIndex: 1,
+            explanationOnSuccess: "M² é a unidade oficial para áreas de salas e terrenos!",
+            explanationOnError: "Lembre-se da unidade quadrada do metro."
+          },
+          notebookGuide: {
+            instruction: "Sabendo o tamanho exato, as lixeiras vão caber direitinho.",
+            example: 'Avançando...',
+            showBorders: false
+          }
+        }
+      ]
+    },
+    {
+      id: 'gari-unit-5',
+      number: 5,
+      title: "Retângulo 6 m × 3 m",
+      shortDesc: "Multiplicação de Área",
+      icon: 'RectangleHorizontal',
+      xpReward: 50,
+      color: 'emerald',
+      steps: [
+        {
+          id: 'step-5-1',
+          title: "Atividade 5 — Área do isolamento",
+          mascotTip: "O gari estende a faixa em uma área retangular de asfalto recém pintado.",
+          conceptCard: {
+            title: 'No dia a dia do Gari...',
+            paragraphs: [
+              "O gari diz: \"A área mede 6 metros de comprimento por 3 metros de largura. E agora?\"",
+              "💡 A área de um retângulo é calculada multiplicando o comprimento pela largura.",
+              "Multiplicar 6 por 3 significa que temos 3 fileiras de 6 quadrados de 1m²."
+            ]
+          },
+          explanation: {
+            text: "6 vezes 3 é igual a 18.",
+            interaction: { type: 'demo-area', data: {} }
+          },
+          quiz: {
+            question: "A área desse espaço de 6m × 3m é de:",
+            options: ["18 m","9 m²","18 m²","12 m²"],
+            correctIndex: 2,
+            explanationOnSuccess: "Correto! 6 × 3 = 18 m².",
+            explanationOnError: "Multiplique as medidas."
+          },
+          notebookGuide: {
+            instruction: "Matemática rápida! A fita vai cobrir o lugar certinho.",
+            example: 'Avançando...',
+            showBorders: false
+          }
+        }
+      ]
+    },
+    {
+      id: 'gari-unit-6',
+      number: 6,
+      title: "Área e perímetro das regiões",
+      shortDesc: "Contorno vs Superfície",
+      icon: 'Scaling',
+      xpReward: 50,
+      color: 'emerald',
+      steps: [
+        {
+          id: 'step-6-1',
+          title: "Atividade 6 — A diferença definitiva",
+          mascotTip: "O gari coloca a fita na borda e depois varre o meio.",
+          conceptCard: {
+            title: 'No dia a dia do Gari...',
+            paragraphs: [
+              "O gari diz: \"A fita preta fica na borda (Perímetro). A vassoura passa no chão (Área).\"",
+              "💡 Perímetro soma os lados externos. Área conta o espaço de dentro.",
+              "Nunca confunda! Para perímetro somamos (ex: 2+3+2+3). Para área multiplicamos (2x3)."
+            ]
+          },
+          explanation: {
+            text: "O contorno é a linha. A área é o miolo.",
+            interaction: { type: 'demo-perimeter', data: {} }
+          },
+          dragAndDrop: {
+            title: "Classifique a tarefa",
+            instruction: "Arraste para a categoria correta.",
+            items: [{"id":"i1","content":"Contorno da cerca"},{"id":"i2","content":"Grama do chão"}],
+            categories: [{"id":"c1","title":"Perímetro"},{"id":"c2","title":"Área"}],
+            correctMapping: {"i1":"c1","i2":"c2"},
+            successMessage: "Você não vai mais se confundir com isso!"
+          },
+          notebookGuide: {
+            instruction: "Trabalho físico feito. Vamos decidir as tarefas de amanhã por sorteio.",
+            example: 'Avançando...',
+            showBorders: false
+          }
+        }
+      ]
+    },
+    {
+      id: 'gari-unit-7',
+      number: 7,
+      title: "Dois dados e combinações",
+      shortDesc: "Probabilidade de pares",
+      icon: 'Dices',
+      xpReward: 50,
+      color: 'emerald',
+      steps: [
+        {
+          id: 'step-7-1',
+          title: "Atividade 7 — Probabilidade e dados",
+          mascotTip: "O gari senta num caixote, puxa 2 dados e brinca com a equipe.",
+          conceptCard: {
+            title: 'No dia a dia do Gari...',
+            paragraphs: [
+              "O gari diz: \"Vamos lançar dois dados. O total de combinações é 36. Quantas duplas de números iguais existem?\"",
+              "💡 A probabilidade compara os Casos Favoráveis com o Total de Casos (36).",
+              "Os casos favoráveis de duplas são (1,1), (2,2), (3,3), (4,4), (5,5), (6,6). São 6 chances em 36."
+            ]
+          },
+          explanation: {
+            text: "A probabilidade é 6/36, que simplificando dá 1/6.",
+            interaction: { type: 'demo-prob', data: {} }
+          },
+          quiz: {
+            question: "A probabilidade de cair com números iguais (duplas) em dois dados é de:",
+            options: ["6/36 ou 1/6","12/36 ou 1/3","1/36","36/36"],
+            correctIndex: 0,
+            explanationOnSuccess: "Incrível! Há 6 combinações de duplas.",
+            explanationOnError: "Há 6 duplas possíveis num total de 36."
+          },
+          notebookGuide: {
+            instruction: "Dados guardados, mas e a tabela de áreas?",
+            example: 'Avançando...',
+            showBorders: false
+          }
+        }
+      ]
+    },
+    {
+      id: 'gari-unit-8',
+      number: 8,
+      title: "Retângulo com 10 quadradinhos",
+      shortDesc: "Leitura na malha",
+      icon: 'Grid',
+      xpReward: 50,
+      color: 'emerald',
+      steps: [
+        {
+          id: 'step-8-1',
+          title: "Atividade 8 — Contando lados",
+          mascotTip: "No galpão, uma grande prateleira tem o formato de um retângulo feito de 10 quadradinhos (5x2).",
+          conceptCard: {
+            title: 'No dia a dia do Gari...',
+            paragraphs: [
+              "O gari diz: \"Olhando para este retângulo de caixas, qual é o comprimento e a largura?\"",
+              "💡 Comprimento é o número de quadradinhos na base. Largura é a altura lateral.",
+              "Se a base tem 5 quadradinhos e a altura tem 2, a área é 10. Mas o perímetro é 5+2+5+2 = 14."
+            ]
+          },
+          explanation: {
+            text: "Base = 5, Lado = 2. Perímetro = 14.",
+            interaction: { type: 'demo-area', data: {} }
+          },
+          quiz: {
+            question: "Se o retângulo tem base 5 e altura 2, seu perímetro e área são, respectivamente:",
+            options: ["10 e 10","14 e 10","10 e 14","7 e 10"],
+            correctIndex: 1,
+            explanationOnSuccess: "Exato! Perímetro é a soma 5+2+5+2=14, e Área é 5x2=10.",
+            explanationOnError: "O perímetro é a soma de TODOS os quatro lados. A área é a multiplicação."
+          },
+          notebookGuide: {
+            instruction: "Você enxerga geometria em qualquer lugar.",
+            example: 'Avançando...',
+            showBorders: false
+          }
+        }
+      ]
+    },
+    {
+      id: 'gari-unit-9',
+      number: 9,
+      title: "Comparação de duas figuras",
+      shortDesc: "Qual é maior?",
+      icon: 'Scale',
+      xpReward: 50,
+      color: 'emerald',
+      steps: [
+        {
+          id: 'step-9-1',
+          title: "Atividade 9 — Ilusão de ótica",
+          mascotTip: "O gari aponta para dois canteiros na calçada. Um é comprido, o outro é gordo.",
+          conceptCard: {
+            title: 'No dia a dia do Gari...',
+            paragraphs: [
+              "O gari diz: \"O comprido parece maior, né? Mas a matemática não se deixa enganar pela aparência.\"",
+              "💡 Para saber qual figura tem MAIOR área, você deve contar o número de quadradinhos de cada uma.",
+              "A Figura 1 pode ter 12 quadradinhos agrupados em um quadrado grosso, e a Figura 2 pode ter 14 esticados. A Figura 2 vence."
+            ]
+          },
+          explanation: {
+            text: "Conte sempre os tijolinhos da área interna.",
+            interaction: { type: 'demo-area', data: {} }
+          },
+          quiz: {
+            question: "Como se determina com precisão a maior área entre duas figuras em uma malha?",
+            options: ["Olhando qual é mais comprida.","Contando e comparando o número total de quadradinhos internos de cada figura.","Medindo apenas a altura.","Somando os lados."],
+            correctIndex: 1,
+            explanationOnSuccess: "Correto! A contagem da superfície interna é o método mais preciso.",
+            explanationOnError: "Não confie na aparência. O espaço ocupado se revela contando o interior."
+          },
+          notebookGuide: {
+            instruction: "O gari confia apenas na matemática exata.",
+            example: 'Avançando...',
+            showBorders: false
+          }
+        }
+      ]
+    },
+    {
+      id: 'gari-unit-10',
+      number: 10,
+      title: "Quadrado 5cm e Retângulo 7x3",
+      shortDesc: "Comparação avançada",
+      icon: 'PenTool',
+      xpReward: 50,
+      color: 'emerald',
+      steps: [
+        {
+          id: 'step-10-1',
+          title: "Atividade 10 — O desafio do desenho",
+          mascotTip: "Ele desenha no chão de giz: um quadrado de 5cm de lado e um retângulo de 7cm por 3cm.",
+          conceptCard: {
+            title: 'No dia a dia do Gari...',
+            paragraphs: [
+              "O gari diz: \"Os formatos são diferentes, os lados também. Mas vamos comparar a área e o perímetro deles!\"",
+              "💡 Quadrado: Área = 5x5=25, Perímetro = 5x4=20. Retângulo: Área = 7x3=21, Perímetro = 7+3+7+3=20.",
+              "Eles podem ter perímetros iguais (ambos 20cm), mas áreas diferentes (25cm² e 21cm²)."
+            ]
+          },
+          explanation: {
+            text: "Quadrado (5,5) -> P=20, A=25. Retângulo (7,3) -> P=20, A=21.",
+            interaction: { type: 'demo-perimeter', data: {} }
+          },
+          dragAndDrop: {
+            title: "Resultados cruzados",
+            instruction: "Arraste os valores para as categorias certas.",
+            items: [{"id":"i1","content":"25 cm²"},{"id":"i2","content":"20 cm"},{"id":"i3","content":"21 cm²"}],
+            categories: [{"id":"c1","title":"Área do Quadrado 5x5"},{"id":"c2","title":"Perímetro (dos dois!)"},{"id":"c3","title":"Área do Retângulo 7x3"}],
+            correctMapping: {"i1":"c1","i2":"c2","i3":"c3"},
+            successMessage: "Percebeu como o formato quadrangular maximiza a área com o mesmo contorno?"
+          },
+          notebookGuide: {
+            instruction: "Desenhar formas é a melhor maneira de visualizar cálculos complexos.",
+            example: 'Avançando...',
+            showBorders: false
+          }
+        }
+      ]
+    },
+    {
+      id: 'gari-unit-11',
+      number: 11,
+      title: "Maior contorno",
+      shortDesc: "Caminho mais longo",
+      icon: 'Milestone',
+      xpReward: 50,
+      color: 'emerald',
+      steps: [
+        {
+          id: 'step-11-1',
+          title: "Atividade 11 — Cinco figuras",
+          mascotTip: "Há 5 poças d'água diferentes na rua. O gari precisa cercar a maior.",
+          conceptCard: {
+            title: 'No dia a dia do Gari...',
+            paragraphs: [
+              "O gari diz: \"A que der a volta mais demorada é a que tem o maior contorno, ou seja, maior perímetro.\"",
+              "💡 Para achar o maior perímetro numa malha cheia de curvas e degraus, é preciso somar absolutamente todos os lados de contato com o exterior.",
+              "Não se apresse. Figuras parecendo estrelas ou com muitos degraus costumam ter os maiores perímetros, pois ziguezagueiam muito."
+            ]
+          },
+          explanation: {
+            text: "Uma cruz tem área pequena, mas um perímetro enorme.",
+            interaction: { type: 'demo-path', data: {} }
+          },
+          writtenPrompt: {
+            question: "Para encontrar o maior CONTORNO, por que contar as pontas em zigue-zague é importante?",
+            linesNeeded: 2,
+            suggestedAnswer: "Porque o zigue-zague aumenta a quantidade de linhas na borda, aumentando o perímetro.",
+            guideline: "O contorno é o caminho pela borda, cada curva adiciona tamanho."
+          },
+          notebookGuide: {
+            instruction: "Excelente observação espacial!",
+            example: 'Avançando...',
+            showBorders: false
+          }
+        }
+      ]
+    },
+    {
+      id: 'gari-unit-12',
+      number: 12,
+      title: "Figura composta colorida",
+      shortDesc: "Decompondo áreas",
+      icon: 'Puzzle',
+      xpReward: 50,
+      color: 'emerald',
+      steps: [
+        {
+          id: 'step-12-1',
+          title: "Atividade 12 — Blocos lógicos",
+          mascotTip: "A praça nova tem uma pintura com partes azuis, amarelas e rosas, formando mosaicos.",
+          conceptCard: {
+            title: 'No dia a dia do Gari...',
+            paragraphs: [
+              "O gari diz: \"Essa figura enorme é composta por peças menores. Se a parte azul vale 15 quadrados e a amarela 8...\"",
+              "💡 Em figuras complexas compostas por retângulos diferentes, a área total é a soma das áreas parciais.",
+              "A área Azul = 15. A Amarela = 8. Se elas se juntam, não se sobrepõem, logo a área da nova figura seria 15 + 8 = 23."
+            ]
+          },
+          explanation: {
+            text: "Isso se chama Conservação de Área e Decomposição de Figuras.",
+            interaction: { type: 'demo-area', data: {} }
+          },
+          quiz: {
+            question: "Se a figura composta for formada exatamente pela parte azul (15) e a amarela (8), qual sua área total?",
+            options: ["15","8","23","7"],
+            correctIndex: 2,
+            explanationOnSuccess: "Correto! 15 + 8 = 23. Somamos as áreas das partes.",
+            explanationOnError: "A área total é a soma de todos os quadradinhos de cada cor."
+          },
+          notebookGuide: {
+            instruction: "Esse mosaico foi calculado sem estresse!",
+            example: 'Avançando...',
+            showBorders: false
+          }
+        }
+      ]
+    },
+    {
+      id: 'gari-unit-13',
+      number: 13,
+      title: "Folha quadrada pontilhada",
+      shortDesc: "Recorte e reagrupamento",
+      icon: 'Scissors',
+      xpReward: 50,
+      color: 'emerald',
+      steps: [
+        {
+          id: 'step-13-1',
+          title: "Atividade 13 — Montando o que sobrou",
+          mascotTip: "O gari encontra restos de um cartaz de festa junina, recortados em formato de triângulos e quadrados menores.",
+          conceptCard: {
+            title: 'No dia a dia do Gari...',
+            paragraphs: [
+              "O gari diz: \"Se eu juntar esses triângulos pontilhados, formo quadrados do mesmo tamanho do centro!\"",
+              "💡 Quando cortamos formas geométricas pelas diagonais, as metades podem ser reagrupadas.",
+              "Dois triângulos retângulos idênticos formam um quadrado. Conte as partes inteiras e some as frações que formam inteiros."
+            ]
+          },
+          explanation: {
+            text: "Se há 4 quadrados inteiros e 4 metades (triângulos), o total são 4 + 2 = 6 quadrados.",
+            interaction: { type: 'demo-area', data: {} }
+          },
+          quiz: {
+            question: "Juntando as pontas (triângulos), qual é a área total equivalente da folha em quadrados?",
+            options: ["5","6","7","8"],
+            correctIndex: 3,
+            explanationOnSuccess: "Exato! Contamos os centrais e juntamos os externos aos pares.",
+            explanationOnError: "Lembre-se que cada 2 triângulos formam 1 quadrado inteiro."
+          },
+          notebookGuide: {
+            instruction: "A geometria ajuda até na hora de limpar papéis picados.",
+            example: 'Avançando...',
+            showBorders: false
+          }
+        }
+      ]
+    },
+    {
+      id: 'gari-unit-14',
+      number: 14,
+      title: "Roleta de tarefas",
+      shortDesc: "Sorteio justo",
+      icon: 'Loader2',
+      xpReward: 50,
+      color: 'emerald',
+      steps: [
+        {
+          id: 'step-14-1',
+          title: "Atividade 14 — A roleta do turno",
+          mascotTip: "Na garagem, o chefe puxa uma roleta de madeira. Nela estão pintadas as tarefas do dia.",
+          conceptCard: {
+            title: 'No dia a dia do Gari...',
+            paragraphs: [
+              "O gari diz: \"A roleta tem setores coloridos de tamanhos diferentes. Aonde a seta vai parar?\"",
+              "💡 A chance de sorteio é proporcional à quantidade de setores com a mesma tarefa.",
+              "Se a tarefa de \"varrer\" ocupa 3 setores, e a de \"lavar\" apenas 1, a maior chance é varrer."
+            ]
+          },
+          explanation: {
+            text: "A área maior na roleta domina o sorteio.",
+            interaction: { type: 'demo-prob', data: {} }
+          },
+          gariInteraction: {
+            type: 'roulette',
+            data: {"options":["Varrer","Lavar","Varrer","Coletar"]}
+          },
+          notebookGuide: {
+            instruction: "O sorteio foi feito! Que os jogos comecem.",
+            example: 'Avançando...',
+            showBorders: false
+          }
+        }
+      ]
+    },
+    {
+      id: 'gari-unit-15',
+      number: 15,
+      title: "Balões de campanha",
+      shortDesc: "Contagem de casos",
+      icon: 'Target',
+      xpReward: 50,
+      color: 'emerald',
+      steps: [
+        {
+          id: 'step-15-1',
+          title: "Atividade 15 — Limpando a festa",
+          mascotTip: "Houve uma festa na praça. Sobraram muitos balões estourados e murchos pelo chão.",
+          conceptCard: {
+            title: 'No dia a dia do Gari...',
+            paragraphs: [
+              "O gari diz: \"Tem balão azul, amarelo e vermelho. Qual a chance de eu recolher um vermelho de olhos fechados?\"",
+              "💡 A probabilidade é a divisão do número de balões daquela cor pelo total de balões no chão.",
+              "Se temos 10 balões no total e 3 vermelhos, a chance é \"3 em 10\"."
+            ]
+          },
+          explanation: {
+            text: "Frações e probabilidades são amigas inseparáveis.",
+            interaction: { type: 'demo-prob', data: {} }
+          },
+          writtenPrompt: {
+            question: "Se há 3 balões vermelhos em um total de 10, como você escreve essa chance?",
+            linesNeeded: 2,
+            suggestedAnswer: "A chance é de 3 em 10, ou a fração 3/10.",
+            guideline: "O formato correto é casos favoráveis sobre casos totais."
+          },
+          notebookGuide: {
+            instruction: "Tudo limpo, e a probabilidade confirmada.",
+            example: 'Avançando...',
+            showBorders: false
+          }
+        }
+      ]
+    },
+    {
+      id: 'gari-unit-16',
+      number: 16,
+      title: "Sacola de materiais",
+      shortDesc: "Tirando às cegas",
+      icon: 'Briefcase',
+      xpReward: 50,
+      color: 'emerald',
+      steps: [
+        {
+          id: 'step-16-1',
+          title: "Atividade 16 — O saco de recicláveis",
+          mascotTip: "O gari carrega um saco opaco de materiais recicláveis: latinhas, papel e plástico.",
+          conceptCard: {
+            title: 'No dia a dia do Gari...',
+            paragraphs: [
+              "O gari diz: \"Sem olhar, vou puxar um material. Qual tem mais chance de sair?\"",
+              "💡 A probabilidade se baseia na contagem de cada tipo dentro do saco.",
+              "A categoria com a maior quantidade (frequência) dentro da sacola é a que tem maior probabilidade de ser retirada aleatoriamente."
+            ]
+          },
+          explanation: {
+            text: "Se há 20 latinhas e 5 papéis, é quase certo puxar uma latinha.",
+            interaction: { type: 'demo-prob', data: {} }
+          },
+          dragAndDrop: {
+            title: "Classifique a chance",
+            instruction: "Arraste o tipo de material para sua classificação (sabendo que há 20 latinhas, 10 vidros e 5 plásticos).",
+            items: [{"id":"i1","content":"Latinhas (20)"},{"id":"i2","content":"Plástico (5)"}],
+            categories: [{"id":"c1","title":"Maior Probabilidade"},{"id":"c2","title":"Menor Probabilidade"}],
+            correctMapping: {"i1":"c1","i2":"c2"},
+            successMessage: "Você compreende perfeitamente a relação de quantidade e chance!"
+          },
+          notebookGuide: {
+            instruction: "Reciclar exige separar bem os materiais.",
+            example: 'Avançando...',
+            showBorders: false
+          }
+        }
+      ]
+    },
+    {
+      id: 'gari-unit-17',
+      number: 17,
+      title: "Dado e sorteio de 1 a 10",
+      shortDesc: "Eventos independentes",
+      icon: 'Hash',
+      xpReward: 50,
+      color: 'emerald',
+      steps: [
+        {
+          id: 'step-17-1',
+          title: "Atividade 17 — Número 7 no sorteio",
+          mascotTip: "No intervalo, o gari vê crianças brincando com fichas numeradas de 1 a 10.",
+          conceptCard: {
+            title: 'No dia a dia do Gari...',
+            paragraphs: [
+              "O gari diz: \"Em um dado normal, a chance de sair o número 5 é 1 em 6. Mas e nesse sorteio de 1 a 10, qual a chance de puxar o 7?\"",
+              "💡 Para calcular a chance de um evento, contamos quantos resultados favoráveis existem e dividimos pelo total.",
+              "Apenas uma ficha tem o número 7 (um caso favorável). O total de fichas é 10. A chance é 1/10."
+            ]
+          },
+          explanation: {
+            text: "Chance = Favoráveis / Possíveis.",
+            interaction: { type: 'demo-prob', data: {} }
+          },
+          quiz: {
+            question: "Em um sorteio de fichas de 1 a 10, qual é a probabilidade de sair exatamente a ficha com o número 7?",
+            options: ["7/10","1/10","1/7","10/10"],
+            correctIndex: 1,
+            explanationOnSuccess: "Correto! Só há uma ficha \"7\" num total de dez fichas.",
+            explanationOnError: "A pergunta não pede 7 fichas, mas sim a ÚNICA ficha que tem o desenho do 7."
+          },
+          notebookGuide: {
+            instruction: "As crianças aplaudem a aula de estatística improvisada.",
+            example: 'Avançando...',
+            showBorders: false
+          }
+        }
+      ]
+    },
+    {
+      id: 'gari-unit-18',
+      number: 18,
+      title: "Frequências 20, 12, 10 e 5",
+      shortDesc: "Estatística básica",
+      icon: 'BarChart2',
+      xpReward: 50,
+      color: 'emerald',
+      steps: [
+        {
+          id: 'step-18-1',
+          title: "Atividade 18 — Registro da coleta",
+          mascotTip: "Fim do dia. O gari precisa registrar quantos sacos de cada cor ele recolheu na planilha.",
+          conceptCard: {
+            title: 'No dia a dia do Gari...',
+            paragraphs: [
+              "O gari diz: \"Recolhi 20 azuis, 12 vermelhos, 10 amarelos e 5 verdes. Qual foi o total?\"",
+              "💡 A soma das frequências individuais dá o tamanho total da nossa amostra estatística.",
+              "Soma total = 20 + 12 + 10 + 5 = 47. Se eu sorteasse um saco desses 47, a chance do verde seria 5/47."
+            ]
+          },
+          explanation: {
+            text: "O total é o denominador.",
+            interaction: { type: 'demo-area', data: {} }
+          },
+          quiz: {
+            question: "Se o total é 47, qual é a probabilidade estatística de se sortear exatamente um dos sacos verdes (foram 5 coletados)?",
+            options: ["5/47","20/47","47/5","1/5"],
+            correctIndex: 0,
+            explanationOnSuccess: "Isso mesmo! 5 sacos verdes dentro de 47.",
+            explanationOnError: "A fração se escreve: Quantidade Verde sobre a Quantidade Total."
+          },
+          notebookGuide: {
+            instruction: "Planilha preenchida com sucesso.",
+            example: 'Avançando...',
+            showBorders: false
+          }
+        }
+      ]
+    },
+    {
+      id: 'gari-unit-19',
+      number: 19,
+      title: "Pizza em dez partes",
+      shortDesc: "Fração e decimal",
+      icon: 'PieChart',
+      xpReward: 50,
+      color: 'emerald',
+      steps: [
+        {
+          id: 'step-19-1',
+          title: "Atividade 19 — O lanche da equipe",
+          mascotTip: "A equipe pediu uma pizza gigante de 10 pedaços para dividir na hora do lanche.",
+          conceptCard: {
+            title: 'No dia a dia do Gari...',
+            paragraphs: [
+              "O gari diz: \"Se eu comer um pedaço de 10, eu comi a fração 1/10. E como escrevemos isso em decimal?\"",
+              "💡 Uma fração decimal com denominador 10 pode ser escrita com uma casa após a vírgula.",
+              "A fração 1/10 corresponde a um décimo, que se escreve 0,1. Se sobrar uma fatia, sobra 0,1."
+            ]
+          },
+          explanation: {
+            text: "1/10 = 0,1. 5/10 = 0,5.",
+            interaction: { type: 'demo-prob', data: {} }
+          },
+          quiz: {
+            question: "A fatia que sobrou (1/10 da pizza) é representada por qual número decimal?",
+            options: ["0,01","1,0","0,1","10,0"],
+            correctIndex: 2,
+            explanationOnSuccess: "Exato! 1/10 = 0,1.",
+            explanationOnError: "Se temos décimos, a vírgula anda uma casa: 0,1."
+          },
+          notebookGuide: {
+            instruction: "Depois do lanche, de volta ao trabalho pesado.",
+            example: 'Avançando...',
+            showBorders: false
+          }
+        }
+      ]
+    },
+    {
+      id: 'gari-unit-20',
+      number: 20,
+      title: "Medida de massa",
+      shortDesc: "mg, g, kg",
+      icon: 'Scale3d',
+      xpReward: 50,
+      color: 'emerald',
+      steps: [
+        {
+          id: 'step-20-1',
+          title: "Atividade 20 — Formiga ou caminhão?",
+          mascotTip: "O gari encontra uma formiguinha carregando uma folha perto do caminhão de lixo.",
+          conceptCard: {
+            title: 'No dia a dia do Gari...',
+            paragraphs: [
+              "O gari diz: \"Olha o peso desse caminhão... e o peso dessa formiga! Tudo tem sua unidade.\"",
+              "💡 Usamos miligrama (mg) para coisas ínfimas, grama (g) para médias, e quilograma (kg) para pesadas.",
+              "Uma formiga pesa em torno de 3 miligramas (mg), não 3 kg."
+            ]
+          },
+          explanation: {
+            text: "1 kg = 1000 g. 1 g = 1000 mg.",
+            interaction: { type: 'demo-area', data: {} }
+          },
+          quiz: {
+            question: "Qual é a massa mais provável para uma formiga pequena?",
+            options: ["3 mg","3 g","3 dag","3 kg"],
+            correctIndex: 0,
+            explanationOnSuccess: "Correto! mg é a menor unidade.",
+            explanationOnError: "A formiga é levíssima. Precisamos da menor unidade possível."
+          },
+          notebookGuide: {
+            instruction: "Até os menores seres da natureza têm sua matemática.",
+            example: 'Avançando...',
+            showBorders: false
+          }
+        }
+      ]
+    },
+    {
+      id: 'gari-unit-21',
+      number: 21,
+      title: "Gráfico PET",
+      shortDesc: "Toneladas e quilogramas",
+      icon: 'BarChart',
+      xpReward: 50,
+      color: 'emerald',
+      steps: [
+        {
+          id: 'step-21-1',
+          title: "Atividade 21 — Relatório anual",
+          mascotTip: "No painel da empresa, há um gráfico de barras das garrafas PET recicladas de 2014 a 2018.",
+          conceptCard: {
+            title: 'No dia a dia do Gari...',
+            paragraphs: [
+              "O gari diz: \"Em 2017 recolhemos 26 toneladas de PET. Mas o gerente quer esse número em quilogramas!\"",
+              "💡 Uma tonelada (t) é igual a mil quilogramas (kg).",
+              "Para transformar 26 toneladas em quilos, multiplicamos 26 por 1.000."
+            ]
+          },
+          explanation: {
+            text: "26 x 1000 = 26.000 kg.",
+            interaction: { type: 'demo-area', data: {} }
+          },
+          quiz: {
+            question: "Sabendo que 1 tonelada = 1000 kg, 26 toneladas de garrafa PET equivalem a:",
+            options: ["2 600 kg","26 000 kg","260 000 kg","2 600 000 kg"],
+            correctIndex: 1,
+            explanationOnSuccess: "Exatamente! Basta acrescentar três zeros (multiplicar por mil).",
+            explanationOnError: "Lembre-se: 26 vezes 1000. Adicione três zeros ao número 26."
+          },
+          notebookGuide: {
+            instruction: "Números impressionantes! E a reciclagem salva a cidade.",
+            example: 'Avançando...',
+            showBorders: false
+          }
+        }
+      ]
+    },
+    {
+      id: 'gari-unit-22',
+      number: 22,
+      title: "Sequência repetitiva",
+      shortDesc: "Padrões",
+      icon: 'Repeat',
+      xpReward: 50,
+      color: 'emerald',
+      steps: [
+        {
+          id: 'step-22-1',
+          title: "Atividade 22 — Os cones na avenida",
+          mascotTip: "Para isolar uma rua, o gari organizou cones e placas em uma fila padronizada: Cone, Placa, Placa, Pneu...",
+          conceptCard: {
+            title: 'No dia a dia do Gari...',
+            paragraphs: [
+              "O gari diz: \"Esse padrão se repete a cada 4 objetos. Se eu continuar assim, qual objeto vai ficar na posição 27?\"",
+              "💡 Em um padrão repetitivo (ciclo de 4), dividimos a posição desejada pelo tamanho do ciclo.",
+              "27 dividido por 4 dá 6 ciclos completos (24) e sobram 3. O resto (3) indica que o objeto é o terceiro da sequência básica."
+            ]
+          },
+          explanation: {
+            text: "Posição 27 -> Resto 3. É o terceiro elemento.",
+            interaction: { type: 'demo-prob', data: {} }
+          },
+          writtenPrompt: {
+            question: "Explique por que saber o \"resto da divisão\" ajuda a descobrir a posição 27.",
+            linesNeeded: 2,
+            suggestedAnswer: "O resto mostra exatamente qual é o passo da sequência após os ciclos completos terminarem.",
+            guideline: "Diga que o resto (3) aponta para o terceiro objeto do ciclo."
+          },
+          notebookGuide: {
+            instruction: "Com matemática, a gente prevê o futuro dos cones.",
+            example: 'Avançando...',
+            showBorders: false
+          }
+        }
+      ]
+    },
+    {
+      id: 'gari-unit-23',
+      number: 23,
+      title: "Blocos de cubinhos",
+      shortDesc: "Raciocínio Espacial",
+      icon: 'Box',
+      xpReward: 50,
+      color: 'emerald',
+      steps: [
+        {
+          id: 'step-23-1',
+          title: "Atividade 23 — A sucata volumétrica",
+          mascotTip: "Ele acha 4 pedaços idênticos de isopor. Cada pedaço é formado por 2 cubinhos colados (como um paralelepípedo).",
+          conceptCard: {
+            title: 'No dia a dia do Gari...',
+            paragraphs: [
+              "O gari diz: \"Esses blocos têm volume. Se eu juntar os 4, terei uma estrutura com 8 cubinhos. Será que eu posso montar qualquer forma?\"",
+              "💡 Com 4 blocos de 2, você só pode montar estruturas cujas metades ou partes possam ser divididas por blocos retos de 2.",
+              "Estruturas com pontas isoladas de 1 cubinho são impossíveis de formar com blocos inteiros de 2."
+            ]
+          },
+          explanation: {
+            text: "Você não quebra o bloco!",
+            interaction: { type: 'demo-area', data: {} }
+          },
+          dragAndDrop: {
+            title: "Montagem de isopor",
+            instruction: "Separe o que PODE e o que NÃO PODE ser montado com 4 peças duplas.",
+            items: [{"id":"i1","content":"Cubo 2x2x2"},{"id":"i2","content":"Pirâmide com 1 no topo"}],
+            categories: [{"id":"c1","title":"Possível"},{"id":"c2","title":"Impossível"}],
+            correctMapping: {"i1":"c1","i2":"c2"},
+            successMessage: "Exato! A peça de isopor não se dobra nem se quebra."
+          },
+          notebookGuide: {
+            instruction: "O caminhão vai amassar tudo isso de qualquer jeito.",
+            example: 'Avançando...',
+            showBorders: false
+          }
+        }
+      ]
+    },
+    {
+      id: 'gari-unit-24',
+      number: 24,
+      title: "Quadrados pintados",
+      shortDesc: "Revisão final",
+      icon: 'CheckSquare',
+      xpReward: 50,
+      color: 'emerald',
+      steps: [
+        {
+          id: 'step-24-1',
+          title: "Atividade 24 — A pintura no fim do dia",
+          mascotTip: "O gari termina o turno olhando para a parede pintada do refeitório. A figura sobre a malha de tijolos tem partes pintadas inteiras e metades.",
+          conceptCard: {
+            title: 'No dia a dia do Gari...',
+            paragraphs: [
+              "O gari diz: \"Pra encerrar o expediente: vamos aplicar a mesma regra de juntar os triângulos para descobrir a área colorida final.\"",
+              "💡 Conte os quadrados preenchidos por completo. Depois junte os triângulos formando pares de 1 unidade inteira.",
+              "Se a figura tiver 12 quadrados inteiros e 4 metades, a área total pintada será 14 unidades quadradas."
+            ]
+          },
+          explanation: {
+            text: "12 inteiros + (4 metades = 2 inteiros) = 14.",
+            interaction: { type: 'demo-area', data: {} }
+          },
+          quiz: {
+            question: "Contando os quadrados pintados da malha (12 inteiros e 4 metades), a área total é:",
+            options: ["12","13","14","15"],
+            correctIndex: 2,
+            explanationOnSuccess: "Exato! 12 inteiros + 2 pares formam 14 de área.",
+            explanationOnError: "Lembre-se de juntar as partes triangulares."
+          },
+          notebookGuide: {
+            instruction: "O expediente do Gari chega ao fim. E com ele, toda essa imersão na matemática do dia a dia!",
+            example: 'Avançando...',
+            showBorders: false
+          }
+        }
+      ]
+    }
+  ]
+};
