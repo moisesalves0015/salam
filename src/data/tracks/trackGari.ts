@@ -18,7 +18,7 @@ export const trackGari: Track = {
     {
       id: 'gari-unit-1',
       number: 1,
-      title: "O mapa da rota",
+      title: "O mapa e a rota",
       shortDesc: "Planejamento da varrição",
       icon: 'MapIcon',
       xpReward: 50,
@@ -45,24 +45,13 @@ export const trackGari: Track = {
             data: {"target":6}
           },
           notebookGuide: {
-            instruction: "O primeiro trajeto está mapeado! Agora precisamos medir as distâncias com mais cuidado.",
-            example: 'Avançando...',
+            tips: ["O primeiro trajeto está mapeado! Agora precisamos medir as distâncias com mais cuidado."],
+            operation: 'addition',
             showBorders: false
           }
-        }
-      ]
-    },
-    {
-      id: 'gari-unit-2',
-      number: 2,
-      title: "Estimativa e régua",
-      shortDesc: "Instrumentos de medida",
-      icon: 'Ruler',
-      xpReward: 50,
-      color: 'emerald',
-      steps: [
+        },
         {
-          id: 'step-2-1',
+          id: 'step-1-2',
           title: "Atividade 2 — A régua do Gari",
           mascotTip: "O gari saca uma trena do cinto e olha para um canteiro.",
           conceptCard: {
@@ -82,24 +71,13 @@ export const trackGari: Track = {
             data: {"expectedCm":10}
           },
           notebookGuide: {
-            instruction: "Medidas anotadas! A trena não mente nunca.",
-            example: 'Avançando...',
+            tips: ["Medidas anotadas! A trena não mente nunca."],
+            operation: 'addition',
             showBorders: false
           }
-        }
-      ]
-    },
-    {
-      id: 'gari-unit-3',
-      number: 3,
-      title: "Regiões coloridas da praça",
-      shortDesc: "Contagem de superfície",
-      icon: 'Square',
-      xpReward: 50,
-      color: 'emerald',
-      steps: [
+        },
         {
-          id: 'step-3-1',
+          id: 'step-1-3',
           title: "Atividade 3 — Pintando a área",
           mascotTip: "A praça central é dividida em canteiros de formatos exóticos.",
           conceptCard: {
@@ -119,24 +97,24 @@ export const trackGari: Track = {
             data: {"totalRegions":15,"paintedRegions":6}
           },
           notebookGuide: {
-            instruction: "Isso é muito útil para calcular quanta água o caminhão pipa vai usar.",
-            example: 'Avançando...',
+            tips: ["Isso é muito útil para calcular quanta água o caminhão pipa vai usar."],
+            operation: 'addition',
             showBorders: false
           }
         }
       ]
     },
     {
-      id: 'gari-unit-4',
-      number: 4,
-      title: "O m² da sala de aula",
+      id: 'gari-unit-2',
+      number: 2,
+      title: "O m² da praça",
       shortDesc: "Unidades grandes",
       icon: 'Maximize',
       xpReward: 50,
       color: 'emerald',
       steps: [
         {
-          id: 'step-4-1',
+          id: 'step-2-1',
           title: "Atividade 4 — O tamanho das coisas",
           mascotTip: "O gari entra na escola para ajudar a arrastar as mesas de reciclagem.",
           conceptCard: {
@@ -159,24 +137,13 @@ export const trackGari: Track = {
             explanationOnError: "Lembre-se da unidade quadrada do metro."
           },
           notebookGuide: {
-            instruction: "Sabendo o tamanho exato, as lixeiras vão caber direitinho.",
-            example: 'Avançando...',
+            tips: ["Sabendo o tamanho exato, as lixeiras vão caber direitinho."],
+            operation: 'addition',
             showBorders: false
           }
-        }
-      ]
-    },
-    {
-      id: 'gari-unit-5',
-      number: 5,
-      title: "Retângulo 6 m × 3 m",
-      shortDesc: "Multiplicação de Área",
-      icon: 'RectangleHorizontal',
-      xpReward: 50,
-      color: 'emerald',
-      steps: [
+        },
         {
-          id: 'step-5-1',
+          id: 'step-2-2',
           title: "Atividade 5 — Área do isolamento",
           mascotTip: "O gari estende a faixa em uma área retangular de asfalto recém pintado.",
           conceptCard: {
@@ -199,24 +166,13 @@ export const trackGari: Track = {
             explanationOnError: "Multiplique as medidas."
           },
           notebookGuide: {
-            instruction: "Matemática rápida! A fita vai cobrir o lugar certinho.",
-            example: 'Avançando...',
+            tips: ["Matemática rápida! A fita vai cobrir o lugar certinho."],
+            operation: 'addition',
             showBorders: false
           }
-        }
-      ]
-    },
-    {
-      id: 'gari-unit-6',
-      number: 6,
-      title: "Área e perímetro das regiões",
-      shortDesc: "Contorno vs Superfície",
-      icon: 'Scaling',
-      xpReward: 50,
-      color: 'emerald',
-      steps: [
+        },
         {
-          id: 'step-6-1',
+          id: 'step-2-3',
           title: "Atividade 6 — A diferença definitiva",
           mascotTip: "O gari coloca a fita na borda e depois varre o meio.",
           conceptCard: {
@@ -240,24 +196,24 @@ export const trackGari: Track = {
             successMessage: "Você não vai mais se confundir com isso!"
           },
           notebookGuide: {
-            instruction: "Trabalho físico feito. Vamos decidir as tarefas de amanhã por sorteio.",
-            example: 'Avançando...',
+            tips: ["Trabalho físico feito. Vamos decidir as tarefas de amanhã por sorteio."],
+            operation: 'addition',
             showBorders: false
           }
         }
       ]
     },
     {
-      id: 'gari-unit-7',
-      number: 7,
-      title: "Dois dados e combinações",
-      shortDesc: "Probabilidade de pares",
-      icon: 'Dices',
+      id: 'gari-unit-3',
+      number: 3,
+      title: "Comparando figuras",
+      shortDesc: "Retângulos e formatos",
+      icon: 'Grid',
       xpReward: 50,
       color: 'emerald',
       steps: [
         {
-          id: 'step-7-1',
+          id: 'step-3-1',
           title: "Atividade 7 — Probabilidade e dados",
           mascotTip: "O gari senta num caixote, puxa 2 dados e brinca com a equipe.",
           conceptCard: {
@@ -280,24 +236,13 @@ export const trackGari: Track = {
             explanationOnError: "Há 6 duplas possíveis num total de 36."
           },
           notebookGuide: {
-            instruction: "Dados guardados, mas e a tabela de áreas?",
-            example: 'Avançando...',
+            tips: ["Dados guardados, mas e a tabela de áreas?"],
+            operation: 'addition',
             showBorders: false
           }
-        }
-      ]
-    },
-    {
-      id: 'gari-unit-8',
-      number: 8,
-      title: "Retângulo com 10 quadradinhos",
-      shortDesc: "Leitura na malha",
-      icon: 'Grid',
-      xpReward: 50,
-      color: 'emerald',
-      steps: [
+        },
         {
-          id: 'step-8-1',
+          id: 'step-3-2',
           title: "Atividade 8 — Contando lados",
           mascotTip: "No galpão, uma grande prateleira tem o formato de um retângulo feito de 10 quadradinhos (5x2).",
           conceptCard: {
@@ -320,24 +265,13 @@ export const trackGari: Track = {
             explanationOnError: "O perímetro é a soma de TODOS os quatro lados. A área é a multiplicação."
           },
           notebookGuide: {
-            instruction: "Você enxerga geometria em qualquer lugar.",
-            example: 'Avançando...',
+            tips: ["Você enxerga geometria em qualquer lugar."],
+            operation: 'addition',
             showBorders: false
           }
-        }
-      ]
-    },
-    {
-      id: 'gari-unit-9',
-      number: 9,
-      title: "Comparação de duas figuras",
-      shortDesc: "Qual é maior?",
-      icon: 'Scale',
-      xpReward: 50,
-      color: 'emerald',
-      steps: [
+        },
         {
-          id: 'step-9-1',
+          id: 'step-3-3',
           title: "Atividade 9 — Ilusão de ótica",
           mascotTip: "O gari aponta para dois canteiros na calçada. Um é comprido, o outro é gordo.",
           conceptCard: {
@@ -360,24 +294,13 @@ export const trackGari: Track = {
             explanationOnError: "Não confie na aparência. O espaço ocupado se revela contando o interior."
           },
           notebookGuide: {
-            instruction: "O gari confia apenas na matemática exata.",
-            example: 'Avançando...',
+            tips: ["O gari confia apenas na matemática exata."],
+            operation: 'addition',
             showBorders: false
           }
-        }
-      ]
-    },
-    {
-      id: 'gari-unit-10',
-      number: 10,
-      title: "Quadrado 5cm e Retângulo 7x3",
-      shortDesc: "Comparação avançada",
-      icon: 'PenTool',
-      xpReward: 50,
-      color: 'emerald',
-      steps: [
+        },
         {
-          id: 'step-10-1',
+          id: 'step-3-4',
           title: "Atividade 10 — O desafio do desenho",
           mascotTip: "Ele desenha no chão de giz: um quadrado de 5cm de lado e um retângulo de 7cm por 3cm.",
           conceptCard: {
@@ -401,24 +324,24 @@ export const trackGari: Track = {
             successMessage: "Percebeu como o formato quadrangular maximiza a área com o mesmo contorno?"
           },
           notebookGuide: {
-            instruction: "Desenhar formas é a melhor maneira de visualizar cálculos complexos.",
-            example: 'Avançando...',
+            tips: ["Desenhar formas é a melhor maneira de visualizar cálculos complexos."],
+            operation: 'addition',
             showBorders: false
           }
         }
       ]
     },
     {
-      id: 'gari-unit-11',
-      number: 11,
-      title: "Maior contorno",
-      shortDesc: "Caminho mais longo",
-      icon: 'Milestone',
+      id: 'gari-unit-4',
+      number: 4,
+      title: "Mosaicos e contornos",
+      shortDesc: "Formas complexas",
+      icon: 'Puzzle',
       xpReward: 50,
       color: 'emerald',
       steps: [
         {
-          id: 'step-11-1',
+          id: 'step-4-1',
           title: "Atividade 11 — Cinco figuras",
           mascotTip: "Há 5 poças d'água diferentes na rua. O gari precisa cercar a maior.",
           conceptCard: {
@@ -440,24 +363,13 @@ export const trackGari: Track = {
             guideline: "O contorno é o caminho pela borda, cada curva adiciona tamanho."
           },
           notebookGuide: {
-            instruction: "Excelente observação espacial!",
-            example: 'Avançando...',
+            tips: ["Excelente observação espacial!"],
+            operation: 'addition',
             showBorders: false
           }
-        }
-      ]
-    },
-    {
-      id: 'gari-unit-12',
-      number: 12,
-      title: "Figura composta colorida",
-      shortDesc: "Decompondo áreas",
-      icon: 'Puzzle',
-      xpReward: 50,
-      color: 'emerald',
-      steps: [
+        },
         {
-          id: 'step-12-1',
+          id: 'step-4-2',
           title: "Atividade 12 — Blocos lógicos",
           mascotTip: "A praça nova tem uma pintura com partes azuis, amarelas e rosas, formando mosaicos.",
           conceptCard: {
@@ -480,24 +392,13 @@ export const trackGari: Track = {
             explanationOnError: "A área total é a soma de todos os quadradinhos de cada cor."
           },
           notebookGuide: {
-            instruction: "Esse mosaico foi calculado sem estresse!",
-            example: 'Avançando...',
+            tips: ["Esse mosaico foi calculado sem estresse!"],
+            operation: 'addition',
             showBorders: false
           }
-        }
-      ]
-    },
-    {
-      id: 'gari-unit-13',
-      number: 13,
-      title: "Folha quadrada pontilhada",
-      shortDesc: "Recorte e reagrupamento",
-      icon: 'Scissors',
-      xpReward: 50,
-      color: 'emerald',
-      steps: [
+        },
         {
-          id: 'step-13-1',
+          id: 'step-4-3',
           title: "Atividade 13 — Montando o que sobrou",
           mascotTip: "O gari encontra restos de um cartaz de festa junina, recortados em formato de triângulos e quadrados menores.",
           conceptCard: {
@@ -520,24 +421,24 @@ export const trackGari: Track = {
             explanationOnError: "Lembre-se que cada 2 triângulos formam 1 quadrado inteiro."
           },
           notebookGuide: {
-            instruction: "A geometria ajuda até na hora de limpar papéis picados.",
-            example: 'Avançando...',
+            tips: ["A geometria ajuda até na hora de limpar papéis picados."],
+            operation: 'addition',
             showBorders: false
           }
         }
       ]
     },
     {
-      id: 'gari-unit-14',
-      number: 14,
-      title: "Roleta de tarefas",
-      shortDesc: "Sorteio justo",
-      icon: 'Loader2',
+      id: 'gari-unit-5',
+      number: 5,
+      title: "Sorteios no turno",
+      shortDesc: "Roletas e balões",
+      icon: 'Target',
       xpReward: 50,
       color: 'emerald',
       steps: [
         {
-          id: 'step-14-1',
+          id: 'step-5-1',
           title: "Atividade 14 — A roleta do turno",
           mascotTip: "Na garagem, o chefe puxa uma roleta de madeira. Nela estão pintadas as tarefas do dia.",
           conceptCard: {
@@ -557,24 +458,13 @@ export const trackGari: Track = {
             data: {"options":["Varrer","Lavar","Varrer","Coletar"]}
           },
           notebookGuide: {
-            instruction: "O sorteio foi feito! Que os jogos comecem.",
-            example: 'Avançando...',
+            tips: ["O sorteio foi feito! Que os jogos comecem."],
+            operation: 'addition',
             showBorders: false
           }
-        }
-      ]
-    },
-    {
-      id: 'gari-unit-15',
-      number: 15,
-      title: "Balões de campanha",
-      shortDesc: "Contagem de casos",
-      icon: 'Target',
-      xpReward: 50,
-      color: 'emerald',
-      steps: [
+        },
         {
-          id: 'step-15-1',
+          id: 'step-5-2',
           title: "Atividade 15 — Limpando a festa",
           mascotTip: "Houve uma festa na praça. Sobraram muitos balões estourados e murchos pelo chão.",
           conceptCard: {
@@ -596,24 +486,13 @@ export const trackGari: Track = {
             guideline: "O formato correto é casos favoráveis sobre casos totais."
           },
           notebookGuide: {
-            instruction: "Tudo limpo, e a probabilidade confirmada.",
-            example: 'Avançando...',
+            tips: ["Tudo limpo, e a probabilidade confirmada."],
+            operation: 'addition',
             showBorders: false
           }
-        }
-      ]
-    },
-    {
-      id: 'gari-unit-16',
-      number: 16,
-      title: "Sacola de materiais",
-      shortDesc: "Tirando às cegas",
-      icon: 'Briefcase',
-      xpReward: 50,
-      color: 'emerald',
-      steps: [
+        },
         {
-          id: 'step-16-1',
+          id: 'step-5-3',
           title: "Atividade 16 — O saco de recicláveis",
           mascotTip: "O gari carrega um saco opaco de materiais recicláveis: latinhas, papel e plástico.",
           conceptCard: {
@@ -637,24 +516,13 @@ export const trackGari: Track = {
             successMessage: "Você compreende perfeitamente a relação de quantidade e chance!"
           },
           notebookGuide: {
-            instruction: "Reciclar exige separar bem os materiais.",
-            example: 'Avançando...',
+            tips: ["Reciclar exige separar bem os materiais."],
+            operation: 'addition',
             showBorders: false
           }
-        }
-      ]
-    },
-    {
-      id: 'gari-unit-17',
-      number: 17,
-      title: "Dado e sorteio de 1 a 10",
-      shortDesc: "Eventos independentes",
-      icon: 'Hash',
-      xpReward: 50,
-      color: 'emerald',
-      steps: [
+        },
         {
-          id: 'step-17-1',
+          id: 'step-5-4',
           title: "Atividade 17 — Número 7 no sorteio",
           mascotTip: "No intervalo, o gari vê crianças brincando com fichas numeradas de 1 a 10.",
           conceptCard: {
@@ -677,24 +545,24 @@ export const trackGari: Track = {
             explanationOnError: "A pergunta não pede 7 fichas, mas sim a ÚNICA ficha que tem o desenho do 7."
           },
           notebookGuide: {
-            instruction: "As crianças aplaudem a aula de estatística improvisada.",
-            example: 'Avançando...',
+            tips: ["As crianças aplaudem a aula de estatística improvisada."],
+            operation: 'addition',
             showBorders: false
           }
         }
       ]
     },
     {
-      id: 'gari-unit-18',
-      number: 18,
-      title: "Frequências 20, 12, 10 e 5",
-      shortDesc: "Estatística básica",
-      icon: 'BarChart2',
+      id: 'gari-unit-6',
+      number: 6,
+      title: "Estatística da coleta",
+      shortDesc: "Frações e massas",
+      icon: 'PieChart',
       xpReward: 50,
       color: 'emerald',
       steps: [
         {
-          id: 'step-18-1',
+          id: 'step-6-1',
           title: "Atividade 18 — Registro da coleta",
           mascotTip: "Fim do dia. O gari precisa registrar quantos sacos de cada cor ele recolheu na planilha.",
           conceptCard: {
@@ -717,24 +585,13 @@ export const trackGari: Track = {
             explanationOnError: "A fração se escreve: Quantidade Verde sobre a Quantidade Total."
           },
           notebookGuide: {
-            instruction: "Planilha preenchida com sucesso.",
-            example: 'Avançando...',
+            tips: ["Planilha preenchida com sucesso."],
+            operation: 'addition',
             showBorders: false
           }
-        }
-      ]
-    },
-    {
-      id: 'gari-unit-19',
-      number: 19,
-      title: "Pizza em dez partes",
-      shortDesc: "Fração e decimal",
-      icon: 'PieChart',
-      xpReward: 50,
-      color: 'emerald',
-      steps: [
+        },
         {
-          id: 'step-19-1',
+          id: 'step-6-2',
           title: "Atividade 19 — O lanche da equipe",
           mascotTip: "A equipe pediu uma pizza gigante de 10 pedaços para dividir na hora do lanche.",
           conceptCard: {
@@ -757,24 +614,13 @@ export const trackGari: Track = {
             explanationOnError: "Se temos décimos, a vírgula anda uma casa: 0,1."
           },
           notebookGuide: {
-            instruction: "Depois do lanche, de volta ao trabalho pesado.",
-            example: 'Avançando...',
+            tips: ["Depois do lanche, de volta ao trabalho pesado."],
+            operation: 'addition',
             showBorders: false
           }
-        }
-      ]
-    },
-    {
-      id: 'gari-unit-20',
-      number: 20,
-      title: "Medida de massa",
-      shortDesc: "mg, g, kg",
-      icon: 'Scale3d',
-      xpReward: 50,
-      color: 'emerald',
-      steps: [
+        },
         {
-          id: 'step-20-1',
+          id: 'step-6-3',
           title: "Atividade 20 — Formiga ou caminhão?",
           mascotTip: "O gari encontra uma formiguinha carregando uma folha perto do caminhão de lixo.",
           conceptCard: {
@@ -797,24 +643,13 @@ export const trackGari: Track = {
             explanationOnError: "A formiga é levíssima. Precisamos da menor unidade possível."
           },
           notebookGuide: {
-            instruction: "Até os menores seres da natureza têm sua matemática.",
-            example: 'Avançando...',
+            tips: ["Até os menores seres da natureza têm sua matemática."],
+            operation: 'addition',
             showBorders: false
           }
-        }
-      ]
-    },
-    {
-      id: 'gari-unit-21',
-      number: 21,
-      title: "Gráfico PET",
-      shortDesc: "Toneladas e quilogramas",
-      icon: 'BarChart',
-      xpReward: 50,
-      color: 'emerald',
-      steps: [
+        },
         {
-          id: 'step-21-1',
+          id: 'step-6-4',
           title: "Atividade 21 — Relatório anual",
           mascotTip: "No painel da empresa, há um gráfico de barras das garrafas PET recicladas de 2014 a 2018.",
           conceptCard: {
@@ -837,24 +672,24 @@ export const trackGari: Track = {
             explanationOnError: "Lembre-se: 26 vezes 1000. Adicione três zeros ao número 26."
           },
           notebookGuide: {
-            instruction: "Números impressionantes! E a reciclagem salva a cidade.",
-            example: 'Avançando...',
+            tips: ["Números impressionantes! E a reciclagem salva a cidade."],
+            operation: 'addition',
             showBorders: false
           }
         }
       ]
     },
     {
-      id: 'gari-unit-22',
-      number: 22,
-      title: "Sequência repetitiva",
-      shortDesc: "Padrões",
-      icon: 'Repeat',
+      id: 'gari-unit-7',
+      number: 7,
+      title: "A revisão final",
+      shortDesc: "Padrões e 3D",
+      icon: 'CheckSquare',
       xpReward: 50,
       color: 'emerald',
       steps: [
         {
-          id: 'step-22-1',
+          id: 'step-7-1',
           title: "Atividade 22 — Os cones na avenida",
           mascotTip: "Para isolar uma rua, o gari organizou cones e placas em uma fila padronizada: Cone, Placa, Placa, Pneu...",
           conceptCard: {
@@ -876,24 +711,13 @@ export const trackGari: Track = {
             guideline: "Diga que o resto (3) aponta para o terceiro objeto do ciclo."
           },
           notebookGuide: {
-            instruction: "Com matemática, a gente prevê o futuro dos cones.",
-            example: 'Avançando...',
+            tips: ["Com matemática, a gente prevê o futuro dos cones."],
+            operation: 'addition',
             showBorders: false
           }
-        }
-      ]
-    },
-    {
-      id: 'gari-unit-23',
-      number: 23,
-      title: "Blocos de cubinhos",
-      shortDesc: "Raciocínio Espacial",
-      icon: 'Box',
-      xpReward: 50,
-      color: 'emerald',
-      steps: [
+        },
         {
-          id: 'step-23-1',
+          id: 'step-7-2',
           title: "Atividade 23 — A sucata volumétrica",
           mascotTip: "Ele acha 4 pedaços idênticos de isopor. Cada pedaço é formado por 2 cubinhos colados (como um paralelepípedo).",
           conceptCard: {
@@ -917,24 +741,13 @@ export const trackGari: Track = {
             successMessage: "Exato! A peça de isopor não se dobra nem se quebra."
           },
           notebookGuide: {
-            instruction: "O caminhão vai amassar tudo isso de qualquer jeito.",
-            example: 'Avançando...',
+            tips: ["O caminhão vai amassar tudo isso de qualquer jeito."],
+            operation: 'addition',
             showBorders: false
           }
-        }
-      ]
-    },
-    {
-      id: 'gari-unit-24',
-      number: 24,
-      title: "Quadrados pintados",
-      shortDesc: "Revisão final",
-      icon: 'CheckSquare',
-      xpReward: 50,
-      color: 'emerald',
-      steps: [
+        },
         {
-          id: 'step-24-1',
+          id: 'step-7-3',
           title: "Atividade 24 — A pintura no fim do dia",
           mascotTip: "O gari termina o turno olhando para a parede pintada do refeitório. A figura sobre a malha de tijolos tem partes pintadas inteiras e metades.",
           conceptCard: {
@@ -957,8 +770,8 @@ export const trackGari: Track = {
             explanationOnError: "Lembre-se de juntar as partes triangulares."
           },
           notebookGuide: {
-            instruction: "O expediente do Gari chega ao fim. E com ele, toda essa imersão na matemática do dia a dia!",
-            example: 'Avançando...',
+            tips: ["O expediente do Gari chega ao fim. E com ele, toda essa imersão na matemática do dia a dia!"],
+            operation: 'addition',
             showBorders: false
           }
         }

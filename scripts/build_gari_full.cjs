@@ -1,10 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const data1 = require('./gen_gari_data1.cjs');
-const data2 = require('./gen_gari_data2.cjs');
-
-const allUnits = [...data1, ...data2];
+const allUnits = require('./gen_gari_data_grouped.cjs');
 
 function generateId(str) {
   return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -100,8 +97,8 @@ allUnits.forEach((u, uIndex) => {
     }
 
     lines.push(`          notebookGuide: {`);
-    lines.push(`            instruction: ${JSON.stringify(act.transicao)},`);
-    lines.push(`            example: 'Avançando...',`);
+    lines.push(`            tips: [${JSON.stringify(act.transicao)}],`);
+    lines.push(`            operation: 'addition',`);
     lines.push(`            showBorders: false`);
     lines.push(`          }`);
 
