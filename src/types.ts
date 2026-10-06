@@ -359,7 +359,7 @@ export interface LessonStep {
     correctPieces: number[];
   };
 
-  gariInteraction?: { type: 'path-draw' | 'measure' | 'paint' | 'cubes' | 'roulette'; data: any; onComplete: () => void; };
+  gariInteraction?: { type: string; data: any; onComplete?: () => void; };
   wordProblem?: {
     story: string;
     question: string;

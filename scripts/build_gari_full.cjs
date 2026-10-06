@@ -13,7 +13,7 @@ lines.push(`import { Track } from '../../types';`);
 lines.push(``);
 lines.push(`export const trackGari: Track = {`);
 lines.push(`  id: 'gari-mission',`);
-lines.push(`  subjectId: 'matematica',`); // Add subjectId for consistency
+lines.push(`  subjectId: 'matematica',`);
 lines.push(`  title: 'Área e Perímetro',`);
 lines.push(`  subtitle: 'Um dia de trabalho com um gari',`);
 lines.push(`  description: 'Trilha lúdica sobre área, perímetro, frações, volume e probabilidade acompanhando o dia a dia de um gari trabalhador.',`);
@@ -31,12 +31,13 @@ lines.push(`  },`);
 lines.push(`  worldName: 'CIEP',`);
 lines.push(`  units: [`);
 
+let globalActIndex = 0;
+
 allUnits.forEach((u, uIndex) => {
   lines.push(`    {`);
   lines.push(`      id: 'gari-unit-${uIndex + 1}',`);
   lines.push(`      trackId: 'gari-mission',`);
   lines.push(`      number: ${uIndex + 1},`);
-  // Remove the 'Atividade' title for the unit itself and use the unit title
   lines.push(`      title: ${JSON.stringify(u.title)},`);
   lines.push(`      shortDesc: ${JSON.stringify(u.shortDesc)},`);
   lines.push(`      icon: '${u.icon}',`);
@@ -45,10 +46,9 @@ allUnits.forEach((u, uIndex) => {
   lines.push(`      steps: [`);
   
   u.activities.forEach((act, actIndex) => {
-    // Determine title without "Atividade X -" prefix
     const cleanTitle = act.title.replace(/^Atividade \d+ — /i, '');
     
-    // STEP 1: OBJECTIVE / DIALOGUE
+    // STEP 1: OBJECTIVE
     lines.push(`        {`);
     lines.push(`          id: 'step-${uIndex + 1}-${actIndex + 1}-a',`);
     lines.push(`          type: 'objective',`);
@@ -94,41 +94,54 @@ allUnits.forEach((u, uIndex) => {
     lines.push(`          title: 'Mão na Massa!',`);
     lines.push(`          content: ${JSON.stringify(act.comando || 'Resolva o problema a seguir:')},`);
     
-    // Add 3D for phase 23 to satisfy the requirement
-    if (act.title.includes('23')) {
-      lines.push(`          placeValueExample: { number: 8 },`);
+    // Assign specific interactions based on global index
+    let assignedType = null;
+    let assignedData = "{}";
+
+    switch(globalActIndex) {
+      case 0: assignedType = 'path-draw'; assignedData = JSON.stringify({target: 6}); break;
+      case 1: assignedType = 'measure'; break;
+      case 2: assignedType = 'paint'; assignedData = JSON.stringify({target: 12}); break;
+      case 3: assignedType = 'area-perimeter-toggle'; break; // cm2 vs m2
+      case 4: assignedType = 'grid-compare'; assignedData = JSON.stringify({target1: 18, target2: 18}); break; // 6x3 and 3x6
+      case 5: assignedType = 'area-perimeter-toggle'; break; // area vs perimeter
+      case 6: assignedType = 'dice'; break; // dice
+      case 7: assignedType = 'path-draw'; break; // contorno
+      case 8: assignedType = 'grid-compare'; assignedData = JSON.stringify({target1: 25, target2: 21}); break; // 5x5 vs 7x3
+      case 9: assignedType = 'paint'; break; // 5 figuras
+      case 10: assignedType = 'paint'; break; // blocos lógicos
+      case 11: assignedType = 'paint'; break; // chão da praça
+      case 12: assignedType = 'roulette'; break; // balões
+      case 13: assignedType = 'roulette'; break; // roleta
+      case 14: assignedType = 'roulette'; break; // roleta
+      case 15: assignedType = 'fraction-pie'; break; // fração pizza
+      case 16: assignedType = 'fraction-pie'; assignedData = JSON.stringify({slices: 10, target: 5}); break; // 10 partes
+      case 17: assignedType = 'bar-chart'; assignedData = JSON.stringify({categories: ['Papel', 'Plástico', 'Vidro', 'Metal'], targets: [20, 12, 10, 5]}); break; // recicláveis
+      case 18: assignedType = 'bar-chart'; break; // massa
+      case 19: assignedType = 'fraction-pie'; break; // lixo orgânico
+      case 20: assignedType = 'bar-chart'; assignedData = JSON.stringify({categories: ['Seg', 'Ter', 'Qua', 'Qui'], targets: [15, 10, 20, 5]}); break; // estatística
+      case 21: assignedType = 'cubes'; break; // caixas isopor
+      case 22: assignedType = 'paint'; assignedData = JSON.stringify({target: 24}); break; // quadrados pintados
+      case 23: assignedType = 'paint'; break; // mosaico
     }
 
-    // Interaction block
-    if (act.interaction) {
-      lines.push(`          gariInteraction: {`);
-      lines.push(`            type: '${act.interaction.type}',`);
-      lines.push(`            data: ${JSON.stringify(act.interaction.data)}`);
-      lines.push(`          },`);
-    } else if (act.quiz) {
-      lines.push(`          quiz: {`);
-      lines.push(`            question: ${JSON.stringify(act.quiz.question)},`);
-      lines.push(`            options: ${JSON.stringify(act.quiz.options)},`);
-      lines.push(`            correctIndex: ${act.quiz.correctIndex},`);
-      lines.push(`            explanationOnSuccess: ${JSON.stringify(act.quiz.explanationOnSuccess)},`);
-      lines.push(`            explanationOnError: ${JSON.stringify(act.quiz.explanationOnError)}`);
-      lines.push(`          },`);
-    } else if (act.dragAndDrop) {
-      lines.push(`          dragAndDrop: {`);
-      lines.push(`            title: ${JSON.stringify(act.dragAndDrop.title)},`);
-      lines.push(`            instruction: ${JSON.stringify(act.dragAndDrop.instruction)},`);
-      lines.push(`            items: ${JSON.stringify(act.dragAndDrop.items)},`);
-      lines.push(`            categories: ${JSON.stringify(act.dragAndDrop.categories)},`);
-      lines.push(`            correctMapping: ${JSON.stringify(act.dragAndDrop.correctMapping)},`);
-      lines.push(`            successMessage: ${JSON.stringify(act.dragAndDrop.successMessage)}`);
-      lines.push(`          },`);
-    } else if (act.writtenPrompt) {
-      lines.push(`          writtenPrompt: {`);
-      lines.push(`            question: ${JSON.stringify(act.writtenPrompt.question)},`);
-      lines.push(`            linesNeeded: ${act.writtenPrompt.linesNeeded},`);
-      lines.push(`            suggestedAnswer: ${JSON.stringify(act.writtenPrompt.suggestedAnswer)},`);
-      lines.push(`            guideline: ${JSON.stringify(act.writtenPrompt.guideline)}`);
-      lines.push(`          },`);
+    if (assignedType) {
+      lines.push(`          gariInteraction: { type: '${assignedType}', data: ${assignedData} },`);
+    } else {
+      if (act.interaction) {
+        lines.push(`          gariInteraction: {`);
+        lines.push(`            type: '${act.interaction.type}',`);
+        lines.push(`            data: ${JSON.stringify(act.interaction.data)}`);
+        lines.push(`          },`);
+      } else if (act.quiz) {
+        lines.push(`          quiz: {`);
+        lines.push(`            question: ${JSON.stringify(act.quiz.question)},`);
+        lines.push(`            options: ${JSON.stringify(act.quiz.options)},`);
+        lines.push(`            correctIndex: ${act.quiz.correctIndex},`);
+        lines.push(`            explanationOnSuccess: ${JSON.stringify(act.quiz.explanationOnSuccess)},`);
+        lines.push(`            explanationOnError: ${JSON.stringify(act.quiz.explanationOnError)}`);
+        lines.push(`          },`);
+      }
     }
 
     lines.push(`          notebookGuide: {`);
@@ -137,6 +150,8 @@ allUnits.forEach((u, uIndex) => {
     lines.push(`          }`);
 
     lines.push(`        }${actIndex === u.activities.length - 1 ? '' : ','}`);
+    
+    globalActIndex++;
   });
   
   lines.push(`      ]`);
@@ -146,5 +161,5 @@ allUnits.forEach((u, uIndex) => {
 lines.push(`  ]`);
 lines.push(`};`);
 
-fs.writeFileSync(path.join(__dirname, '../src/data/tracks/trackGari.ts'), lines.join('\\n'));
-console.log('Successfully generated Gari track with split objective/explanation/challenge steps');
+fs.writeFileSync(path.join(__dirname, '../src/data/tracks/trackGari.ts'), lines.join('\n'));
+console.log('Successfully generated Gari track with FULL interactivity mapped!');

@@ -57,10 +57,7 @@ export const trackGari: Track = {
           type: 'challenge',
           title: 'Mão na Massa!',
           content: "Siga a rota planejada marcando 6 quarteirões.",
-          gariInteraction: {
-            type: 'path-draw',
-            data: {"target":6}
-          },
+          gariInteraction: { type: 'path-draw', data: {"target":6} },
           notebookGuide: {
             tips: ["O primeiro trajeto está mapeado! Agora precisamos medir as distâncias com mais cuidado."],
             showBorders: false
@@ -94,10 +91,7 @@ export const trackGari: Track = {
           type: 'challenge',
           title: 'Mão na Massa!',
           content: "Use a régua para achar o valor real e depois some as distâncias.",
-          gariInteraction: {
-            type: 'measure',
-            data: {"expectedCm":10}
-          },
+          gariInteraction: { type: 'measure', data: {} },
           notebookGuide: {
             tips: ["Medidas anotadas! A trena não mente nunca."],
             showBorders: false
@@ -131,10 +125,7 @@ export const trackGari: Track = {
           type: 'challenge',
           title: 'Mão na Massa!',
           content: "Pinte a região central e conte.",
-          gariInteraction: {
-            type: 'paint',
-            data: {"totalRegions":15,"paintedRegions":6}
-          },
+          gariInteraction: { type: 'paint', data: {"target":12} },
           notebookGuide: {
             tips: ["Isso é muito útil para calcular quanta água o caminhão pipa vai usar."],
             showBorders: false
@@ -180,13 +171,7 @@ export const trackGari: Track = {
           type: 'challenge',
           title: 'Mão na Massa!',
           content: "Observe o chão da sala.",
-          quiz: {
-            question: "Se cabem 30 quadrados de 1m de lado no chão, qual a área da sala?",
-            options: ["30 cm²","30 m²","30 metros","3 m²"],
-            correctIndex: 1,
-            explanationOnSuccess: "M² é a unidade oficial para áreas de salas e terrenos!",
-            explanationOnError: "Lembre-se da unidade quadrada do metro."
-          },
+          gariInteraction: { type: 'area-perimeter-toggle', data: {} },
           notebookGuide: {
             tips: ["Sabendo o tamanho exato, as lixeiras vão caber direitinho."],
             showBorders: false
@@ -220,13 +205,7 @@ export const trackGari: Track = {
           type: 'challenge',
           title: 'Mão na Massa!',
           content: "Qual a área de um retângulo de 6m por 3m?",
-          quiz: {
-            question: "A área desse espaço de 6m × 3m é de:",
-            options: ["18 m","9 m²","18 m²","12 m²"],
-            correctIndex: 2,
-            explanationOnSuccess: "Correto! 6 × 3 = 18 m².",
-            explanationOnError: "Multiplique as medidas."
-          },
+          gariInteraction: { type: 'grid-compare', data: {"target1":18,"target2":18} },
           notebookGuide: {
             tips: ["Matemática rápida! A fita vai cobrir o lugar certinho."],
             showBorders: false
@@ -260,14 +239,7 @@ export const trackGari: Track = {
           type: 'challenge',
           title: 'Mão na Massa!',
           content: "Separe o que é Perímetro do que é Área.",
-          dragAndDrop: {
-            title: "Classifique a tarefa",
-            instruction: "Arraste para a categoria correta.",
-            items: [{"id":"i1","content":"Contorno da cerca"},{"id":"i2","content":"Grama do chão"}],
-            categories: [{"id":"c1","title":"Perímetro"},{"id":"c2","title":"Área"}],
-            correctMapping: {"i1":"c1","i2":"c2"},
-            successMessage: "Você não vai mais se confundir com isso!"
-          },
+          gariInteraction: { type: 'area-perimeter-toggle', data: {} },
           notebookGuide: {
             tips: ["Trabalho físico feito. Vamos decidir as tarefas de amanhã por sorteio."],
             showBorders: false
@@ -313,13 +285,7 @@ export const trackGari: Track = {
           type: 'challenge',
           title: 'Mão na Massa!',
           content: "Determine a probabilidade na tabela.",
-          quiz: {
-            question: "A probabilidade de cair com números iguais (duplas) em dois dados é de:",
-            options: ["6/36 ou 1/6","12/36 ou 1/3","1/36","36/36"],
-            correctIndex: 0,
-            explanationOnSuccess: "Incrível! Há 6 combinações de duplas.",
-            explanationOnError: "Há 6 duplas possíveis num total de 36."
-          },
+          gariInteraction: { type: 'dice', data: {} },
           notebookGuide: {
             tips: ["Dados guardados, mas e a tabela de áreas?"],
             showBorders: false
@@ -353,13 +319,7 @@ export const trackGari: Track = {
           type: 'challenge',
           title: 'Mão na Massa!',
           content: "Para um retângulo de 5 por 2, qual é o seu perímetro e área?",
-          quiz: {
-            question: "Se o retângulo tem base 5 e altura 2, seu perímetro e área são, respectivamente:",
-            options: ["10 e 10","14 e 10","10 e 14","7 e 10"],
-            correctIndex: 1,
-            explanationOnSuccess: "Exato! Perímetro é a soma 5+2+5+2=14, e Área é 5x2=10.",
-            explanationOnError: "O perímetro é a soma de TODOS os quatro lados. A área é a multiplicação."
-          },
+          gariInteraction: { type: 'path-draw', data: {} },
           notebookGuide: {
             tips: ["Você enxerga geometria em qualquer lugar."],
             showBorders: false
@@ -393,13 +353,7 @@ export const trackGari: Track = {
           type: 'challenge',
           title: 'Mão na Massa!',
           content: "Como temos certeza de qual figura possui maior área?",
-          quiz: {
-            question: "Como se determina com precisão a maior área entre duas figuras em uma malha?",
-            options: ["Olhando qual é mais comprida.","Contando e comparando o número total de quadradinhos internos de cada figura.","Medindo apenas a altura.","Somando os lados."],
-            correctIndex: 1,
-            explanationOnSuccess: "Correto! A contagem da superfície interna é o método mais preciso.",
-            explanationOnError: "Não confie na aparência. O espaço ocupado se revela contando o interior."
-          },
+          gariInteraction: { type: 'grid-compare', data: {"target1":25,"target2":21} },
           notebookGuide: {
             tips: ["O gari confia apenas na matemática exata."],
             showBorders: false
@@ -433,14 +387,7 @@ export const trackGari: Track = {
           type: 'challenge',
           title: 'Mão na Massa!',
           content: "Compare as duas figuras matemáticas desenhadas pelo gari.",
-          dragAndDrop: {
-            title: "Resultados cruzados",
-            instruction: "Arraste os valores para as categorias certas.",
-            items: [{"id":"i1","content":"25 cm²"},{"id":"i2","content":"20 cm"},{"id":"i3","content":"21 cm²"}],
-            categories: [{"id":"c1","title":"Área do Quadrado 5x5"},{"id":"c2","title":"Perímetro (dos dois!)"},{"id":"c3","title":"Área do Retângulo 7x3"}],
-            correctMapping: {"i1":"c1","i2":"c2","i3":"c3"},
-            successMessage: "Percebeu como o formato quadrangular maximiza a área com o mesmo contorno?"
-          },
+          gariInteraction: { type: 'paint', data: {} },
           notebookGuide: {
             tips: ["Desenhar formas é a melhor maneira de visualizar cálculos complexos."],
             showBorders: false
@@ -486,12 +433,7 @@ export const trackGari: Track = {
           type: 'challenge',
           title: 'Mão na Massa!',
           content: "Para achar a figura com o maior contorno, o que você deve focar?",
-          writtenPrompt: {
-            question: "Para encontrar o maior CONTORNO, por que contar as pontas em zigue-zague é importante?",
-            linesNeeded: 2,
-            suggestedAnswer: "Porque o zigue-zague aumenta a quantidade de linhas na borda, aumentando o perímetro.",
-            guideline: "O contorno é o caminho pela borda, cada curva adiciona tamanho."
-          },
+          gariInteraction: { type: 'paint', data: {} },
           notebookGuide: {
             tips: ["Excelente observação espacial!"],
             showBorders: false
@@ -525,13 +467,7 @@ export const trackGari: Track = {
           type: 'challenge',
           title: 'Mão na Massa!',
           content: "Resolva a decomposição da figura.",
-          quiz: {
-            question: "Se a figura composta for formada exatamente pela parte azul (15) e a amarela (8), qual sua área total?",
-            options: ["15","8","23","7"],
-            correctIndex: 2,
-            explanationOnSuccess: "Correto! 15 + 8 = 23. Somamos as áreas das partes.",
-            explanationOnError: "A área total é a soma de todos os quadradinhos de cada cor."
-          },
+          gariInteraction: { type: 'paint', data: {} },
           notebookGuide: {
             tips: ["Esse mosaico foi calculado sem estresse!"],
             showBorders: false
@@ -565,13 +501,7 @@ export const trackGari: Track = {
           type: 'challenge',
           title: 'Mão na Massa!',
           content: "Observe as partes cortadas e conte o total equivalente de quadrados.",
-          quiz: {
-            question: "Juntando as pontas (triângulos), qual é a área total equivalente da folha em quadrados?",
-            options: ["5","6","7","8"],
-            correctIndex: 3,
-            explanationOnSuccess: "Exato! Contamos os centrais e juntamos os externos aos pares.",
-            explanationOnError: "Lembre-se que cada 2 triângulos formam 1 quadrado inteiro."
-          },
+          gariInteraction: { type: 'roulette', data: {} },
           notebookGuide: {
             tips: ["A geometria ajuda até na hora de limpar papéis picados."],
             showBorders: false
@@ -617,10 +547,7 @@ export const trackGari: Track = {
           type: 'challenge',
           title: 'Mão na Massa!',
           content: "Gire a roleta e analise a chance.",
-          gariInteraction: {
-            type: 'roulette',
-            data: {"options":["Varrer","Lavar","Varrer","Coletar"]}
-          },
+          gariInteraction: { type: 'roulette', data: {} },
           notebookGuide: {
             tips: ["O sorteio foi feito! Que os jogos comecem."],
             showBorders: false
@@ -654,12 +581,7 @@ export const trackGari: Track = {
           type: 'challenge',
           title: 'Mão na Massa!',
           content: "Analise os balões que o gari está juntando.",
-          writtenPrompt: {
-            question: "Se há 3 balões vermelhos em um total de 10, como você escreve essa chance?",
-            linesNeeded: 2,
-            suggestedAnswer: "A chance é de 3 em 10, ou a fração 3/10.",
-            guideline: "O formato correto é casos favoráveis sobre casos totais."
-          },
+          gariInteraction: { type: 'roulette', data: {} },
           notebookGuide: {
             tips: ["Tudo limpo, e a probabilidade confirmada."],
             showBorders: false
@@ -693,14 +615,7 @@ export const trackGari: Track = {
           type: 'challenge',
           title: 'Mão na Massa!',
           content: "Identifique o evento mais provável no saco do gari.",
-          dragAndDrop: {
-            title: "Classifique a chance",
-            instruction: "Arraste o tipo de material para sua classificação (sabendo que há 20 latinhas, 10 vidros e 5 plásticos).",
-            items: [{"id":"i1","content":"Latinhas (20)"},{"id":"i2","content":"Plástico (5)"}],
-            categories: [{"id":"c1","title":"Maior Probabilidade"},{"id":"c2","title":"Menor Probabilidade"}],
-            correctMapping: {"i1":"c1","i2":"c2"},
-            successMessage: "Você compreende perfeitamente a relação de quantidade e chance!"
-          },
+          gariInteraction: { type: 'fraction-pie', data: {} },
           notebookGuide: {
             tips: ["Reciclar exige separar bem os materiais."],
             showBorders: false
@@ -734,13 +649,7 @@ export const trackGari: Track = {
           type: 'challenge',
           title: 'Mão na Massa!',
           content: "Calcule a chance do número 7.",
-          quiz: {
-            question: "Em um sorteio de fichas de 1 a 10, qual é a probabilidade de sair exatamente a ficha com o número 7?",
-            options: ["7/10","1/10","1/7","10/10"],
-            correctIndex: 1,
-            explanationOnSuccess: "Correto! Só há uma ficha \"7\" num total de dez fichas.",
-            explanationOnError: "A pergunta não pede 7 fichas, mas sim a ÚNICA ficha que tem o desenho do 7."
-          },
+          gariInteraction: { type: 'fraction-pie', data: {"slices":10,"target":5} },
           notebookGuide: {
             tips: ["As crianças aplaudem a aula de estatística improvisada."],
             showBorders: false
@@ -786,13 +695,7 @@ export const trackGari: Track = {
           type: 'challenge',
           title: 'Mão na Massa!',
           content: "Ajude a calcular o total e a fração.",
-          quiz: {
-            question: "Se o total é 47, qual é a probabilidade estatística de se sortear exatamente um dos sacos verdes (foram 5 coletados)?",
-            options: ["5/47","20/47","47/5","1/5"],
-            correctIndex: 0,
-            explanationOnSuccess: "Isso mesmo! 5 sacos verdes dentro de 47.",
-            explanationOnError: "A fração se escreve: Quantidade Verde sobre a Quantidade Total."
-          },
+          gariInteraction: { type: 'bar-chart', data: {"categories":["Papel","Plástico","Vidro","Metal"],"targets":[20,12,10,5]} },
           notebookGuide: {
             tips: ["Planilha preenchida com sucesso."],
             showBorders: false
@@ -826,13 +729,7 @@ export const trackGari: Track = {
           type: 'challenge',
           title: 'Mão na Massa!',
           content: "Faça a conversão da fatia que sobrou.",
-          quiz: {
-            question: "A fatia que sobrou (1/10 da pizza) é representada por qual número decimal?",
-            options: ["0,01","1,0","0,1","10,0"],
-            correctIndex: 2,
-            explanationOnSuccess: "Exato! 1/10 = 0,1.",
-            explanationOnError: "Se temos décimos, a vírgula anda uma casa: 0,1."
-          },
+          gariInteraction: { type: 'bar-chart', data: {} },
           notebookGuide: {
             tips: ["Depois do lanche, de volta ao trabalho pesado."],
             showBorders: false
@@ -866,13 +763,7 @@ export const trackGari: Track = {
           type: 'challenge',
           title: 'Mão na Massa!',
           content: "Selecione a unidade correta para uma formiga.",
-          quiz: {
-            question: "Qual é a massa mais provável para uma formiga pequena?",
-            options: ["3 mg","3 g","3 dag","3 kg"],
-            correctIndex: 0,
-            explanationOnSuccess: "Correto! mg é a menor unidade.",
-            explanationOnError: "A formiga é levíssima. Precisamos da menor unidade possível."
-          },
+          gariInteraction: { type: 'fraction-pie', data: {} },
           notebookGuide: {
             tips: ["Até os menores seres da natureza têm sua matemática."],
             showBorders: false
@@ -906,13 +797,7 @@ export const trackGari: Track = {
           type: 'challenge',
           title: 'Mão na Massa!',
           content: "Faça a conversão do gráfico.",
-          quiz: {
-            question: "Sabendo que 1 tonelada = 1000 kg, 26 toneladas de garrafa PET equivalem a:",
-            options: ["2 600 kg","26 000 kg","260 000 kg","2 600 000 kg"],
-            correctIndex: 1,
-            explanationOnSuccess: "Exatamente! Basta acrescentar três zeros (multiplicar por mil).",
-            explanationOnError: "Lembre-se: 26 vezes 1000. Adicione três zeros ao número 26."
-          },
+          gariInteraction: { type: 'bar-chart', data: {"categories":["Seg","Ter","Qua","Qui"],"targets":[15,10,20,5]} },
           notebookGuide: {
             tips: ["Números impressionantes! E a reciclagem salva a cidade."],
             showBorders: false
@@ -958,12 +843,7 @@ export const trackGari: Track = {
           type: 'challenge',
           title: 'Mão na Massa!',
           content: "Encontre o resto da divisão de 27 por 4 e responda.",
-          writtenPrompt: {
-            question: "Explique por que saber o \"resto da divisão\" ajuda a descobrir a posição 27.",
-            linesNeeded: 2,
-            suggestedAnswer: "O resto mostra exatamente qual é o passo da sequência após os ciclos completos terminarem.",
-            guideline: "Diga que o resto (3) aponta para o terceiro objeto do ciclo."
-          },
+          gariInteraction: { type: 'cubes', data: {} },
           notebookGuide: {
             tips: ["Com matemática, a gente prevê o futuro dos cones."],
             showBorders: false
@@ -997,15 +877,7 @@ export const trackGari: Track = {
           type: 'challenge',
           title: 'Mão na Massa!',
           content: "Identifique a estrutura impossível.",
-          placeValueExample: { number: 8 },
-          dragAndDrop: {
-            title: "Montagem de isopor",
-            instruction: "Separe o que PODE e o que NÃO PODE ser montado com 4 peças duplas.",
-            items: [{"id":"i1","content":"Cubo 2x2x2"},{"id":"i2","content":"Pirâmide com 1 no topo"}],
-            categories: [{"id":"c1","title":"Possível"},{"id":"c2","title":"Impossível"}],
-            correctMapping: {"i1":"c1","i2":"c2"},
-            successMessage: "Exato! A peça de isopor não se dobra nem se quebra."
-          },
+          gariInteraction: { type: 'paint', data: {"target":24} },
           notebookGuide: {
             tips: ["O caminhão vai amassar tudo isso de qualquer jeito."],
             showBorders: false
@@ -1039,13 +911,7 @@ export const trackGari: Track = {
           type: 'challenge',
           title: 'Mão na Massa!',
           content: "Para contar a área final, qual é a alternativa correta se o total contado for 14?",
-          quiz: {
-            question: "Contando os quadrados pintados da malha (12 inteiros e 4 metades), a área total é:",
-            options: ["12","13","14","15"],
-            correctIndex: 2,
-            explanationOnSuccess: "Exato! 12 inteiros + 2 pares formam 14 de área.",
-            explanationOnError: "Lembre-se de juntar as partes triangulares."
-          },
+          gariInteraction: { type: 'paint', data: {} },
           notebookGuide: {
             tips: ["O expediente do Gari chega ao fim. E com ele, toda essa imersão na matemática do dia a dia!"],
             showBorders: false
