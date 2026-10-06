@@ -233,8 +233,13 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
   // ── Tela de conclusão ─────────────────────────────────────────────────────
   if (isCompleted) {
     return (
-      <div className="fixed inset-0 z-[90] flex flex-col items-center justify-center p-6 text-center lesson-bg overflow-y-auto">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-amber-500/25 to-transparent" />
+      <div className="fixed inset-0 z-[90] flex flex-col items-center justify-center p-6 text-center overflow-y-auto bg-[#020617]">
+        {/* Background image layers from Trail */}
+        <div className="absolute inset-0 z-0 md:hidden pointer-events-none" aria-hidden="true" style={{ backgroundImage: "url('/assets/trilhas/fundo-ciep-rio-vertical.png')", backgroundSize: 'cover', backgroundPosition: 'center top', backgroundRepeat: 'no-repeat' }} />
+        <div className="absolute inset-0 z-0 hidden md:block pointer-events-none" aria-hidden="true" style={{ backgroundImage: "url('/assets/trilhas/fundo-mapa-ciep-aventura-pc.jpg')", backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} />
+        <div className="trail-scrim absolute inset-0 z-[1] pointer-events-none" aria-hidden="true" />
+
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-amber-500/25 to-transparent z-[2]" />
 
         <div className="relative z-10 max-w-md w-full animate-trail-enter">
           <div className="w-24 h-24 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-yellow-300 via-amber-400 to-orange-500 flex items-center justify-center shadow-2xl shadow-amber-600/40 border-4 border-yellow-200/70 lesson-pop">
@@ -359,11 +364,16 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
 
   // ── Tela principal do desafio ─────────────────────────────────────────────
   return (
-    <div className="fixed inset-0 z-[90] flex flex-col overflow-hidden lesson-bg">
+    <div className="fixed inset-0 z-[90] flex flex-col overflow-hidden bg-[#020617]">
+      {/* Background image layers from Trail */}
+      <div className="absolute inset-0 z-0 md:hidden pointer-events-none" aria-hidden="true" style={{ backgroundImage: "url('/assets/trilhas/fundo-ciep-rio-vertical.png')", backgroundSize: 'cover', backgroundPosition: 'center top', backgroundRepeat: 'no-repeat' }} />
+      <div className="absolute inset-0 z-0 hidden md:block pointer-events-none" aria-hidden="true" style={{ backgroundImage: "url('/assets/trilhas/fundo-mapa-ciep-aventura-pc.jpg')", backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} />
+      <div className="trail-scrim absolute inset-0 z-[1] pointer-events-none" aria-hidden="true" />
+
       {/* Brilho ambiente com a cor da etapa (troca suave a cada etapa) */}
       <div
         key={`ambient-${currentStepIndex}`}
-        className={`pointer-events-none absolute inset-x-0 top-0 h-64 bg-gradient-to-b ${theme.ambient} to-transparent z-0 lesson-card-in`}
+        className={`pointer-events-none absolute inset-x-0 top-0 h-64 bg-gradient-to-b ${theme.ambient} to-transparent z-[2] lesson-card-in`}
         aria-hidden="true"
       />
 
