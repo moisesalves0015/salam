@@ -50,10 +50,10 @@ allUnits.forEach((u, uIndex) => {
     // Concept Card with dialogue and explanation
     lines.push(`          conceptCard: {`);
     lines.push(`            title: 'No dia a dia do Gari...',`);
-    lines.push(`            paragraphs: [`);
-    lines.push(`              ${JSON.stringify('O gari diz: "' + act.fala + '"')},`);
-    lines.push(`              ${JSON.stringify('💡 ' + act.explicacao)},`);
-    lines.push(`              ${JSON.stringify(act.detalhePedagogico)}`);
+    lines.push(`            points: [`);
+    lines.push(`              { label: 'Ouvindo o Gari', text: ${JSON.stringify('O gari diz: "' + act.fala + '"')}, iconName: 'MessageSquare' },`);
+    lines.push(`              { label: 'O Conceito', text: ${JSON.stringify('💡 ' + act.explicacao)}, iconName: 'Lightbulb' },`);
+    lines.push(`              { label: 'Dica de Ouro', text: ${JSON.stringify(act.detalhePedagogico)}, iconName: 'Star' }`);
     lines.push(`            ]`);
     lines.push(`          },`);
     

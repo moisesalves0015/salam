@@ -30,10 +30,10 @@ export const trackGari: Track = {
           mascotTip: "O gari espalha um mapa quadriculado na mesa. \"Hoje a nossa rota vai ser desenhada passo a passo!\"",
           conceptCard: {
             title: 'No dia a dia do Gari...',
-            paragraphs: [
-              "O gari diz: \"Cada segmento do quadrado é uma quadra. Para onde vamos?\"",
-              "💡 Um trajeto precisa de quantidade e direção. Contamos os lados percorridos na malha.",
-              "A direção (direita, cima) muda a cada esquina. Conte apenas os lados, não os vértices."
+            points: [
+              { label: 'Ouvindo o Gari', text: "O gari diz: \"Cada segmento do quadrado é uma quadra. Para onde vamos?\"", iconName: 'MessageSquare' },
+              { label: 'O Conceito', text: "💡 Um trajeto precisa de quantidade e direção. Contamos os lados percorridos na malha.", iconName: 'Lightbulb' },
+              { label: 'Dica de Ouro', text: "A direção (direita, cima) muda a cada esquina. Conte apenas os lados, não os vértices.", iconName: 'Star' }
             ]
           },
           explanation: {
@@ -67,10 +67,10 @@ export const trackGari: Track = {
           mascotTip: "O gari saca uma trena do cinto e olha para um canteiro.",
           conceptCard: {
             title: 'No dia a dia do Gari...',
-            paragraphs: [
-              "O gari diz: \"Sem a régua, quanto você acha que mede o lado desse canteirinho? Estime!\"",
-              "💡 Estimar é tentar chegar próximo ao valor real com base na intuição.",
-              "Depois usamos o instrumento (régua) para achar a medida exata. O perímetro total é a soma dessas medidas."
+            points: [
+              { label: 'Ouvindo o Gari', text: "O gari diz: \"Sem a régua, quanto você acha que mede o lado desse canteirinho? Estime!\"", iconName: 'MessageSquare' },
+              { label: 'O Conceito', text: "💡 Estimar é tentar chegar próximo ao valor real com base na intuição.", iconName: 'Lightbulb' },
+              { label: 'Dica de Ouro', text: "Depois usamos o instrumento (régua) para achar a medida exata. O perímetro total é a soma dessas medidas.", iconName: 'Star' }
             ]
           },
           explanation: {
@@ -104,10 +104,10 @@ export const trackGari: Track = {
           mascotTip: "A praça central é dividida em canteiros de formatos exóticos.",
           conceptCard: {
             title: 'No dia a dia do Gari...',
-            paragraphs: [
-              "O gari diz: \"O contorno já sabemos, mas quanto de grama cabe aqui dentro?\"",
-              "💡 Área é a quantidade de superfície interna de uma figura.",
-              "Figuras de formatos diferentes podem ter exatamente a mesma área se possuírem a mesma quantidade de quadrados."
+            points: [
+              { label: 'Ouvindo o Gari', text: "O gari diz: \"O contorno já sabemos, mas quanto de grama cabe aqui dentro?\"", iconName: 'MessageSquare' },
+              { label: 'O Conceito', text: "💡 Área é a quantidade de superfície interna de uma figura.", iconName: 'Lightbulb' },
+              { label: 'Dica de Ouro', text: "Figuras de formatos diferentes podem ter exatamente a mesma área se possuírem a mesma quantidade de quadrados.", iconName: 'Star' }
             ]
           },
           explanation: {
@@ -141,10 +141,10 @@ export const trackGari: Track = {
           mascotTip: "O gari entra na escola para ajudar a arrastar as mesas de reciclagem.",
           conceptCard: {
             title: 'No dia a dia do Gari...',
-            paragraphs: [
-              "O gari diz: \"Aqui dentro a gente não mede em centímetros. Vamos usar o Metro!\"",
-              "💡 Em espaços grandes usamos o Metro Quadrado (m²), que é um quadrado de 1m por 1m.",
-              "Se a área do piso for coberta por 30 desses quadrados de 1 metro, a área total é 30 m²."
+            points: [
+              { label: 'Ouvindo o Gari', text: "O gari diz: \"Aqui dentro a gente não mede em centímetros. Vamos usar o Metro!\"", iconName: 'MessageSquare' },
+              { label: 'O Conceito', text: "💡 Em espaços grandes usamos o Metro Quadrado (m²), que é um quadrado de 1m por 1m.", iconName: 'Lightbulb' },
+              { label: 'Dica de Ouro', text: "Se a área do piso for coberta por 30 desses quadrados de 1 metro, a área total é 30 m².", iconName: 'Star' }
             ]
           },
           explanation: {
@@ -181,10 +181,10 @@ export const trackGari: Track = {
           mascotTip: "O gari estende a faixa em uma área retangular de asfalto recém pintado.",
           conceptCard: {
             title: 'No dia a dia do Gari...',
-            paragraphs: [
-              "O gari diz: \"A área mede 6 metros de comprimento por 3 metros de largura. E agora?\"",
-              "💡 A área de um retângulo é calculada multiplicando o comprimento pela largura.",
-              "Multiplicar 6 por 3 significa que temos 3 fileiras de 6 quadrados de 1m²."
+            points: [
+              { label: 'Ouvindo o Gari', text: "O gari diz: \"A área mede 6 metros de comprimento por 3 metros de largura. E agora?\"", iconName: 'MessageSquare' },
+              { label: 'O Conceito', text: "💡 A área de um retângulo é calculada multiplicando o comprimento pela largura.", iconName: 'Lightbulb' },
+              { label: 'Dica de Ouro', text: "Multiplicar 6 por 3 significa que temos 3 fileiras de 6 quadrados de 1m².", iconName: 'Star' }
             ]
           },
           explanation: {
@@ -221,10 +221,10 @@ export const trackGari: Track = {
           mascotTip: "O gari coloca a fita na borda e depois varre o meio.",
           conceptCard: {
             title: 'No dia a dia do Gari...',
-            paragraphs: [
-              "O gari diz: \"A fita preta fica na borda (Perímetro). A vassoura passa no chão (Área).\"",
-              "💡 Perímetro soma os lados externos. Área conta o espaço de dentro.",
-              "Nunca confunda! Para perímetro somamos (ex: 2+3+2+3). Para área multiplicamos (2x3)."
+            points: [
+              { label: 'Ouvindo o Gari', text: "O gari diz: \"A fita preta fica na borda (Perímetro). A vassoura passa no chão (Área).\"", iconName: 'MessageSquare' },
+              { label: 'O Conceito', text: "💡 Perímetro soma os lados externos. Área conta o espaço de dentro.", iconName: 'Lightbulb' },
+              { label: 'Dica de Ouro', text: "Nunca confunda! Para perímetro somamos (ex: 2+3+2+3). Para área multiplicamos (2x3).", iconName: 'Star' }
             ]
           },
           explanation: {
@@ -262,10 +262,10 @@ export const trackGari: Track = {
           mascotTip: "O gari senta num caixote, puxa 2 dados e brinca com a equipe.",
           conceptCard: {
             title: 'No dia a dia do Gari...',
-            paragraphs: [
-              "O gari diz: \"Vamos lançar dois dados. O total de combinações é 36. Quantas duplas de números iguais existem?\"",
-              "💡 A probabilidade compara os Casos Favoráveis com o Total de Casos (36).",
-              "Os casos favoráveis de duplas são (1,1), (2,2), (3,3), (4,4), (5,5), (6,6). São 6 chances em 36."
+            points: [
+              { label: 'Ouvindo o Gari', text: "O gari diz: \"Vamos lançar dois dados. O total de combinações é 36. Quantas duplas de números iguais existem?\"", iconName: 'MessageSquare' },
+              { label: 'O Conceito', text: "💡 A probabilidade compara os Casos Favoráveis com o Total de Casos (36).", iconName: 'Lightbulb' },
+              { label: 'Dica de Ouro', text: "Os casos favoráveis de duplas são (1,1), (2,2), (3,3), (4,4), (5,5), (6,6). São 6 chances em 36.", iconName: 'Star' }
             ]
           },
           explanation: {
@@ -302,10 +302,10 @@ export const trackGari: Track = {
           mascotTip: "No galpão, uma grande prateleira tem o formato de um retângulo feito de 10 quadradinhos (5x2).",
           conceptCard: {
             title: 'No dia a dia do Gari...',
-            paragraphs: [
-              "O gari diz: \"Olhando para este retângulo de caixas, qual é o comprimento e a largura?\"",
-              "💡 Comprimento é o número de quadradinhos na base. Largura é a altura lateral.",
-              "Se a base tem 5 quadradinhos e a altura tem 2, a área é 10. Mas o perímetro é 5+2+5+2 = 14."
+            points: [
+              { label: 'Ouvindo o Gari', text: "O gari diz: \"Olhando para este retângulo de caixas, qual é o comprimento e a largura?\"", iconName: 'MessageSquare' },
+              { label: 'O Conceito', text: "💡 Comprimento é o número de quadradinhos na base. Largura é a altura lateral.", iconName: 'Lightbulb' },
+              { label: 'Dica de Ouro', text: "Se a base tem 5 quadradinhos e a altura tem 2, a área é 10. Mas o perímetro é 5+2+5+2 = 14.", iconName: 'Star' }
             ]
           },
           explanation: {
@@ -342,10 +342,10 @@ export const trackGari: Track = {
           mascotTip: "O gari aponta para dois canteiros na calçada. Um é comprido, o outro é gordo.",
           conceptCard: {
             title: 'No dia a dia do Gari...',
-            paragraphs: [
-              "O gari diz: \"O comprido parece maior, né? Mas a matemática não se deixa enganar pela aparência.\"",
-              "💡 Para saber qual figura tem MAIOR área, você deve contar o número de quadradinhos de cada uma.",
-              "A Figura 1 pode ter 12 quadradinhos agrupados em um quadrado grosso, e a Figura 2 pode ter 14 esticados. A Figura 2 vence."
+            points: [
+              { label: 'Ouvindo o Gari', text: "O gari diz: \"O comprido parece maior, né? Mas a matemática não se deixa enganar pela aparência.\"", iconName: 'MessageSquare' },
+              { label: 'O Conceito', text: "💡 Para saber qual figura tem MAIOR área, você deve contar o número de quadradinhos de cada uma.", iconName: 'Lightbulb' },
+              { label: 'Dica de Ouro', text: "A Figura 1 pode ter 12 quadradinhos agrupados em um quadrado grosso, e a Figura 2 pode ter 14 esticados. A Figura 2 vence.", iconName: 'Star' }
             ]
           },
           explanation: {
@@ -382,10 +382,10 @@ export const trackGari: Track = {
           mascotTip: "Ele desenha no chão de giz: um quadrado de 5cm de lado e um retângulo de 7cm por 3cm.",
           conceptCard: {
             title: 'No dia a dia do Gari...',
-            paragraphs: [
-              "O gari diz: \"Os formatos são diferentes, os lados também. Mas vamos comparar a área e o perímetro deles!\"",
-              "💡 Quadrado: Área = 5x5=25, Perímetro = 5x4=20. Retângulo: Área = 7x3=21, Perímetro = 7+3+7+3=20.",
-              "Eles podem ter perímetros iguais (ambos 20cm), mas áreas diferentes (25cm² e 21cm²)."
+            points: [
+              { label: 'Ouvindo o Gari', text: "O gari diz: \"Os formatos são diferentes, os lados também. Mas vamos comparar a área e o perímetro deles!\"", iconName: 'MessageSquare' },
+              { label: 'O Conceito', text: "💡 Quadrado: Área = 5x5=25, Perímetro = 5x4=20. Retângulo: Área = 7x3=21, Perímetro = 7+3+7+3=20.", iconName: 'Lightbulb' },
+              { label: 'Dica de Ouro', text: "Eles podem ter perímetros iguais (ambos 20cm), mas áreas diferentes (25cm² e 21cm²).", iconName: 'Star' }
             ]
           },
           explanation: {
@@ -423,10 +423,10 @@ export const trackGari: Track = {
           mascotTip: "Há 5 poças d'água diferentes na rua. O gari precisa cercar a maior.",
           conceptCard: {
             title: 'No dia a dia do Gari...',
-            paragraphs: [
-              "O gari diz: \"A que der a volta mais demorada é a que tem o maior contorno, ou seja, maior perímetro.\"",
-              "💡 Para achar o maior perímetro numa malha cheia de curvas e degraus, é preciso somar absolutamente todos os lados de contato com o exterior.",
-              "Não se apresse. Figuras parecendo estrelas ou com muitos degraus costumam ter os maiores perímetros, pois ziguezagueiam muito."
+            points: [
+              { label: 'Ouvindo o Gari', text: "O gari diz: \"A que der a volta mais demorada é a que tem o maior contorno, ou seja, maior perímetro.\"", iconName: 'MessageSquare' },
+              { label: 'O Conceito', text: "💡 Para achar o maior perímetro numa malha cheia de curvas e degraus, é preciso somar absolutamente todos os lados de contato com o exterior.", iconName: 'Lightbulb' },
+              { label: 'Dica de Ouro', text: "Não se apresse. Figuras parecendo estrelas ou com muitos degraus costumam ter os maiores perímetros, pois ziguezagueiam muito.", iconName: 'Star' }
             ]
           },
           explanation: {
@@ -462,10 +462,10 @@ export const trackGari: Track = {
           mascotTip: "A praça nova tem uma pintura com partes azuis, amarelas e rosas, formando mosaicos.",
           conceptCard: {
             title: 'No dia a dia do Gari...',
-            paragraphs: [
-              "O gari diz: \"Essa figura enorme é composta por peças menores. Se a parte azul vale 15 quadrados e a amarela 8...\"",
-              "💡 Em figuras complexas compostas por retângulos diferentes, a área total é a soma das áreas parciais.",
-              "A área Azul = 15. A Amarela = 8. Se elas se juntam, não se sobrepõem, logo a área da nova figura seria 15 + 8 = 23."
+            points: [
+              { label: 'Ouvindo o Gari', text: "O gari diz: \"Essa figura enorme é composta por peças menores. Se a parte azul vale 15 quadrados e a amarela 8...\"", iconName: 'MessageSquare' },
+              { label: 'O Conceito', text: "💡 Em figuras complexas compostas por retângulos diferentes, a área total é a soma das áreas parciais.", iconName: 'Lightbulb' },
+              { label: 'Dica de Ouro', text: "A área Azul = 15. A Amarela = 8. Se elas se juntam, não se sobrepõem, logo a área da nova figura seria 15 + 8 = 23.", iconName: 'Star' }
             ]
           },
           explanation: {
@@ -502,10 +502,10 @@ export const trackGari: Track = {
           mascotTip: "O gari encontra restos de um cartaz de festa junina, recortados em formato de triângulos e quadrados menores.",
           conceptCard: {
             title: 'No dia a dia do Gari...',
-            paragraphs: [
-              "O gari diz: \"Se eu juntar esses triângulos pontilhados, formo quadrados do mesmo tamanho do centro!\"",
-              "💡 Quando cortamos formas geométricas pelas diagonais, as metades podem ser reagrupadas.",
-              "Dois triângulos retângulos idênticos formam um quadrado. Conte as partes inteiras e some as frações que formam inteiros."
+            points: [
+              { label: 'Ouvindo o Gari', text: "O gari diz: \"Se eu juntar esses triângulos pontilhados, formo quadrados do mesmo tamanho do centro!\"", iconName: 'MessageSquare' },
+              { label: 'O Conceito', text: "💡 Quando cortamos formas geométricas pelas diagonais, as metades podem ser reagrupadas.", iconName: 'Lightbulb' },
+              { label: 'Dica de Ouro', text: "Dois triângulos retângulos idênticos formam um quadrado. Conte as partes inteiras e some as frações que formam inteiros.", iconName: 'Star' }
             ]
           },
           explanation: {
@@ -542,10 +542,10 @@ export const trackGari: Track = {
           mascotTip: "Na garagem, o chefe puxa uma roleta de madeira. Nela estão pintadas as tarefas do dia.",
           conceptCard: {
             title: 'No dia a dia do Gari...',
-            paragraphs: [
-              "O gari diz: \"A roleta tem setores coloridos de tamanhos diferentes. Aonde a seta vai parar?\"",
-              "💡 A chance de sorteio é proporcional à quantidade de setores com a mesma tarefa.",
-              "Se a tarefa de \"varrer\" ocupa 3 setores, e a de \"lavar\" apenas 1, a maior chance é varrer."
+            points: [
+              { label: 'Ouvindo o Gari', text: "O gari diz: \"A roleta tem setores coloridos de tamanhos diferentes. Aonde a seta vai parar?\"", iconName: 'MessageSquare' },
+              { label: 'O Conceito', text: "💡 A chance de sorteio é proporcional à quantidade de setores com a mesma tarefa.", iconName: 'Lightbulb' },
+              { label: 'Dica de Ouro', text: "Se a tarefa de \"varrer\" ocupa 3 setores, e a de \"lavar\" apenas 1, a maior chance é varrer.", iconName: 'Star' }
             ]
           },
           explanation: {
@@ -579,10 +579,10 @@ export const trackGari: Track = {
           mascotTip: "Houve uma festa na praça. Sobraram muitos balões estourados e murchos pelo chão.",
           conceptCard: {
             title: 'No dia a dia do Gari...',
-            paragraphs: [
-              "O gari diz: \"Tem balão azul, amarelo e vermelho. Qual a chance de eu recolher um vermelho de olhos fechados?\"",
-              "💡 A probabilidade é a divisão do número de balões daquela cor pelo total de balões no chão.",
-              "Se temos 10 balões no total e 3 vermelhos, a chance é \"3 em 10\"."
+            points: [
+              { label: 'Ouvindo o Gari', text: "O gari diz: \"Tem balão azul, amarelo e vermelho. Qual a chance de eu recolher um vermelho de olhos fechados?\"", iconName: 'MessageSquare' },
+              { label: 'O Conceito', text: "💡 A probabilidade é a divisão do número de balões daquela cor pelo total de balões no chão.", iconName: 'Lightbulb' },
+              { label: 'Dica de Ouro', text: "Se temos 10 balões no total e 3 vermelhos, a chance é \"3 em 10\".", iconName: 'Star' }
             ]
           },
           explanation: {
@@ -618,10 +618,10 @@ export const trackGari: Track = {
           mascotTip: "O gari carrega um saco opaco de materiais recicláveis: latinhas, papel e plástico.",
           conceptCard: {
             title: 'No dia a dia do Gari...',
-            paragraphs: [
-              "O gari diz: \"Sem olhar, vou puxar um material. Qual tem mais chance de sair?\"",
-              "💡 A probabilidade se baseia na contagem de cada tipo dentro do saco.",
-              "A categoria com a maior quantidade (frequência) dentro da sacola é a que tem maior probabilidade de ser retirada aleatoriamente."
+            points: [
+              { label: 'Ouvindo o Gari', text: "O gari diz: \"Sem olhar, vou puxar um material. Qual tem mais chance de sair?\"", iconName: 'MessageSquare' },
+              { label: 'O Conceito', text: "💡 A probabilidade se baseia na contagem de cada tipo dentro do saco.", iconName: 'Lightbulb' },
+              { label: 'Dica de Ouro', text: "A categoria com a maior quantidade (frequência) dentro da sacola é a que tem maior probabilidade de ser retirada aleatoriamente.", iconName: 'Star' }
             ]
           },
           explanation: {
@@ -659,10 +659,10 @@ export const trackGari: Track = {
           mascotTip: "No intervalo, o gari vê crianças brincando com fichas numeradas de 1 a 10.",
           conceptCard: {
             title: 'No dia a dia do Gari...',
-            paragraphs: [
-              "O gari diz: \"Em um dado normal, a chance de sair o número 5 é 1 em 6. Mas e nesse sorteio de 1 a 10, qual a chance de puxar o 7?\"",
-              "💡 Para calcular a chance de um evento, contamos quantos resultados favoráveis existem e dividimos pelo total.",
-              "Apenas uma ficha tem o número 7 (um caso favorável). O total de fichas é 10. A chance é 1/10."
+            points: [
+              { label: 'Ouvindo o Gari', text: "O gari diz: \"Em um dado normal, a chance de sair o número 5 é 1 em 6. Mas e nesse sorteio de 1 a 10, qual a chance de puxar o 7?\"", iconName: 'MessageSquare' },
+              { label: 'O Conceito', text: "💡 Para calcular a chance de um evento, contamos quantos resultados favoráveis existem e dividimos pelo total.", iconName: 'Lightbulb' },
+              { label: 'Dica de Ouro', text: "Apenas uma ficha tem o número 7 (um caso favorável). O total de fichas é 10. A chance é 1/10.", iconName: 'Star' }
             ]
           },
           explanation: {
@@ -699,10 +699,10 @@ export const trackGari: Track = {
           mascotTip: "Fim do dia. O gari precisa registrar quantos sacos de cada cor ele recolheu na planilha.",
           conceptCard: {
             title: 'No dia a dia do Gari...',
-            paragraphs: [
-              "O gari diz: \"Recolhi 20 azuis, 12 vermelhos, 10 amarelos e 5 verdes. Qual foi o total?\"",
-              "💡 A soma das frequências individuais dá o tamanho total da nossa amostra estatística.",
-              "Soma total = 20 + 12 + 10 + 5 = 47. Se eu sorteasse um saco desses 47, a chance do verde seria 5/47."
+            points: [
+              { label: 'Ouvindo o Gari', text: "O gari diz: \"Recolhi 20 azuis, 12 vermelhos, 10 amarelos e 5 verdes. Qual foi o total?\"", iconName: 'MessageSquare' },
+              { label: 'O Conceito', text: "💡 A soma das frequências individuais dá o tamanho total da nossa amostra estatística.", iconName: 'Lightbulb' },
+              { label: 'Dica de Ouro', text: "Soma total = 20 + 12 + 10 + 5 = 47. Se eu sorteasse um saco desses 47, a chance do verde seria 5/47.", iconName: 'Star' }
             ]
           },
           explanation: {
@@ -739,10 +739,10 @@ export const trackGari: Track = {
           mascotTip: "A equipe pediu uma pizza gigante de 10 pedaços para dividir na hora do lanche.",
           conceptCard: {
             title: 'No dia a dia do Gari...',
-            paragraphs: [
-              "O gari diz: \"Se eu comer um pedaço de 10, eu comi a fração 1/10. E como escrevemos isso em decimal?\"",
-              "💡 Uma fração decimal com denominador 10 pode ser escrita com uma casa após a vírgula.",
-              "A fração 1/10 corresponde a um décimo, que se escreve 0,1. Se sobrar uma fatia, sobra 0,1."
+            points: [
+              { label: 'Ouvindo o Gari', text: "O gari diz: \"Se eu comer um pedaço de 10, eu comi a fração 1/10. E como escrevemos isso em decimal?\"", iconName: 'MessageSquare' },
+              { label: 'O Conceito', text: "💡 Uma fração decimal com denominador 10 pode ser escrita com uma casa após a vírgula.", iconName: 'Lightbulb' },
+              { label: 'Dica de Ouro', text: "A fração 1/10 corresponde a um décimo, que se escreve 0,1. Se sobrar uma fatia, sobra 0,1.", iconName: 'Star' }
             ]
           },
           explanation: {
@@ -779,10 +779,10 @@ export const trackGari: Track = {
           mascotTip: "O gari encontra uma formiguinha carregando uma folha perto do caminhão de lixo.",
           conceptCard: {
             title: 'No dia a dia do Gari...',
-            paragraphs: [
-              "O gari diz: \"Olha o peso desse caminhão... e o peso dessa formiga! Tudo tem sua unidade.\"",
-              "💡 Usamos miligrama (mg) para coisas ínfimas, grama (g) para médias, e quilograma (kg) para pesadas.",
-              "Uma formiga pesa em torno de 3 miligramas (mg), não 3 kg."
+            points: [
+              { label: 'Ouvindo o Gari', text: "O gari diz: \"Olha o peso desse caminhão... e o peso dessa formiga! Tudo tem sua unidade.\"", iconName: 'MessageSquare' },
+              { label: 'O Conceito', text: "💡 Usamos miligrama (mg) para coisas ínfimas, grama (g) para médias, e quilograma (kg) para pesadas.", iconName: 'Lightbulb' },
+              { label: 'Dica de Ouro', text: "Uma formiga pesa em torno de 3 miligramas (mg), não 3 kg.", iconName: 'Star' }
             ]
           },
           explanation: {
@@ -819,10 +819,10 @@ export const trackGari: Track = {
           mascotTip: "No painel da empresa, há um gráfico de barras das garrafas PET recicladas de 2014 a 2018.",
           conceptCard: {
             title: 'No dia a dia do Gari...',
-            paragraphs: [
-              "O gari diz: \"Em 2017 recolhemos 26 toneladas de PET. Mas o gerente quer esse número em quilogramas!\"",
-              "💡 Uma tonelada (t) é igual a mil quilogramas (kg).",
-              "Para transformar 26 toneladas em quilos, multiplicamos 26 por 1.000."
+            points: [
+              { label: 'Ouvindo o Gari', text: "O gari diz: \"Em 2017 recolhemos 26 toneladas de PET. Mas o gerente quer esse número em quilogramas!\"", iconName: 'MessageSquare' },
+              { label: 'O Conceito', text: "💡 Uma tonelada (t) é igual a mil quilogramas (kg).", iconName: 'Lightbulb' },
+              { label: 'Dica de Ouro', text: "Para transformar 26 toneladas em quilos, multiplicamos 26 por 1.000.", iconName: 'Star' }
             ]
           },
           explanation: {
@@ -859,10 +859,10 @@ export const trackGari: Track = {
           mascotTip: "Para isolar uma rua, o gari organizou cones e placas em uma fila padronizada: Cone, Placa, Placa, Pneu...",
           conceptCard: {
             title: 'No dia a dia do Gari...',
-            paragraphs: [
-              "O gari diz: \"Esse padrão se repete a cada 4 objetos. Se eu continuar assim, qual objeto vai ficar na posição 27?\"",
-              "💡 Em um padrão repetitivo (ciclo de 4), dividimos a posição desejada pelo tamanho do ciclo.",
-              "27 dividido por 4 dá 6 ciclos completos (24) e sobram 3. O resto (3) indica que o objeto é o terceiro da sequência básica."
+            points: [
+              { label: 'Ouvindo o Gari', text: "O gari diz: \"Esse padrão se repete a cada 4 objetos. Se eu continuar assim, qual objeto vai ficar na posição 27?\"", iconName: 'MessageSquare' },
+              { label: 'O Conceito', text: "💡 Em um padrão repetitivo (ciclo de 4), dividimos a posição desejada pelo tamanho do ciclo.", iconName: 'Lightbulb' },
+              { label: 'Dica de Ouro', text: "27 dividido por 4 dá 6 ciclos completos (24) e sobram 3. O resto (3) indica que o objeto é o terceiro da sequência básica.", iconName: 'Star' }
             ]
           },
           explanation: {
@@ -898,10 +898,10 @@ export const trackGari: Track = {
           mascotTip: "Ele acha 4 pedaços idênticos de isopor. Cada pedaço é formado por 2 cubinhos colados (como um paralelepípedo).",
           conceptCard: {
             title: 'No dia a dia do Gari...',
-            paragraphs: [
-              "O gari diz: \"Esses blocos têm volume. Se eu juntar os 4, terei uma estrutura com 8 cubinhos. Será que eu posso montar qualquer forma?\"",
-              "💡 Com 4 blocos de 2, você só pode montar estruturas cujas metades ou partes possam ser divididas por blocos retos de 2.",
-              "Estruturas com pontas isoladas de 1 cubinho são impossíveis de formar com blocos inteiros de 2."
+            points: [
+              { label: 'Ouvindo o Gari', text: "O gari diz: \"Esses blocos têm volume. Se eu juntar os 4, terei uma estrutura com 8 cubinhos. Será que eu posso montar qualquer forma?\"", iconName: 'MessageSquare' },
+              { label: 'O Conceito', text: "💡 Com 4 blocos de 2, você só pode montar estruturas cujas metades ou partes possam ser divididas por blocos retos de 2.", iconName: 'Lightbulb' },
+              { label: 'Dica de Ouro', text: "Estruturas com pontas isoladas de 1 cubinho são impossíveis de formar com blocos inteiros de 2.", iconName: 'Star' }
             ]
           },
           explanation: {
@@ -939,10 +939,10 @@ export const trackGari: Track = {
           mascotTip: "O gari termina o turno olhando para a parede pintada do refeitório. A figura sobre a malha de tijolos tem partes pintadas inteiras e metades.",
           conceptCard: {
             title: 'No dia a dia do Gari...',
-            paragraphs: [
-              "O gari diz: \"Pra encerrar o expediente: vamos aplicar a mesma regra de juntar os triângulos para descobrir a área colorida final.\"",
-              "💡 Conte os quadrados preenchidos por completo. Depois junte os triângulos formando pares de 1 unidade inteira.",
-              "Se a figura tiver 12 quadrados inteiros e 4 metades, a área total pintada será 14 unidades quadradas."
+            points: [
+              { label: 'Ouvindo o Gari', text: "O gari diz: \"Pra encerrar o expediente: vamos aplicar a mesma regra de juntar os triângulos para descobrir a área colorida final.\"", iconName: 'MessageSquare' },
+              { label: 'O Conceito', text: "💡 Conte os quadrados preenchidos por completo. Depois junte os triângulos formando pares de 1 unidade inteira.", iconName: 'Lightbulb' },
+              { label: 'Dica de Ouro', text: "Se a figura tiver 12 quadrados inteiros e 4 metades, a área total pintada será 14 unidades quadradas.", iconName: 'Star' }
             ]
           },
           explanation: {
