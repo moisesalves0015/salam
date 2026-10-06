@@ -98,6 +98,30 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
     setIsChallengeExpanded(false);
   };
 
+  useEffect(() => {
+    if (stepFeedback.status === 'success') {
+      if (!prefersReducedMotion()) {
+        try {
+          confetti({
+            particleCount: 60,
+            spread: 60,
+            origin: { y: 0.85 },
+            colors: ['#34d399', '#10b981', '#059669', '#a7f3d0', '#047857']
+          });
+        } catch { /* ignore */ }
+      }
+      
+      setTimeout(() => {
+        if (contentRef.current) {
+          contentRef.current.scrollTo({
+            top: contentRef.current.scrollHeight,
+            behavior: prefersReducedMotion() ? 'auto' : 'smooth'
+          });
+        }
+      }, 50);
+    }
+  }, [stepFeedback.status]);
+
   const handleNextStep = () => {
     resetStepState();
     if (currentStepIndex < steps.length - 1) {
