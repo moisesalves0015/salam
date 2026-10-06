@@ -13,8 +13,12 @@ lines.push(`import { Track } from '../../types';`);
 lines.push(``);
 lines.push(`export const trackGari: Track = {`);
 lines.push(`  id: 'gari-mission',`);
+lines.push(`  subjectId: 'matematica',`); // Add subjectId for consistency
 lines.push(`  title: 'Área e Perímetro',`);
 lines.push(`  subtitle: 'Um dia de trabalho com um gari',`);
+lines.push(`  description: 'Trilha lúdica sobre área, perímetro, frações, volume e probabilidade acompanhando o dia a dia de um gari trabalhador.',`);
+lines.push(`  objective: 'Aplicar conceitos de área, perímetro, frações e probabilidade em cenários reais.',`);
+lines.push(`  bnccSkills: ['Matemática do 4º e 5º ano'],`);
 lines.push(`  theme: {`);
 lines.push(`    primary: 'from-amber-600 to-orange-500',`);
 lines.push(`    secondary: 'from-yellow-500 to-amber-500',`);
@@ -30,7 +34,9 @@ lines.push(`  units: [`);
 allUnits.forEach((u, uIndex) => {
   lines.push(`    {`);
   lines.push(`      id: 'gari-unit-${uIndex + 1}',`);
+  lines.push(`      trackId: 'gari-mission',`);
   lines.push(`      number: ${uIndex + 1},`);
+  // Remove the 'Atividade' title for the unit itself and use the unit title
   lines.push(`      title: ${JSON.stringify(u.title)},`);
   lines.push(`      shortDesc: ${JSON.stringify(u.shortDesc)},`);
   lines.push(`      icon: '${u.icon}',`);
@@ -39,22 +45,38 @@ allUnits.forEach((u, uIndex) => {
   lines.push(`      steps: [`);
   
   u.activities.forEach((act, actIndex) => {
-    lines.push(`        {`);
-    lines.push(`          id: 'step-${uIndex + 1}-${actIndex + 1}',`);
-    lines.push(`          title: ${JSON.stringify(act.title)},`);
-    if (act.cena) lines.push(`          mascotTip: ${JSON.stringify(act.cena)},`);
+    // Determine title without "Atividade X -" prefix
+    const cleanTitle = act.title.replace(/^Atividade \d+ — /i, '');
     
-    // Concept Card with dialogue and explanation
+    // STEP 1: OBJECTIVE / DIALOGUE
+    lines.push(`        {`);
+    lines.push(`          id: 'step-${uIndex + 1}-${actIndex + 1}-a',`);
+    lines.push(`          type: 'objective',`);
+    lines.push(`          title: ${JSON.stringify(cleanTitle)},`);
+    if (act.cena) {
+      lines.push(`          content: ${JSON.stringify(act.cena)},`);
+    } else {
+      lines.push(`          content: 'O trabalho nas ruas reserva muitos desafios.',`);
+    }
+    if (act.fala) {
+      lines.push(`          mascotTip: ${JSON.stringify(act.fala)},`);
+    }
+    lines.push(`        },`);
+
+    // STEP 2: EXPLANATION
+    lines.push(`        {`);
+    lines.push(`          id: 'step-${uIndex + 1}-${actIndex + 1}-b',`);
+    lines.push(`          type: 'explanation',`);
+    lines.push(`          title: 'Entendendo: ' + ${JSON.stringify(act.shortDesc || 'Conceitos')},`);
+    lines.push(`          content: ${JSON.stringify(act.explicacao)},`);
+    
     lines.push(`          conceptCard: {`);
     lines.push(`            title: 'No dia a dia do Gari...',`);
     lines.push(`            points: [`);
-    lines.push(`              { label: 'Ouvindo o Gari', text: ${JSON.stringify('O gari diz: "' + act.fala + '"')}, iconName: 'MessageSquare' },`);
-    lines.push(`              { label: 'O Conceito', text: ${JSON.stringify('💡 ' + act.explicacao)}, iconName: 'Lightbulb' },`);
     lines.push(`              { label: 'Dica de Ouro', text: ${JSON.stringify(act.detalhePedagogico)}, iconName: 'Star' }`);
     lines.push(`            ]`);
     lines.push(`          },`);
-    
-    // Explanation block (Demo interaction and microexample)
+
     if (act.demoInteraction || act.microexemplo) {
       lines.push(`          explanation: {`);
       lines.push(`            text: ${JSON.stringify(act.microexemplo || 'Veja o exemplo visual.')},`);
@@ -62,6 +84,19 @@ allUnits.forEach((u, uIndex) => {
         lines.push(`            interaction: { type: '${act.demoInteraction.type}', data: ${JSON.stringify(act.demoInteraction.data || {})} }`);
       }
       lines.push(`          },`);
+    }
+    lines.push(`        },`);
+
+    // STEP 3: CHALLENGE
+    lines.push(`        {`);
+    lines.push(`          id: 'step-${uIndex + 1}-${actIndex + 1}-c',`);
+    lines.push(`          type: 'challenge',`);
+    lines.push(`          title: 'Mão na Massa!',`);
+    lines.push(`          content: ${JSON.stringify(act.comando || 'Resolva o problema a seguir:')},`);
+    
+    // Add 3D for phase 23 to satisfy the requirement
+    if (act.title.includes('23')) {
+      lines.push(`          placeValueExample: { number: 8 },`);
     }
 
     // Interaction block
@@ -98,7 +133,6 @@ allUnits.forEach((u, uIndex) => {
 
     lines.push(`          notebookGuide: {`);
     lines.push(`            tips: [${JSON.stringify(act.transicao)}],`);
-    lines.push(`            operation: 'addition',`);
     lines.push(`            showBorders: false`);
     lines.push(`          }`);
 
@@ -112,5 +146,5 @@ allUnits.forEach((u, uIndex) => {
 lines.push(`  ]`);
 lines.push(`};`);
 
-fs.writeFileSync(path.join(__dirname, '../src/data/tracks/trackGari.ts'), lines.join('\n'));
-console.log('Successfully generated 24-phase trackGari.ts');
+fs.writeFileSync(path.join(__dirname, '../src/data/tracks/trackGari.ts'), lines.join('\\n'));
+console.log('Successfully generated Gari track with split objective/explanation/challenge steps');
