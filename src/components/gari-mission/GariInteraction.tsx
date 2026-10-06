@@ -415,7 +415,7 @@ const RouletteInteraction = ({ onComplete, completed }: { onComplete: () => void
     </div>
   );
 };
-\n
+
 // --- DICE INTERACTION ---
 const DiceInteraction = ({ onComplete, completed, data }: any) => {
   const [rolls, setRolls] = useState<number[]>([]);
