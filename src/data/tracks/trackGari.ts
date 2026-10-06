@@ -46,7 +46,6 @@ export const trackGari: Track = {
           },
           notebookGuide: {
             tips: ["O primeiro trajeto está mapeado! Agora precisamos medir as distâncias com mais cuidado."],
-            operation: 'addition',
             showBorders: false
           }
         },
@@ -72,7 +71,6 @@ export const trackGari: Track = {
           },
           notebookGuide: {
             tips: ["Medidas anotadas! A trena não mente nunca."],
-            operation: 'addition',
             showBorders: false
           }
         },
@@ -98,7 +96,6 @@ export const trackGari: Track = {
           },
           notebookGuide: {
             tips: ["Isso é muito útil para calcular quanta água o caminhão pipa vai usar."],
-            operation: 'addition',
             showBorders: false
           }
         }
@@ -138,7 +135,6 @@ export const trackGari: Track = {
           },
           notebookGuide: {
             tips: ["Sabendo o tamanho exato, as lixeiras vão caber direitinho."],
-            operation: 'addition',
             showBorders: false
           }
         },
@@ -167,7 +163,6 @@ export const trackGari: Track = {
           },
           notebookGuide: {
             tips: ["Matemática rápida! A fita vai cobrir o lugar certinho."],
-            operation: 'addition',
             showBorders: false
           }
         },
@@ -197,7 +192,6 @@ export const trackGari: Track = {
           },
           notebookGuide: {
             tips: ["Trabalho físico feito. Vamos decidir as tarefas de amanhã por sorteio."],
-            operation: 'addition',
             showBorders: false
           }
         }
@@ -237,7 +231,6 @@ export const trackGari: Track = {
           },
           notebookGuide: {
             tips: ["Dados guardados, mas e a tabela de áreas?"],
-            operation: 'addition',
             showBorders: false
           }
         },
@@ -266,7 +259,6 @@ export const trackGari: Track = {
           },
           notebookGuide: {
             tips: ["Você enxerga geometria em qualquer lugar."],
-            operation: 'addition',
             showBorders: false
           }
         },
@@ -295,7 +287,6 @@ export const trackGari: Track = {
           },
           notebookGuide: {
             tips: ["O gari confia apenas na matemática exata."],
-            operation: 'addition',
             showBorders: false
           }
         },
@@ -325,7 +316,6 @@ export const trackGari: Track = {
           },
           notebookGuide: {
             tips: ["Desenhar formas é a melhor maneira de visualizar cálculos complexos."],
-            operation: 'addition',
             showBorders: false
           }
         }
@@ -364,7 +354,6 @@ export const trackGari: Track = {
           },
           notebookGuide: {
             tips: ["Excelente observação espacial!"],
-            operation: 'addition',
             showBorders: false
           }
         },
@@ -393,7 +382,6 @@ export const trackGari: Track = {
           },
           notebookGuide: {
             tips: ["Esse mosaico foi calculado sem estresse!"],
-            operation: 'addition',
             showBorders: false
           }
         },
@@ -422,7 +410,6 @@ export const trackGari: Track = {
           },
           notebookGuide: {
             tips: ["A geometria ajuda até na hora de limpar papéis picados."],
-            operation: 'addition',
             showBorders: false
           }
         }
@@ -459,7 +446,6 @@ export const trackGari: Track = {
           },
           notebookGuide: {
             tips: ["O sorteio foi feito! Que os jogos comecem."],
-            operation: 'addition',
             showBorders: false
           }
         },
@@ -487,7 +473,6 @@ export const trackGari: Track = {
           },
           notebookGuide: {
             tips: ["Tudo limpo, e a probabilidade confirmada."],
-            operation: 'addition',
             showBorders: false
           }
         },
@@ -517,7 +502,6 @@ export const trackGari: Track = {
           },
           notebookGuide: {
             tips: ["Reciclar exige separar bem os materiais."],
-            operation: 'addition',
             showBorders: false
           }
         },
@@ -546,7 +530,6 @@ export const trackGari: Track = {
           },
           notebookGuide: {
             tips: ["As crianças aplaudem a aula de estatística improvisada."],
-            operation: 'addition',
             showBorders: false
           }
         }
@@ -586,7 +569,6 @@ export const trackGari: Track = {
           },
           notebookGuide: {
             tips: ["Planilha preenchida com sucesso."],
-            operation: 'addition',
             showBorders: false
           }
         },
@@ -615,7 +597,6 @@ export const trackGari: Track = {
           },
           notebookGuide: {
             tips: ["Depois do lanche, de volta ao trabalho pesado."],
-            operation: 'addition',
             showBorders: false
           }
         },
@@ -644,7 +625,6 @@ export const trackGari: Track = {
           },
           notebookGuide: {
             tips: ["Até os menores seres da natureza têm sua matemática."],
-            operation: 'addition',
             showBorders: false
           }
         },
@@ -673,7 +653,6 @@ export const trackGari: Track = {
           },
           notebookGuide: {
             tips: ["Números impressionantes! E a reciclagem salva a cidade."],
-            operation: 'addition',
             showBorders: false
           }
         }
@@ -712,7 +691,6 @@ export const trackGari: Track = {
           },
           notebookGuide: {
             tips: ["Com matemática, a gente prevê o futuro dos cones."],
-            operation: 'addition',
             showBorders: false
           }
         },
@@ -742,7 +720,6 @@ export const trackGari: Track = {
           },
           notebookGuide: {
             tips: ["O caminhão vai amassar tudo isso de qualquer jeito."],
-            operation: 'addition',
             showBorders: false
           }
         },
@@ -771,7 +748,6 @@ export const trackGari: Track = {
           },
           notebookGuide: {
             tips: ["O expediente do Gari chega ao fim. E com ele, toda essa imersão na matemática do dia a dia!"],
-            operation: 'addition',
             showBorders: false
           }
         }
