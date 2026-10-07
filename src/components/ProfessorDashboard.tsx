@@ -112,7 +112,7 @@ export const ProfessorDashboard: React.FC<ProfessorDashboardProps> = ({
               </span>
             </div>
             <p className="text-sm text-slate-600 font-medium mt-1">
-              Profª Carla Souza • EM Monte das Águas • 32 exploradores ativos hoje
+              Profª Carla Souza • Ciep Metalúrgico Benedito Cerqueira • 32 exploradores ativos hoje
             </p>
           </div>
         </div>

@@ -137,7 +137,7 @@ const CertPreview: React.FC<CertPreviewProps> = ({ studentName, avatarUrl, avata
 
         <div className="mt-3 flex items-center gap-2">
           <Sparkles className="w-3.5 h-3.5 text-white/60" />
-          <div className="text-[9px] text-white/50 font-medium">Escola Municipal Monte das Águas • 2026</div>
+          <div className="text-[9px] text-white/50 font-medium">Ciep Metalúrgico Benedito Cerqueira • 2026</div>
         </div>
       </div>
     </div>

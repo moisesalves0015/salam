@@ -661,7 +661,7 @@ const CLASSROOM_ADVENTURES: ClassroomAdventureData[] = [
   {
     id: 'escola',
     name: 'ESCOLA TODA',
-    grade: 'EM Monte das Águas • 4º e 5º Anos',
+    grade: 'Ciep Metalúrgico Benedito Cerqueira • 4º e 5º Anos',
     totalXp: 30280,
     xpToday: 1440,
     completedMissions: 454,

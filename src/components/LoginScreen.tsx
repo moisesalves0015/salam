@@ -321,7 +321,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         <div className="mt-8 text-center">
           <div className="flex items-center justify-center gap-2 text-xs text-slate-600">
             <Users className="w-3.5 h-3.5" />
-            <span>EM Monte das Águas • 4º e 5º Anos • Escola Pública</span>
+            <span>Ciep Metalúrgico Benedito Cerqueira • 4º e 5º Anos • Escola Pública</span>
           </div>
         </div>
       </div>

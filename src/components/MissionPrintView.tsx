@@ -246,7 +246,7 @@ export const MissionPrintView: React.FC<MissionPrintViewProps> = ({
 
           {/* Footer */}
           <div className="text-center text-[9px] text-slate-400 mt-4 print:mt-2">
-            Sala de Missões • Escola Municipal Monte das Águas • 4º e 5º Anos •
+            Sala de Missões • Ciep Metalúrgico Benedito Cerqueira • 4º e 5º Anos •
             Missão: {mission.id} • +{mission.xpReward} XP ao concluir
           </div>
         </div>

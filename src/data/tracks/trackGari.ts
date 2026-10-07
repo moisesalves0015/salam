@@ -17,7 +17,7 @@ export const trackGari: Track = {
     textMain: 'text-amber-50',
     textMuted: 'text-amber-200/60',
   },
-  worldName: 'CIEP',
+  worldName: 'Ciep Metalúrgico Benedito Cerqueira',
   units: [
     {
       id: 'gari-unit-1',

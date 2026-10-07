@@ -120,7 +120,7 @@ export const CoordenacaoDashboard: React.FC<CoordenacaoDashboardProps> = () => {
               </span>
             </div>
             <p className="text-sm text-slate-600 font-medium mt-1">
-              Coordª Helena Ramos • EM Monte das Águas • 4 turmas monitoradas em tempo real
+              Coordª Helena Ramos • Ciep Metalúrgico Benedito Cerqueira • 4 turmas monitoradas em tempo real
             </p>
           </div>
         </div>

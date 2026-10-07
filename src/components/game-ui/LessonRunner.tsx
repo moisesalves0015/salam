@@ -257,7 +257,7 @@ export const LessonRunner: React.FC<LessonRunnerProps> = ({
       const filled = cv.data.fractionLegend;
       return (
         <div className={`flex flex-col items-center gap-1 w-full ${compact ? '' : 'max-w-md mx-auto'} relative`}>
-          <img src={cv.data.url} alt={cv.data.alt || 'Imagem'} className="max-w-full h-auto -my-12 sm:-my-16 relative z-0" />
+          <img src={cv.data.url} alt={cv.data.alt || 'Imagem'} className="max-w-full h-auto -my-24 sm:-my-32 relative z-0" />
           {filled !== undefined && (
             <div className="flex flex-wrap items-center justify-center gap-2 text-sm font-black mt-2">
               <span className="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-500/60 text-slate-100">{filled} de 10 espaços</span>

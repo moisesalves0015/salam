@@ -759,7 +759,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <span className="text-sm font-black text-slate-900">SALA DE MISSÕES</span>
           </div>
           <p className="text-xs text-slate-500 font-medium text-center">
-            Ecossistema Pedagógico Gamificado • Escola Municipal Monte das Águas • 4º e 5º Anos
+            Ecossistema Pedagógico Gamificado • Ciep Metalúrgico Benedito Cerqueira • 4º e 5º Anos
           </p>
           <div className="flex items-center gap-1.5 text-xs font-bold text-slate-600">
             <Heart className="w-3.5 h-3.5 text-emerald-500" />

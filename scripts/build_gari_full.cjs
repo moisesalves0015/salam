@@ -28,7 +28,7 @@ lines.push(`    cardBg: 'bg-[#1a2b54]',`);
 lines.push(`    textMain: 'text-amber-50',`);
 lines.push(`    textMuted: 'text-amber-200/60',`);
 lines.push(`  },`);
-lines.push(`  worldName: 'CIEP',`);
+lines.push(`  worldName: 'Ciep Metalúrgico Benedito Cerqueira',`);
 lines.push(`  units: [`);
 
 let globalActIndex = 0;
