@@ -104,7 +104,7 @@ export const trackMatDecimais: Track = {
           type: 'guided_practice',
           title: 'Qual número vai na etiqueta?',
           content: 'Eraldo preencheu 2 espaços de uma caixa com 10. Observe a caixa abaixo e escolha o número decimal que representa essa quantidade.',
-          customVisual: { type: 'fraction-box-10', data: 2 },
+          customVisual: { type: 'image', data: { url: '/assets/candy_box_two_spaces.png', alt: 'Caixa com 2 espaços preenchidos', fractionLegend: 2 } },
           mascotTip: 'Olha a caixa: tenho 2 espaços com bala e 8 espaços vazios. A parte cheia é 2 de 10. Qual número com vírgula representa isso?',
           quiz: {
             question: 'Qual número decimal representa 2 espaços de 10 preenchidos?',
@@ -136,7 +136,7 @@ export const trackMatDecimais: Track = {
           type: 'independent_exercise',
           title: 'A caixa com 7 espaços cheios',
           content: 'Eraldo agora tem 7 espaços preenchidos dos 10 disponíveis. Em decimal, isso é 0,7.\n\nA metade exata de 10 espaços seria 5 (que em decimal é 0,5).',
-          customVisual: { type: 'fraction-box-10', data: 7 },
+          customVisual: { type: 'image', data: { url: '/assets/candy_box_seven_spaces.png', alt: 'Caixa com 7 espaços preenchidos', fractionLegend: 7 } },
           mascotTip: 'Compara: metade da caixa são 5 espaços. Eu tenho 7. O que você acha — passei da metade?',
           quiz: {
             question: 'Com 7 de 10 espaços cheios (ou seja, 0,7 da caixa), o estoque está:',

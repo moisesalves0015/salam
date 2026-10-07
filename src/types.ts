@@ -311,7 +311,7 @@ export interface LessonStep {
 
   // Explicações customizadas desenhadas em código (ex: tabelas, barras)
   customVisual?: {
-    type: 'fraction-box-10' | 'price-table' | 'vertical-math' | 'path-grid' | 'colored-regions-grid' | 'paint-grid';
+    type: 'fraction-box-10' | 'price-table' | 'vertical-math' | 'path-grid' | 'colored-regions-grid' | 'paint-grid' | 'image';
     data?: any;
   };
 
