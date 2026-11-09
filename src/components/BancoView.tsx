@@ -58,7 +58,7 @@ const TransactionRow: React.FC<{ item: Transaction }> = ({ item }) => {
   return <li className="flex min-w-0 items-center gap-2 border-b border-slate-100 py-3 last:border-0 last:pb-0 sm:gap-3 sm:py-4">
     <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-full sm:h-11 sm:w-11 ${incoming ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-600'}`}>{incoming ? <ArrowDownLeft size={18} /> : <ArrowUpRight size={18} />}</span>
     <span className="min-w-0 flex-1"><span className="block truncate text-xs font-bold text-slate-900 sm:text-sm">{item.title}</span><span className="mt-0.5 block truncate text-[10px] text-slate-500 sm:text-xs">{item.subtitle} · {item.date}</span></span>
-    <span className="shrink-0 text-right"><span className={`block whitespace-nowrap text-xs font-extrabold tabular-nums sm:text-sm ${incoming ? 'text-emerald-700' : 'text-slate-900'}`}>{incoming ? '+' : '−'}{item.amount} <span className="hidden xs:inline">moedas</span></span><span className="mt-0.5 block text-[9px] font-semibold text-slate-400 sm:text-[10px]">{item.category} · demo</span></span>
+    <span className="shrink-0 text-right"><span className={`block whitespace-nowrap text-xs font-extrabold tabular-nums sm:text-sm ${incoming ? 'text-emerald-700' : 'text-slate-900'}`}>{incoming ? '+' : '−'}{item.amount} <span className="hidden xs:inline">moedas</span></span><span className="mt-0.5 block text-[9px] font-semibold text-slate-400 sm:text-[10px]">{item.category}</span></span>
   </li>;
 };
 
@@ -76,7 +76,7 @@ export const BancoView: React.FC<{ studentName: string; nfcRoute?: boolean; onEx
   const [amountText, setAmountText] = useState('');
   const [note, setNote] = useState('');
   const [linkKind, setLinkKind] = useState<Operation>('pagar');
-  const [copyLabel, setCopyLabel] = useState('Copiar link demonstrativo');
+  const [copyLabel, setCopyLabel] = useState('Copiar link');
   const [feedback, setFeedback] = useState('');
 
   const nfcIntent = useMemo<NfcIntent | null>(() => {
@@ -95,7 +95,7 @@ export const BancoView: React.FC<{ studentName: string; nfcRoute?: boolean; onEx
     if (!nfcRoute) return;
     setActiveTab('inicio');
     if (!nfcIntent) {
-      setFeedback('Link de demonstração incompleto. Nenhum pagamento ou transferência foi iniciado.');
+      setFeedback('Link incompleto. Confira o endereço e tente novamente.');
       return;
     }
     setRecipient(nfcIntent.recipient);
@@ -111,14 +111,14 @@ export const BancoView: React.FC<{ studentName: string; nfcRoute?: boolean; onEx
   const submitOperation = () => {
     const amount = Number(amountText);
     if (!recipient.trim() || !Number.isInteger(amount) || amount < 1 || amount > balance) {
-      setFeedback(`Confira o nome e o valor. Você pode usar de 1 a ${balance} moedas demonstrativas.`);
+      setFeedback(`Confira o nome e o valor. Você pode usar de 1 a ${balance} moedas.`);
       return;
     }
     const isTransfer = modal === 'transferir';
     const transaction: Transaction = {
       id: `demo-${Date.now()}`,
       title: isTransfer ? `Transferência para ${recipient.trim()}` : `Pagamento para ${recipient.trim()}`,
-      subtitle: note.trim() || (isTransfer ? 'Transferência simulada entre colegas' : 'Pagamento simulado'),
+      subtitle: note.trim() || (isTransfer ? 'Transferência entre colegas' : 'Pagamento'),
       amount,
       direction: 'out',
       date: 'Agora',
@@ -126,14 +126,14 @@ export const BancoView: React.FC<{ studentName: string; nfcRoute?: boolean; onEx
     };
     setBalance(current => current - amount);
     setTransactions(current => [transaction, ...current]);
-    setFeedback(`${isTransfer ? 'Transferência' : 'Pagamento'} de ${amount} moedas simulada. Nenhum valor real foi movimentado.`);
+    setFeedback('Operação concluída.');
     setModal(null); setAmountText(''); setNote(''); closeNfc();
   };
 
   const createLink = async () => {
     const amount = Number(amountText);
     if (linkKind === 'pagar' && (!Number.isInteger(amount) || amount < 1 || amount > 500)) {
-      setFeedback('Informe um valor inteiro entre 1 e 500 moedas para criar o link demonstrativo.');
+      setFeedback('Informe um valor inteiro entre 1 e 500 moedas.');
       return;
     }
     const url = makeIntentUrl(linkKind, studentName || 'Estudante', linkKind === 'pagar' ? amount : undefined);
@@ -141,10 +141,10 @@ export const BancoView: React.FC<{ studentName: string; nfcRoute?: boolean; onEx
       if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
       await navigator.clipboard.writeText(url);
       setCopyLabel('Link copiado');
-      window.setTimeout(() => setCopyLabel('Copiar link demonstrativo'), 2200);
-      setFeedback(`Link demonstrativo de ${linkKind === 'pagar' ? 'cobrança' : 'transferência'} copiado. Ele não movimenta moedas reais.`);
+      window.setTimeout(() => setCopyLabel('Copiar link'), 2200);
+      setFeedback('Link copiado.');
     } catch {
-      setFeedback(`Copie este endereço de demonstração: ${url}`);
+      setFeedback(`Copie este endereço: ${url}`);
     }
   };
 
@@ -154,7 +154,6 @@ export const BancoView: React.FC<{ studentName: string; nfcRoute?: boolean; onEx
         <span className="grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-[#123cc4] to-[#05148d] text-white shadow-md shadow-blue-900/15"><Wallet size={22} /></span>
         <div><p className="mb-0 text-[10px] font-black uppercase tracking-[.16em] text-[#123cc4]">Carteira escolar</p><h1 className="mb-0 font-[Outfit] text-2xl font-black tracking-tight sm:text-3xl">Banco de moedas</h1></div>
       </div>
-      <span className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-[11px] font-extrabold text-amber-900"><span className="h-2 w-2 rounded-full bg-amber-500" />DEMONSTRAÇÃO</span>
     </header>
 
     <section className="grid gap-4 lg:grid-cols-[1.2fr_.8fr]">
@@ -162,7 +161,7 @@ export const BancoView: React.FC<{ studentName: string; nfcRoute?: boolean; onEx
         <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full border-[34px] border-blue-900/[.035]" />
         <div className="relative flex items-start justify-between gap-3"><div className="min-w-0"><p className="mb-1 text-xs font-semibold text-[#123cc4]">Carteira de aprendizagem</p><h2 className="mb-0 truncate font-[Outfit] text-lg font-extrabold sm:text-xl">Olá, {studentName || 'Estudante'}</h2></div><button type="button" onClick={() => setHideBalance(hidden => !hidden)} className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-blue-100 bg-white text-[#123cc4] transition hover:bg-blue-50" aria-label={hideBalance ? 'Mostrar saldo' : 'Ocultar saldo'}>{hideBalance ? <Eye size={18} /> : <EyeOff size={18} />}</button></div>
         <div className="relative mt-5 sm:mt-7"><p className="mb-1 text-xs font-semibold text-slate-500">Saldo disponível</p><p className="mb-0 flex flex-wrap items-baseline gap-x-2"><span className="font-[Outfit] text-4xl font-black tracking-tight tabular-nums text-[#05148d] sm:text-6xl">{hideBalance ? '••••' : balance}</span><span className="text-base font-bold text-slate-600 sm:text-lg">moedas</span></p></div>
-        <div className="relative mt-4 flex items-start gap-2 text-[11px] font-semibold leading-relaxed text-slate-600 sm:mt-6 sm:text-xs"><ShieldCheck size={15} className="mt-0.5 shrink-0 text-[#123cc4]" /><span>Saldo fictício · operações apenas demonstrativas</span></div>
+        <div className="relative mt-4 flex items-center gap-2 text-[11px] font-semibold text-slate-600 sm:mt-6 sm:text-xs"><ShieldCheck size={15} className="shrink-0 text-[#123cc4]" /><span>Seu saldo disponível</span></div>
       </div>
 
       <aside className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
@@ -172,7 +171,6 @@ export const BancoView: React.FC<{ studentName: string; nfcRoute?: boolean; onEx
           <ActionButton label="Transferir" icon={<ArrowLeftRight size={19} />} onClick={() => openOperation('transferir')} />
           <ActionButton label="Receber" icon={<ArrowDownLeft size={19} />} onClick={() => setActiveTab('receber')} />
         </div>
-        <div className="mt-4 flex items-start gap-2 rounded-xl bg-slate-50 px-3 py-2.5 text-[11px] leading-relaxed text-slate-600"><CircleHelp size={15} className="mt-0.5 shrink-0 text-[#123cc4]" /><p className="mb-0">Use moedas fictícias para explorar. Não é um banco nem um serviço de pagamento real.</p></div>
       </aside>
     </section>
 
@@ -191,46 +189,42 @@ export const BancoView: React.FC<{ studentName: string; nfcRoute?: boolean; onEx
       </div>
       <div className="overflow-hidden rounded-[24px] border border-blue-100 bg-white shadow-sm">
         <div className="bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-5 sm:p-6">
-          <div className="flex items-start justify-between"><span className="grid h-10 w-10 place-items-center rounded-xl border border-blue-100 bg-white text-[#123cc4]"><CreditCard size={19} /></span><span className="rounded-full border border-blue-100 bg-white px-2.5 py-1 text-[9px] font-black tracking-[.12em] text-[#123cc4]">CARTÃO DEMO</span></div>
+          <div className="flex items-start justify-between"><span className="grid h-10 w-10 place-items-center rounded-xl border border-blue-100 bg-white text-[#123cc4]"><CreditCard size={19} /></span><span className="rounded-full border border-blue-100 bg-white px-2.5 py-1 text-[9px] font-black tracking-[.12em] text-[#123cc4]">CARTÃO</span></div>
           <p className="mb-1 mt-6 text-xs text-slate-500">Carteira de</p><p className="mb-5 truncate font-[Outfit] text-lg font-bold text-slate-900">{studentName || 'Estudante'}</p>
-          <div className="flex flex-wrap items-end justify-between gap-2"><span className="font-mono text-sm tracking-[.12em] text-slate-500 sm:tracking-[.2em]">•••• &nbsp;•••• &nbsp;•••• &nbsp;0000</span><span className="text-[10px] font-bold text-indigo-700">NFC · DEMO</span></div>
+          <div className="flex flex-wrap items-end justify-between gap-2"><span className="font-mono text-sm tracking-[.12em] text-slate-500 sm:tracking-[.2em]">•••• &nbsp;•••• &nbsp;•••• &nbsp;0000</span><span className="text-[10px] font-bold text-indigo-700">NFC</span></div>
         </div>
-        <div className="p-5"><p className="mb-3 text-xs leading-relaxed text-slate-600">Cartão visual para a demonstração. Gere um endereço de exemplo para testar a abertura por aproximação.</p><button type="button" onClick={() => setActiveTab('receber')} className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-3 text-sm font-bold text-[#123cc4] transition hover:bg-blue-100"><Link2 size={16} />Criar link NFC demonstrativo<ArrowRight size={15} /></button></div>
+        <div className="p-5"><p className="mb-3 text-xs leading-relaxed text-slate-600">Crie um link para abrir sua carteira por aproximação.</p><button type="button" onClick={() => setActiveTab('receber')} className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-3 text-sm font-bold text-[#123cc4] transition hover:bg-blue-100"><Link2 size={16} />Criar link NFC<ArrowRight size={15} /></button></div>
       </div>
     </section>}
 
     {activeTab === 'extrato' && <section className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-      <div className="mb-2"><p className="mb-1 text-[10px] font-black uppercase tracking-[.14em] text-slate-400">Histórico da carteira</p><h2 className="mb-0 font-[Outfit] text-xl font-bold">Extrato de demonstração</h2><p className="mb-0 mt-1 text-xs text-slate-500">Entradas e saídas fictícias, disponíveis somente nesta sessão.</p></div>
-      {transactions.length ? <ul className="m-0 list-none p-0">{transactions.map(item => <TransactionRow key={item.id} item={item} />)}</ul> : <p className="py-10 text-center text-sm text-slate-500">Ainda não há movimentações nesta demonstração.</p>}
+      <div className="mb-2"><p className="mb-1 text-[10px] font-black uppercase tracking-[.14em] text-slate-400">Histórico da carteira</p><h2 className="mb-0 font-[Outfit] text-xl font-bold">Extrato</h2><p className="mb-0 mt-1 text-xs text-slate-500">Entradas e saídas da sua carteira.</p></div>
+      {transactions.length ? <ul className="m-0 list-none p-0">{transactions.map(item => <TransactionRow key={item.id} item={item} />)}</ul> : <p className="py-10 text-center text-sm text-slate-500">Não há movimentações.</p>}
     </section>}
 
     {activeTab === 'receber' && <section className="grid gap-5 lg:grid-cols-[1.1fr_.9fr]">
       <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
         <span className="mb-4 grid h-11 w-11 place-items-center rounded-xl bg-blue-50 text-[#123cc4]"><QrCode size={21} /></span>
-        <p className="mb-1 text-[10px] font-black uppercase tracking-[.14em] text-slate-400">Receber moedas</p><h2 className="mb-0 font-[Outfit] text-xl font-bold">Link para etiqueta NFC</h2><p className="mb-0 mt-2 max-w-xl text-sm leading-relaxed text-slate-600">Crie um endereço demonstrativo para abrir a tela de cobrança ou transferência ao aproximar o cartão de um celular.</p>
+        <p className="mb-1 text-[10px] font-black uppercase tracking-[.14em] text-slate-400">Receber moedas</p><h2 className="mb-0 font-[Outfit] text-xl font-bold">Link para etiqueta NFC</h2><p className="mb-0 mt-2 max-w-xl text-sm leading-relaxed text-slate-600">Crie um link para abrir a tela de cobrança ou transferência ao aproximar o cartão de um celular.</p>
         <label className="mt-5 block text-xs font-bold text-slate-700">O que o link vai fazer?<select value={linkKind} onChange={event => setLinkKind(event.target.value as Operation)} className="mt-1.5 min-h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-sm outline-none focus:border-[#123cc4] focus:ring-4 focus:ring-blue-500/10"><option value="pagar">Cobrar um valor fixo</option><option value="transferir">Transferir moedas (valor escolhido ao abrir)</option></select></label>
         {linkKind === 'pagar' && <label className="mt-4 block text-xs font-bold text-slate-700">Valor em moedas<input type="number" min="1" max="500" step="1" value={amountText} onChange={event => setAmountText(event.target.value)} placeholder="Ex.: 5" className="mt-1.5 min-h-11 w-full rounded-xl border border-slate-300 px-3 text-base outline-none focus:border-[#123cc4] focus:ring-4 focus:ring-blue-500/10" /></label>}
         <button type="button" onClick={() => void createLink()} className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#123cc4] px-4 text-sm font-bold text-white shadow-sm transition hover:bg-[#0d2fa9] sm:w-auto"><Copy size={16} />{copyLabel}</button>
       </div>
       <aside className="rounded-[24px] border border-blue-100 bg-gradient-to-br from-blue-50 to-white p-5 sm:p-6">
         <div className="flex items-center gap-2 font-[Outfit] font-bold text-[#05148d]"><Smartphone size={19} />Teste a aproximação</div>
-        <ol className="mt-4 space-y-3 pl-5 text-sm leading-relaxed text-slate-700"><li>Copie o endereço gerado.</li><li>Grave o endereço em uma etiqueta NFC como link de site.</li><li>Aproxime um celular e confira a tela antes de confirmar a simulação.</li></ol>
-        <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs leading-relaxed text-amber-950"><strong>Somente demonstração.</strong> O link contém dados de exemplo e não é uma cobrança real. Não grave informações pessoais em etiquetas públicas.</div>
+        <ol className="mt-4 space-y-3 pl-5 text-sm leading-relaxed text-slate-700"><li>Copie o endereço gerado.</li><li>Grave o endereço em uma etiqueta NFC como link de site.</li><li>Aproxime um celular para abrir o link.</li></ol>
       </aside>
     </section>}
 
-    <div className="flex items-start gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs leading-relaxed text-slate-600"><CircleHelp size={16} className="mt-0.5 shrink-0 text-slate-500" /><p className="mb-0"><strong>Aprender com segurança:</strong> saldo, extrato, pagamentos e transferências são simulados no navegador e desaparecem ao sair da tela. Nenhum valor real é movimentado.</p></div>
-
     {modal && <div className="fixed inset-0 z-[100] grid place-items-center bg-slate-950/55 p-4 backdrop-blur-sm">
       <section role="dialog" aria-modal="true" aria-labelledby="bank-operation-title" className="w-full max-w-md overflow-hidden rounded-[28px] bg-white shadow-2xl">
-        <div className="flex items-start justify-between gap-3 bg-slate-50 px-5 py-5 sm:px-6"><div><span className="mb-2 grid h-10 w-10 place-items-center rounded-xl bg-blue-100 text-[#123cc4]">{modal === 'transferir' ? <ArrowLeftRight size={20} /> : <Banknote size={20} />}</span><h2 id="bank-operation-title" className="mb-0 font-[Outfit] text-xl font-bold text-slate-900">{nfcRoute ? 'Confira a operação' : modal === 'transferir' ? 'Transferir moedas' : 'Fazer um pagamento'}</h2><p className="mb-0 mt-1 text-sm text-slate-500">Simulação · confirme o nome e o valor</p></div><button type="button" onClick={() => { setModal(null); closeNfc(); }} aria-label="Fechar" className="rounded-lg p-2 text-slate-500 hover:bg-slate-200"><X size={18} /></button></div>
+        <div className="flex items-start justify-between gap-3 bg-slate-50 px-5 py-5 sm:px-6"><div><span className="mb-2 grid h-10 w-10 place-items-center rounded-xl bg-blue-100 text-[#123cc4]">{modal === 'transferir' ? <ArrowLeftRight size={20} /> : <Banknote size={20} />}</span><h2 id="bank-operation-title" className="mb-0 font-[Outfit] text-xl font-bold text-slate-900">{nfcRoute ? 'Confira a operação' : modal === 'transferir' ? 'Transferir moedas' : 'Fazer um pagamento'}</h2><p className="mb-0 mt-1 text-sm text-slate-500">Confira o nome e o valor</p></div><button type="button" onClick={() => { setModal(null); closeNfc(); }} aria-label="Fechar" className="rounded-lg p-2 text-slate-500 hover:bg-slate-200"><X size={18} /></button></div>
         <div className="space-y-4 p-5 sm:p-6">
           <label className="block text-xs font-bold text-slate-700">{modal === 'transferir' ? 'Enviar para' : 'Pagar para'}<input autoFocus value={recipient} onChange={event => setRecipient(event.target.value)} readOnly={Boolean(nfcIntent)} placeholder="Nome do colega ou estabelecimento" className="mt-1.5 min-h-12 w-full rounded-xl border border-slate-300 px-3 text-base outline-none focus:border-[#123cc4] focus:ring-4 focus:ring-blue-500/10 read-only:bg-slate-50" /></label>
           <label className="block text-xs font-bold text-slate-700">Valor em moedas<input type="number" min="1" max={balance} step="1" value={amountText} onChange={event => setAmountText(event.target.value)} readOnly={nfcIntent?.amount !== undefined} placeholder="Digite um valor" className="mt-1.5 min-h-12 w-full rounded-xl border border-slate-300 px-3 text-lg font-bold outline-none focus:border-[#123cc4] focus:ring-4 focus:ring-blue-500/10 read-only:bg-slate-50" /></label>
           <label className="block text-xs font-bold text-slate-700">Recado (opcional)<input value={note} onChange={event => setNote(event.target.value)} placeholder="Ex.: lanche da cantina" className="mt-1.5 min-h-11 w-full rounded-xl border border-slate-300 px-3 text-sm outline-none focus:border-[#123cc4] focus:ring-4 focus:ring-blue-500/10" /></label>
           {feedback && <p role="alert" className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-900">{feedback}</p>}
-          <button type="button" onClick={submitOperation} className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#123cc4] px-4 text-sm font-extrabold text-white transition hover:bg-[#0d2fa9]"><Check size={17} />Confirmar simulação</button>
-          <p className="mb-0 text-center text-[11px] text-slate-500">Nada será enviado para um banco ou salvo no Firebase.</p>
+          <button type="button" onClick={submitOperation} className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#123cc4] px-4 text-sm font-extrabold text-white transition hover:bg-[#0d2fa9]"><Check size={17} />Confirmar</button>
         </div>
       </section>
     </div>}

@@ -47,7 +47,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ students, onDemoStuden
             </button>)}
           </div> : <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-10 text-center"><GraduationCap className="mx-auto h-8 w-8 text-slate-400" aria-hidden="true" /><p className="mb-0 mt-2 text-sm font-semibold text-slate-600">Nenhum aluno encontrado.</p></div>}
 
-          <div className="mt-5 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50/80 px-4 py-3 text-xs leading-relaxed text-amber-950"><span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-amber-200 font-black">i</span><p className="mb-0"><strong>Modo demonstração.</strong> A entrada é local e não usa Firebase; não carrega nem grava dados reais.</p></div>
         </div>
 
         <footer className="mt-5 text-center text-xs font-medium text-slate-500">Ciep Metalúrgico Benedito Cerqueira · 4º e 5º anos</footer>

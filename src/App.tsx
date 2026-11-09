@@ -141,7 +141,7 @@ export default function App() {
     setDemoStudent(student);
     setProfile({ firebaseUid: `demo-${student.id}`, userId: `demo-${student.id}`, email: '', name: student.name, role: 'aluno', schoolId: 'demo', classroomIds: [], studentId: student.id });
     setStudents([student]); setSelectedStudent(student); setTrails([]); setMissions([]); setCards([]); setAchievements([]); setMetrics(null); setInterventions([]); setRewards([]);
-    setError(null); setNotice('Modo demonstração: sessão local, sem Firebase ou gravação de dados.'); setLoading(false);
+    setError(null); setNotice(null); setLoading(false);
   };
   const logout = async () => {
     if (demoStudent) { clearSession(); setNotice(null); setError(null); setLoading(false); return; }
@@ -162,7 +162,7 @@ export default function App() {
 
   if (!profile) return <LoginScreen students={INITIAL_STUDENTS} onDemoStudentLogin={loginDemoStudent} loading={loading} error={error} />;
   if (loading) return <main className="min-h-screen grid place-items-center bg-slate-50"><p role="status">Carregando dados autorizados…</p></main>;
-  if (profile.role === 'admin' && routePath.startsWith('/banco')) return <div className="min-h-screen bg-[#f4f7fc] p-4 sm:p-8"><div className="mx-auto mb-5 flex max-w-6xl justify-between"><span className="self-center text-sm font-bold text-slate-700">Banco demonstrativo · ADM Master</span><button onClick={()=>{window.history.pushState({}, '', '/');setRoutePath('/');}} className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700">Voltar à administração</button></div><BancoView studentName={profile.name} nfcRoute={routePath.startsWith('/banco/nfc/')} onExitNfc={()=>{window.history.replaceState({}, '', '/banco');setRoutePath('/banco');}}/></div>;
+  if (profile.role === 'admin' && routePath.startsWith('/banco')) return <div className="min-h-screen bg-[#f4f7fc] p-4 sm:p-8"><div className="mx-auto mb-5 flex max-w-6xl justify-between"><span className="self-center text-sm font-bold text-slate-700">Banco de moedas · ADM Master</span><button onClick={()=>{window.history.pushState({}, '', '/');setRoutePath('/');}} className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700">Voltar à administração</button></div><BancoView studentName={profile.name} nfcRoute={routePath.startsWith('/banco/nfc/')} onExitNfc={()=>{window.history.replaceState({}, '', '/banco');setRoutePath('/banco');}}/></div>;
   if (profile.role === 'admin') return <AdminConsole actor={{name:profile.name,email:profile.email,role:profile.role}} data={adminData} summary={adminSummary} loading={loading} error={error} onRefresh={refresh} onLogout={logout} onOpenBank={()=>{window.history.pushState({}, '', '/banco');setRoutePath('/banco');}} onOpenTv={()=>setNotice('Painel TV não aberto: selecione primeiro uma escola e turma válidas. Não exibimos alunos de várias escolas em conjunto.')} onAction={adminAction}/>;
 
   const role = profile.role as UserRole;
