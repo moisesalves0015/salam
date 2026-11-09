@@ -13,9 +13,10 @@ import {
   Building2, 
   Activity, 
   FileSpreadsheet, 
-  Calendar, 
-  X, 
-  ChevronDown
+  Calendar,
+  X,
+  ChevronDown,
+  Wallet,
 } from 'lucide-react';
 import { UserRole, Student } from '../types';
 
@@ -87,6 +88,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'cards', label: 'Meus Cards', icon: Star, action: onOpenCards },
     { id: 'conquistas', label: 'Conquistas & Selos', icon: Trophy },
     { id: 'loja', label: 'Loja de Moedas', icon: Activity, badge: 'Novo', badgeColor: 'bg-amber-100 text-amber-700 border border-amber-200' },
+    { id: 'banco', label: 'Banco de Moedas', icon: Wallet },
     { id: 'relatorios', label: 'Minha Evolução', icon: BarChart3 },
   ];
 

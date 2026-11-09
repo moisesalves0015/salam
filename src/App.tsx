@@ -20,6 +20,7 @@ import { RelatoriosView } from './components/RelatoriosView';
 import { PainelSalaMissoes } from './components/PainelSalaMissoes';
 import { InterventionModal } from './components/InterventionModal';
 import { DiagnosticModal } from './components/DiagnosticModal';
+import { BancoView } from './components/BancoView';
 import type { UserRole, Student, Mission, CardItem, AchievementItem } from './types';
 
 type Profile = Awaited<ReturnType<typeof adminApi.me>>;
@@ -51,7 +52,8 @@ export default function App() {
   const [rewards, setRewards] = useState<Record<string, any>[]>([]);
   const [adminData, setAdminData] = useState<Record<string, Array<Record<string, unknown>>>>({});
   const [adminSummary, setAdminSummary] = useState<Record<string, number>>();
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [routePath, setRoutePath] = useState(() => window.location.pathname);
+  const [activeTab, setActiveTab] = useState(() => window.location.pathname.startsWith('/banco') ? 'banco' : 'dashboard');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -65,6 +67,16 @@ export default function App() {
   const [showDiagnostic, setShowDiagnostic] = useState(false);
   const [interventionStudentId, setInterventionStudentId] = useState('');
   const [selectedClass, setSelectedClass] = useState<string>();
+
+  useEffect(() => {
+    const onPopState = () => {
+      const path = window.location.pathname;
+      setRoutePath(path);
+      setActiveTab(path.startsWith('/banco') ? 'banco' : 'dashboard');
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
 
   const clearSession = useCallback(() => {
     setProfile(null); setStudents([]); setSelectedStudent(null); setTrails([]); setMissions([]); setCards([]); setAchievements([]); setMetrics(null); setInterventions([]); setRewards([]); setAdminData({}); setAdminSummary(undefined); setActiveTab('dashboard');
@@ -140,7 +152,20 @@ export default function App() {
 
   const role = profile.role as UserRole;
   const current = selectedStudent;
-  const availableTabs = role === 'aluno' ? ['dashboard','trilhas','cards','conquistas','loja','relatorios'] : role === 'professor' ? ['dashboard','alunos','missoes','trilhas','intervencoes','relatorios','reconhecimento','cards'] : ['dashboard','alunos','relatorios','trilhas','reconhecimento'];
+  const availableTabs = role === 'aluno' ? ['dashboard','trilhas','cards','conquistas','loja','banco','relatorios'] : role === 'professor' ? ['dashboard','alunos','missoes','trilhas','intervencoes','relatorios','reconhecimento','cards'] : ['dashboard','alunos','relatorios','trilhas','reconhecimento'];
+  const navigateTab = (tab: string) => {
+    if (tab === 'banco') {
+      window.history.pushState({}, '', '/banco');
+      setRoutePath('/banco');
+      setActiveTab('banco');
+    } else {
+      if (routePath.startsWith('/banco')) {
+        window.history.pushState({}, '', '/');
+        setRoutePath('/');
+      }
+      setActiveTab(tab);
+    }
+  };
   const activeMission = missions.find(m => ['Disponível', 'Em andamento', 'em_andamento'].includes(String(m.status)));
   const openMission = (mission?: Mission) => { const realMission = mission ?? activeMission; if (!realMission || !current) { setNotice('Não há missão real disponível para este aluno.'); return; } setMissionToPlay(realMission); };
   if (tv) return <PainelSalaMissoes students={students} metrics={metrics as any} loading={loading} error={error} onClose={()=>setTv(false)} />;
@@ -148,7 +173,7 @@ export default function App() {
     {notice && <p role="status" className="bg-emerald-100 p-2 text-center">{notice}</p>}
     <Header currentRole={role} userName={profile.name} userEmail={profile.email} selectedStudent={current ?? undefined} onOpenNotifications={()=>setNotice('Notificações indisponíveis: não há endpoint de notificações para esta conta.')} onLogout={()=>void logout()} isMobileMenuOpen={mobileMenu} setIsMobileMenuOpen={setMobileMenu}/>
     <div className="flex-1 flex flex-col lg:flex-row w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 gap-4">
-      <Sidebar currentRole={role} activeTab={activeTab} onTabChange={tab=>{if(tab==='painel-tv' && role!=='aluno') setTv(true); else if(availableTabs.includes(tab)) setActiveTab(tab);}} onOpenMission={()=>openMission()} onOpenCards={()=>setActiveTab('cards')} selectedStudent={current ?? undefined} isMobileMenuOpen={mobileMenu} setIsMobileMenuOpen={setMobileMenu}/>
+      <Sidebar currentRole={role} activeTab={activeTab} onTabChange={tab=>{if(tab==='painel-tv' && role!=='aluno') setTv(true); else if(availableTabs.includes(tab)) navigateTab(tab);}} onOpenMission={()=>openMission()} onOpenCards={()=>navigateTab('cards')} selectedStudent={current ?? undefined} isMobileMenuOpen={mobileMenu} setIsMobileMenuOpen={setMobileMenu}/>
       <main className="flex-1 min-w-0 rounded-2xl bg-white/70 p-4">
         {error && <div role="alert" className="mb-4 rounded border border-red-300 bg-red-50 p-3 text-red-800">{error}<button onClick={()=>void refresh()} className="ml-3 underline">Tentar novamente</button></div>}
         {role !== 'aluno' && (profile.classroomIds?.length ?? 0) > 1 && <label className="mb-4 block text-sm">Turma autorizada <select className="ml-2 rounded border p-2" value={selectedClass ?? ''} onChange={e=>setSelectedClass(e.target.value || undefined)}><option value="">Selecione uma turma</option>{profile.classroomIds.map(id=><option key={id} value={id}>{id}</option>)}</select></label>}
@@ -158,6 +183,7 @@ export default function App() {
         {role === 'aluno' && activeTab === 'cards' && <CardsAlbumView cards={cards} onSelectCard={setSelectedCard}/>}
         {role === 'aluno' && activeTab === 'conquistas' && <section className="rounded-2xl bg-white p-6"><h2 className="text-xl font-bold">Conquistas do aluno</h2>{achievements.length ? <button className="mt-3 rounded bg-amber-600 px-4 py-2 text-white" onClick={()=>setShowAchievements(true)}>Ver {achievements.length} registros</button> : <p className="mt-3">Nenhuma conquista retornada pela API.</p>}</section>}
         {role === 'aluno' && activeTab === 'loja' && current && <LojaMoedasView student={current} rewards={rewards.map(r=>({id:String(r.id??''),name:String(r.name??r.title??''),desc:String(r.description??r.desc??''),cost:Number(r.cost??0),category:['escola','experiencias','digitais','cultura'].includes(String(r.category))?r.category as any:'escola',availability:r.availability==='esgotado'||r.availability==='reservado'?r.availability:'disponivel',popular:typeof r.popular==='boolean'?r.popular:undefined,note:typeof r.note==='string'?r.note:undefined})).filter(r=>r.id)} loading={loading} error={error} onRedeem={async rewardId=>{const result=await rewardsApi.redeem(rewardId,current.id);await refresh();return result.remainingCoins;}}/>}
+        {role === 'aluno' && activeTab === 'banco' && current && <BancoView studentName={current.name} nfcRoute={routePath.startsWith('/banco/nfc/')} onExitNfc={()=>{window.history.replaceState({}, '', '/banco');setRoutePath('/banco');}}/>}
         {role !== 'aluno' && activeTab === 'dashboard' && (role === 'professor' && metrics ? <ProfessorDashboard students={students} metrics={metrics as any} onSelectStudent={setSelectedStudent} onNavigateToTab={tab=>{if(tab==='painel-tv') setTv(true); else setActiveTab(tab);}} onOpenNewInterventionModal={id=>{setInterventionStudentId(id??'');setShowIntervention(true);}}/> : role==='coordenacao' && metrics ? <CoordenacaoDashboard students={students} metrics={metrics as any}/> : <section className="rounded-2xl bg-white p-6"><h2 className="text-2xl font-bold">Visão da turma</h2>{metrics ? <dl className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">{[['Alunos',metrics.totalStudents],['Evoluindo bem',metrics.evolvingWell],['Precisam de atenção',metrics.needsAttention],['Intervenções',metrics.needsIntervention],['Progresso médio',`${metrics.averageMissionProgressPercent}%`],['Missões concluídas',metrics.completedMissionsMonth]].map(([k,v])=><div className="rounded-xl bg-indigo-50 p-4" key={String(k)}><dt>{String(k)}</dt><dd className="text-2xl font-bold">{String(v ?? '—')}</dd></div>)}</dl> : <p className="mt-3">Selecione uma turma autorizada para consultar métricas.</p>}</section>)}
         {role !== 'aluno' && activeTab === 'alunos' && <section className="rounded-2xl bg-white p-6"><h2 className="text-xl font-bold">Alunos autorizados</h2><p className="text-sm">Cadastro de alunos é restrito à Administração Master.</p>{students.length ? students.map(s=><button key={s.id} className="block w-full border-b py-3 text-left" onClick={()=>{void studentsApi.get(s.id).then(row=>row&&setSelectedStudent(asStudent(row))).catch(e=>setError(String(e)));}}>{s.name} · {s.classroom}</button>) : <p>Nenhum aluno disponível no escopo atual.</p>}{current && <div className="mt-4 rounded bg-slate-50 p-4"><b>{current.name}</b><p>{current.grade} · {current.classroom}</p><p>{current.pedagogicalNotes||'Sem observações registradas.'}</p>{current.abilities?.length ? current.abilities.map(a=><p key={a.id}>{a.name}: {a.state}</p>) : <p>Sem dados de habilidades.</p>}<button type="button" onClick={()=>setShowDiagnostic(true)} className="mt-3 rounded bg-indigo-700 px-4 py-2 text-white">Aplicar diagnóstico</button></div>}</section>}
         {role === 'professor' && activeTab === 'missoes' && <section className="rounded-2xl bg-white p-6"><h2 className="text-xl font-bold">Catálogo real de missões</h2>{missions.length ? missions.map(m=><div key={m.id} className="flex justify-between border-b p-3">{m.title} · {m.status}<button className="text-indigo-700 underline" onClick={()=>setMissionToPrint(m)}>Imprimir</button></div>) : <p>Nenhuma missão retornada pela API.</p>}</section>}
