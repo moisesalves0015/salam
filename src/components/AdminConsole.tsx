@@ -3,7 +3,7 @@ import {
   Activity, Archive, BookOpen, Building2, Check, ChevronDown, CircleDollarSign,
   ClipboardList, Coins, GraduationCap, LayoutDashboard, LogOut, Monitor, Pencil,
   Plus, RefreshCw, Search, Shield, ShoppingBag, Trash2, Users, X, AlertCircle,
-  LoaderCircle, Boxes, ScrollText, Sparkles, Flag, Star, Trophy,
+  LoaderCircle, Boxes, ScrollText, Sparkles, Flag, Star, Trophy, Wallet,
 } from 'lucide-react';
 
 export interface AdminConsoleProps {
@@ -15,6 +15,7 @@ export interface AdminConsoleProps {
   onRefresh: () => Promise<void> | void;
   onLogout: () => void;
   onOpenTv: () => void;
+  onOpenBank: () => void;
   onAction: (action: string, entity: string, payload: Record<string, unknown>) => Promise<unknown>;
 }
 
@@ -71,7 +72,7 @@ const display = (value: unknown): string => {
 };
 const recordId = (record: Record<string, unknown>) => record.id ?? record.uid ?? record.key ?? '';
 
-export default function AdminConsole({ actor, data, summary, loading, error, onRefresh, onLogout, onOpenTv, onAction }: AdminConsoleProps) {
+export default function AdminConsole({ actor, data, summary, loading, error, onRefresh, onLogout, onOpenTv, onOpenBank, onAction }: AdminConsoleProps) {
   const [active, setActive] = useState('overview');
   const [query, setQuery] = useState('');
   const [modal, setModal] = useState<{ mode: 'create' | 'edit'; record?: Record<string, unknown> } | null>(null);
@@ -158,6 +159,7 @@ export default function AdminConsole({ actor, data, summary, loading, error, onR
               <div className="hidden lg:block"><div className="font-[Outfit] text-sm font-bold text-slate-800">Console administrativa</div><div className="text-xs text-slate-500">Gestão central · Sala de Missões</div></div>
             </div>
             <div className="flex items-center gap-2 sm:gap-3">
+              <button onClick={onOpenBank} className="inline-flex h-9 items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 text-xs font-semibold text-[#123cc4] transition hover:border-blue-300 hover:bg-blue-100"><Wallet size={15} /><span>Banco</span></button>
               <button onClick={onOpenTv} className="inline-flex h-9 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-600 transition hover:border-blue-200 hover:text-[#123cc4]"><Monitor size={15} /><span className="hidden sm:inline">Painel TV</span></button>
               <div className="hidden h-8 w-px bg-slate-200 sm:block" />
               <div className="hidden text-right sm:block"><div className="max-w-36 truncate text-xs font-bold text-slate-700">{actor.name}</div><div className="max-w-36 truncate text-[10px] text-slate-500">{actor.email}</div></div>

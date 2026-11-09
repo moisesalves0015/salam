@@ -79,6 +79,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'relatorios', label: 'Relatórios & Memória', icon: BarChart3 },
     { id: 'reconhecimento', label: 'Reconhecimento & Cert.', icon: Trophy, badge: 'Novo', badgeColor: 'bg-purple-100 text-purple-700 border border-purple-200' },
     { id: 'cards', label: 'Álbum de Cards', icon: Star },
+    { id: 'banco', label: 'Banco de Moedas', icon: Wallet },
   ];
 
   const alunoNavItems: NavItem[] = [
@@ -98,6 +99,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'relatorios', label: 'Relatórios & Memória', icon: FileSpreadsheet },
     { id: 'trilhas', label: 'Matriz Curricular', icon: GitBranch },
     { id: 'reconhecimento', label: 'Reconhecimentos', icon: Trophy, badge: 'Novo', badgeColor: 'bg-amber-100 text-amber-700 border border-amber-200' },
+    { id: 'banco', label: 'Banco de Moedas', icon: Wallet },
   ];
 
   const navItems = currentRole === 'aluno' 
