@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { onAuthStateChanged, type User } from 'firebase/auth';
-import { firebaseAuth, firebaseClientConfigured, requestPasswordReset, signInWithEmailAndPassword, signOutUser } from './services/firebaseClient';
+import { firebaseAuth, firebaseClientConfigured, signOutUser } from './services/firebaseClient';
 import { adminApi, studentsApi, trailsApi, missionsApi, cardsApi, achievementsApi, metricsApi, interventionsApi, rewardsApi, type TrailCatalogItem } from './services/api';
 import { INITIAL_STUDENTS } from './data/initialData';
 import { LoginScreen } from './components/LoginScreen';
@@ -137,7 +137,6 @@ export default function App() {
     });
   }, [clearSession, demoStudent, loadProfileData]);
 
-  const loginStaff = async (email: string, password: string) => { setLoading(true); setError(null); try { await signInWithEmailAndPassword(email, password); } catch (e) { setError(e instanceof Error ? e.message : 'Falha ao entrar.'); setLoading(false); throw e; } };
   const loginDemoStudent = (student: Student) => {
     setDemoStudent(student);
     setProfile({ firebaseUid: `demo-${student.id}`, userId: `demo-${student.id}`, email: '', name: student.name, role: 'aluno', schoolId: 'demo', classroomIds: [], studentId: student.id });
@@ -161,7 +160,7 @@ export default function App() {
     await loadAdmin(); setNotice('Alteração confirmada pelo servidor.'); return result;
   };
 
-  if (!profile) return <LoginScreen students={INITIAL_STUDENTS} onDemoStudentLogin={loginDemoStudent} onStaffLogin={loginStaff} onPasswordReset={requestPasswordReset} loading={loading} error={error} firebaseConfigured={firebaseClientConfigured} />;
+  if (!profile) return <LoginScreen students={INITIAL_STUDENTS} onDemoStudentLogin={loginDemoStudent} loading={loading} error={error} />;
   if (loading) return <main className="min-h-screen grid place-items-center bg-slate-50"><p role="status">Carregando dados autorizados…</p></main>;
   if (profile.role === 'admin' && routePath.startsWith('/banco')) return <div className="min-h-screen bg-[#f4f7fc] p-4 sm:p-8"><div className="mx-auto mb-5 flex max-w-6xl justify-between"><span className="self-center text-sm font-bold text-slate-700">Banco demonstrativo · ADM Master</span><button onClick={()=>{window.history.pushState({}, '', '/');setRoutePath('/');}} className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700">Voltar à administração</button></div><BancoView studentName={profile.name} nfcRoute={routePath.startsWith('/banco/nfc/')} onExitNfc={()=>{window.history.replaceState({}, '', '/banco');setRoutePath('/banco');}}/></div>;
   if (profile.role === 'admin') return <AdminConsole actor={{name:profile.name,email:profile.email,role:profile.role}} data={adminData} summary={adminSummary} loading={loading} error={error} onRefresh={refresh} onLogout={logout} onOpenBank={()=>{window.history.pushState({}, '', '/banco');setRoutePath('/banco');}} onOpenTv={()=>setNotice('Painel TV não aberto: selecione primeiro uma escola e turma válidas. Não exibimos alunos de várias escolas em conjunto.')} onAction={adminAction}/>;
