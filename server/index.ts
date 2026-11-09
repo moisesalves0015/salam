@@ -27,7 +27,7 @@ try {
 } catch (err) {
   const message = err instanceof Error ? err.message : String(err);
   console.warn(`\n[Server] ⚠️  Firebase não inicializado: ${message}`);
-  console.warn('[Server] O servidor vai iniciar em modo OFFLINE (dados mockados no frontend).\n');
+  console.warn('[Server] O servidor vai iniciar sem Firebase; rotas de dados permanecerão indisponíveis até a configuração ser corrigida.\n');
 }
 
 // ─── App Express ──────────────────────────────────────────────────────────────
@@ -57,7 +57,7 @@ app.use(cors({
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Mock-Role', 'X-Request-ID'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID'],
 }));
 
 // ─── Parsing ──────────────────────────────────────────────────────────────────

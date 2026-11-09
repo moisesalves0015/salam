@@ -1,206 +1,75 @@
 #!/usr/bin/env tsx
 /**
- * scripts/seedFirebase.ts
- * 
- * Script de migração CLI para popular o Firestore com os dados mockados.
- * 
- * Uso:
- *   npm run firebase:seed:dry   — valida sem gravar
- *   npm run firebase:seed       — executa migração completa
- *   npm run firebase:verify     — verifica contagem de documentos
- * 
- * Flags:
- *   --dry-run    Apenas valida, sem gravar no Firestore
- *   --verify     Apenas conta documentos existentes
- *   --entity=X   Migra apenas entidade específica (pode repetir)
- * 
- * Segurança:
- *   Fora do ambiente de desenvolvimento, exige confirmação explícita
- *   digitando o nome do projeto antes de executar.
+ * Valida ou publica, de forma insert-only, catálogos curriculares globais.
+ * Por padrão este script executa apenas dry-run. Escrita exige --apply.
+ * Dados legados eventualmente existentes não são removidos ou substituídos;
+ * cleanup de produção requer migração aprovada separadamente.
  */
-
 import 'dotenv/config';
-import * as readline from 'readline';
 import { initializeFirebaseAdmin, getDb } from '../server/config/firebaseAdmin';
-import {
-  executeSeed,
-  createMigrationRun,
-} from '../server/services/seedService';
-import { SeedableEntity } from '../server/types/server';
-
-// ─── Parse de argumentos ──────────────────────────────────────────────────────
+import { executeSeed, CatalogEntity } from '../server/services/seedService';
 
 const args = process.argv.slice(2);
-const isDryRun = args.includes('--dry-run');
-const isVerify = args.includes('--verify');
-const entityArgs = args
-  .filter((a) => a.startsWith('--entity='))
-  .map((a) => a.replace('--entity=', '') as SeedableEntity);
-
-const ALL_ENTITIES: SeedableEntity[] = [
-  'schools', 'users', 'classrooms', 'students', 'abilities', 'trails',
-  'missions', 'studentMissions', 'cards', 'achievements', 'interventions',
-  'diagnostics', 'rewards', 'recognitionEvents', 'historyLogs',
-];
-
-const entitiesToSeed = entityArgs.length > 0 ? entityArgs : ALL_ENTITIES;
-
-// ─── Confirmação interativa ───────────────────────────────────────────────────
-
-async function askConfirmation(question: string): Promise<string> {
-  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-  return new Promise((resolve) => {
-    rl.question(question, (answer) => {
-      rl.close();
-      resolve(answer.trim());
-    });
-  });
-}
-
-// ─── Verificação de documentos ────────────────────────────────────────────────
-
-async function verifyCollections(): Promise<void> {
-  const db = getDb();
-  const collections = [
-    'schools', 'users', 'classrooms', 'students', 'abilities',
-    'studentAbilities', 'trails', 'missions', 'studentMissions',
-    'cards', 'studentCards', 'achievements', 'studentAchievements',
-    'interventions', 'diagnostics', 'rewards', 'recognitionEvents', 'historyLogs',
-  ];
-
-  console.log('\n📊 Verificando coleções no Firestore:\n');
-  let total = 0;
-
-  for (const col of collections) {
-    const snap = await db.collection(col).count().get();
-    const count = snap.data().count;
-    total += count;
-    const indicator = count > 0 ? '✅' : '⭕';
-    console.log(`   ${indicator} ${col.padEnd(25)} ${count} documentos`);
-  }
-
-  console.log(`\n   Total: ${total} documentos\n`);
-}
-
-// ─── Main ─────────────────────────────────────────────────────────────────────
+const apply = args.includes('--apply');
+const verify = args.includes('--verify');
+const entities: CatalogEntity[] = ['trails', 'missions', 'abilities', 'cards', 'achievements', 'rewards'];
+const entityArgs = args.filter((arg) => arg.startsWith('--entity=')).map((arg) => arg.slice('--entity='.length));
+const invalid = entityArgs.filter((entity) => !entities.includes(entity as CatalogEntity));
 
 async function main(): Promise<void> {
-  console.log('╔══════════════════════════════════════════════╗');
-  console.log('║    Sala de Missões — Firebase Seed Script    ║');
-  console.log('╚══════════════════════════════════════════════╝\n');
+  if (invalid.length) throw new Error(`Coleção não permitida: ${invalid.join(', ')}`);
+  const selected = (entityArgs.length ? entityArgs : entities) as CatalogEntity[];
+  const projectId = process.env.FIREBASE_PROJECT_ID || process.env.GCLOUD_PROJECT || '';
+  const emulator = Boolean(process.env.FIRESTORE_EMULATOR_HOST || process.env.FIREBASE_EMULATOR_HUB);
 
-  // Inicializa Firebase
-  try {
+  if (verify) {
+    if (!emulator && process.env.ACKNOWLEDGE_FIREBASE_PRODUCTION_WRITE !== projectId) {
+      throw new Error('Verificação fora do emulator requer ACKNOWLEDGE_FIREBASE_PRODUCTION_WRITE igual ao project ID.');
+    }
+    if (!projectId) throw new Error('FIREBASE_PROJECT_ID/GCLOUD_PROJECT ausente.');
     initializeFirebaseAdmin();
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    console.error('❌ Falha ao inicializar Firebase:', message);
-    console.error('\nVerifique as variáveis de ambiente no .env:');
-    console.error('  FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY\n');
-    process.exit(1);
+    const db = getDb();
+    console.log(`Coleções consultadas no projeto ${projectId}: ${selected.join(', ')}`);
+    for (const collection of selected) {
+      const snapshot = await db.collection(collection).count().get();
+      console.log(`${collection}: ${snapshot.data().count} documentos`);
+    }
+    return;
   }
 
-  const projectId = process.env.FIREBASE_PROJECT_ID || 'desconhecido';
-  const nodeEnv = process.env.NODE_ENV || 'development';
-
-  console.log(`📌 Projeto Firebase: ${projectId}`);
-  console.log(`🌍 Ambiente: ${nodeEnv}`);
-  console.log(`📝 Modo: ${isDryRun ? '🔍 DRY-RUN (sem gravar)' : isVerify ? '📊 VERIFICAÇÃO' : '✍️  LIVE'}\n`);
-
-  // Modo de verificação
-  if (isVerify) {
-    await verifyCollections();
-    process.exit(0);
+  if (!apply) {
+    console.log('Modo: DRY-RUN (padrão; nenhuma conexão ou escrita no Firebase).');
+    console.log(`Catálogos validados: ${selected.join(', ')}`);
+    const progress = await executeSeed({ entities: selected, dryRun: true });
+    for (const item of progress) {
+      console.log(`${item.entity}: ${item.created} itens válidos; ${item.errors} erros`);
+      item.errorMessages.forEach((message) => console.error(`  ${message}`));
+    }
+    if (progress.some((item) => item.errors > 0)) process.exitCode = 1;
+    console.log('Para gravar explicitamente, use --apply. Documentos existentes serão mantidos; não há cleanup automático.');
+    return;
   }
 
-  // Confirmação obrigatória fora de desenvolvimento
-  if (!isDryRun && nodeEnv !== 'development') {
-    console.warn('⚠️  ATENÇÃO: Você está executando o seed em ambiente de PRODUÇÃO!');
-    console.warn('   Esta operação vai MODIFICAR dados no Firebase real.\n');
-
-    const answer = await askConfirmation(
-      `   Digite o nome do projeto (${projectId}) para confirmar: `
-    );
-
-    if (answer !== projectId) {
-      console.log('\n❌ Confirmação incorreta. Operação cancelada.\n');
-      process.exit(1);
-    }
-
-    console.log('\n✅ Confirmação aceita. Iniciando migração...\n');
+  if (!projectId) throw new Error('Escrita abortada: FIREBASE_PROJECT_ID/GCLOUD_PROJECT ausente.');
+  if (!emulator && process.env.ACKNOWLEDGE_FIREBASE_PRODUCTION_WRITE !== projectId) {
+    throw new Error('Escrita abortada: fora do emulator defina ACKNOWLEDGE_FIREBASE_PRODUCTION_WRITE exatamente igual ao project ID.');
   }
 
-  // Exibe entidades que serão migradas
-  console.log('📦 Entidades a migrar:');
-  entitiesToSeed.forEach((e) => console.log(`   - ${e}`));
-  console.log('');
-
-  const requestId = `seed-cli-${new Date().toISOString().replace(/[:.]/g, '-')}`;
-
-  try {
-    // Cria o migration run (apenas em modo live)
-    let runId = 'dry-run';
-    if (!isDryRun) {
-      runId = await createMigrationRun({
-        requestId,
-        source: 'mock',
-        entities: entitiesToSeed,
-        mode: 'upsert',
-        dryRun: false,
-        createdBy: 'cli-script',
-      });
-      console.log(`📋 Migration Run ID: ${runId}\n`);
-    }
-
-    // Executa seed
-    const progress = await executeSeed({
-      entities: entitiesToSeed,
-      mode: 'upsert',
-      dryRun: isDryRun,
-      requestId,
-      runId,
-    });
-
-    // Resultado final
-    console.log('\n═══════════════════════════════════════════════');
-    console.log('RESULTADO FINAL');
-    console.log('═══════════════════════════════════════════════');
-
-    let totalCreated = 0;
-    let totalUpdated = 0;
-    let totalErrors = 0;
-
-    for (const p of progress) {
-      totalCreated += p.created;
-      totalUpdated += p.updated;
-      totalErrors += p.errors;
-
-      const status = p.errors > 0 ? '⚠️ ' : '✅';
-      console.log(`${status} ${p.entity.padEnd(22)} criados: ${p.created}, atualizados: ${p.updated}, erros: ${p.errors}`);
-
-      if (p.errorMessages.length > 0) {
-        p.errorMessages.forEach((msg) => console.error(`   └── ${msg}`));
-      }
-    }
-
-    console.log('───────────────────────────────────────────────');
-    console.log(`   Total: ${totalCreated + totalUpdated} documentos processados (${totalErrors} erros)`);
-    console.log('═══════════════════════════════════════════════\n');
-
-    if (isDryRun) {
-      console.log('✅ Dry-run concluído. Nenhum dado foi gravado.');
-      console.log('   Para executar de verdade: npm run firebase:seed\n');
-    } else {
-      console.log('✅ Migração concluída!');
-      console.log(`   Execute "npm run firebase:verify" para confirmar os dados.\n`);
-    }
-
-    process.exit(totalErrors > 0 ? 1 : 0);
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    console.error('\n❌ Erro fatal durante a migração:', message);
-    process.exit(1);
+  // Exibe escopo/projeto antes de inicializar o cliente ou iniciar qualquer escrita.
+  console.log(`Coleções que podem receber novos documentos: ${selected.join(', ')}`);
+  console.log(`Projeto Firebase: ${projectId}${emulator ? ' (emulator)' : ' (fora do emulator)'}`);
+  console.log('Modo: APPLY insert-only; documentos existentes não serão alterados nem removidos.');
+  initializeFirebaseAdmin();
+  const progress = await executeSeed({ entities: selected, mode: 'insert', dryRun: false });
+  for (const item of progress) {
+    console.log(`${item.entity}: ${item.created} criados, ${item.updated} existentes preservados, ${item.errors} erros`);
+    item.errorMessages.forEach((message) => console.error(`  ${message}`));
   }
+  if (progress.some((item) => item.errors > 0)) process.exitCode = 1;
+  console.log('Dados já criados por seeds antigos não foram removidos ou substituídos. Cleanup de produção exige migração aprovada.');
 }
 
-main();
+main().catch((error) => {
+  console.error(`Seed abortado: ${error instanceof Error ? error.message : String(error)}`);
+  process.exitCode = 1;
+});

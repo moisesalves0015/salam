@@ -8,14 +8,35 @@ interface CardDetailModalProps {
   card: CardItem | null;
   isOpen: boolean;
   onClose: () => void;
+  isLoading?: boolean;
+  error?: string | null;
 }
 
 export const CardDetailModal: React.FC<CardDetailModalProps> = ({
   card,
   isOpen,
-  onClose
+  onClose,
+  isLoading = false,
+  error = null
 }) => {
-  if (!isOpen || !card) return null;
+  if (!isOpen) return null;
+
+  if (isLoading || error || !card) {
+    const message = isLoading
+      ? 'Carregando detalhes do card...'
+      : error
+        ? `Não foi possível carregar o card. ${error}`
+        : 'Nenhum card selecionado.';
+
+    return (
+      <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
+        <div className="bg-white border-2 border-slate-200 rounded-3xl w-full max-w-lg shadow-2xl p-8 text-center">
+          <p role={error ? 'alert' : 'status'} className={`text-sm font-bold ${error ? 'text-red-700' : 'text-slate-600'}`}>{message}</p>
+          <button onClick={onClose} className="mt-5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold cursor-pointer">Fechar</button>
+        </div>
+      </div>
+    );
+  }
 
   const rarityConfig = RARITY_CONFIGS[card.rarity] || RARITY_CONFIGS.comum;
 

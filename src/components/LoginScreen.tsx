@@ -1,330 +1,147 @@
 import React, { useState } from 'react';
-import {
-  Rocket,
-  Star,
-  GraduationCap,
-  BookOpen,
-  Globe,
-  ChevronRight,
-  ArrowLeft,
-  Sparkles,
-  Users,
-  Zap
-} from 'lucide-react';
-import { Student } from '../types';
+import { GraduationCap, LoaderCircle, Rocket, Sparkles, Users } from 'lucide-react';
 
-interface LoginScreenProps {
-  students: Student[];
-  onLoginAsStudent: (student: Student) => void;
-  onLoginAsProfessor: () => void;
-  onLoginAsCoordenacao: () => void;
-  onBack: () => void;
-  defaultRole?: 'aluno' | 'professor' | 'coordenacao';
+export interface LoginScreenProps {
+  onStaffLogin(email: string, password: string): Promise<void>;
+  onStudentLogin(studentId: string, pin: string): Promise<void>;
+  onPasswordReset?(email: string): Promise<void>;
+  loading: boolean;
+  error?: string | null;
+  firebaseConfigured: boolean;
 }
 
-const ROLE_OPTIONS = [
-  {
-    id: 'aluno' as const,
-    label: 'Sou Aluno(a)',
-    desc: 'Acesse sua jornada de missões',
-    icon: GraduationCap,
-    color: 'from-blue-600 to-indigo-600',
-    border: 'border-blue-400/30',
-    glow: 'shadow-blue-600/20',
-    badge: '4º e 5º Ano'
-  },
-  {
-    id: 'professor' as const,
-    label: 'Sou Professor(a)',
-    desc: 'Acompanhe o progresso da turma',
-    icon: BookOpen,
-    color: 'from-purple-600 to-pink-600',
-    border: 'border-purple-400/30',
-    glow: 'shadow-purple-600/20',
-    badge: 'Área Docente'
-  },
-  {
-    id: 'coordenacao' as const,
-    label: 'Coordenação',
-    desc: 'Visão geral do projeto',
-    icon: Globe,
-    color: 'from-emerald-600 to-teal-600',
-    border: 'border-emerald-400/30',
-    glow: 'shadow-emerald-600/20',
-    badge: 'Gestão Pedagógica'
-  },
-];
+type LoginTab = 'staff' | 'student';
 
 export const LoginScreen: React.FC<LoginScreenProps> = ({
-  students,
-  onLoginAsStudent,
-  onLoginAsProfessor,
-  onLoginAsCoordenacao,
-  onBack,
-  defaultRole
+  onStaffLogin,
+  onStudentLogin,
+  onPasswordReset,
+  loading,
+  error,
+  firebaseConfigured,
 }) => {
-  const [selectedRole, setSelectedRole] = useState<'aluno' | 'professor' | 'coordenacao' | null>(defaultRole || null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-  const [pinDigits, setPinDigits] = useState<string[]>(['', '', '', '']);
-  const [pinError, setPinError] = useState(false);
+  const [tab, setTab] = useState<LoginTab>('staff');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [studentId, setStudentId] = useState('');
+  const [pin, setPin] = useState('');
+  const [resetMode, setResetMode] = useState(false);
+  const [notice, setNotice] = useState('');
+  const unavailable = !firebaseConfigured;
+  const disabled = loading || unavailable;
 
-  const filteredStudents = students.filter(s =>
-    s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    s.classroom.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const handleRoleSelect = (role: 'aluno' | 'professor' | 'coordenacao') => {
-    setSelectedRole(role);
-    if (role === 'professor') {
-      setTimeout(onLoginAsProfessor, 200);
-    } else if (role === 'coordenacao') {
-      setTimeout(onLoginAsCoordenacao, 200);
-    }
+  const switchTab = (nextTab: LoginTab) => {
+    setTab(nextTab);
+    setResetMode(false);
+    setNotice('');
   };
 
-  const handleStudentSelect = (student: Student) => {
-    setSelectedStudent(student);
-    setPinDigits(['', '', '', '']);
-    setPinError(false);
+  const handleStaffSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (disabled) return;
+    setNotice('');
+    if (resetMode) {
+      if (!onPasswordReset) return;
+      await onPasswordReset(email.trim());
+      setNotice('Se a solicitação for válida, você receberá instruções para redefinir sua senha.');
+      setResetMode(false);
+      return;
+    }
+    await onStaffLogin(email.trim(), password);
   };
 
-  const handlePinInput = (digit: string, index: number) => {
-    const newDigits = [...pinDigits];
-    newDigits[index] = digit;
-    setPinDigits(newDigits);
-    setPinError(false);
-
-    // Auto-focus next input
-    if (digit && index < 3) {
-      const nextInput = document.getElementById(`pin-${index + 1}`);
-      if (nextInput) (nextInput as HTMLInputElement).focus();
-    }
-
-    // Auto-login when all 4 digits entered (PIN is always correct in demo mode)
-    if (newDigits.every(d => d !== '') && index === 3 && selectedStudent) {
-      setTimeout(() => {
-        onLoginAsStudent(selectedStudent);
-      }, 400);
-    }
-  };
-
-  const handlePinKeyDown = (e: React.KeyboardEvent, index: number) => {
-    if (e.key === 'Backspace' && !pinDigits[index] && index > 0) {
-      const prevInput = document.getElementById(`pin-${index - 1}`);
-      if (prevInput) (prevInput as HTMLInputElement).focus();
-    }
-  };
-
-  const handleDirectLogin = () => {
-    if (selectedStudent) {
-      onLoginAsStudent(selectedStudent);
-    }
+  const handleStudentSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (disabled) return;
+    setNotice('');
+    await onStudentLogin(studentId.trim(), pin);
   };
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_center,#ffffff_0%,#e0e7ff_100%)] flex flex-col items-center justify-center p-4 relative overflow-hidden">
-      {/* Background Orbs */}
-      <div className="absolute w-[400px] h-[400px] bg-blue-400/20 rounded-full blur-3xl -top-40 -left-20 pointer-events-none" />
-      <div className="absolute w-[300px] h-[300px] bg-purple-400/20 rounded-full blur-3xl -bottom-20 -right-20 pointer-events-none" />
+    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_center,#ffffff_0%,#e0e7ff_100%)] p-4 sm:p-6">
+      <div aria-hidden="true" className="pointer-events-none absolute -left-20 -top-40 h-[400px] w-[400px] rounded-full bg-blue-400/20 blur-3xl" />
+      <div aria-hidden="true" className="pointer-events-none absolute -bottom-20 -right-20 h-[300px] w-[300px] rounded-full bg-indigo-400/20 blur-3xl" />
 
-      <div className="w-full max-w-md relative z-10">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <button
-            onClick={onBack}
-            className="inline-flex items-center gap-1.5 text-slate-500 hover:text-slate-800 text-xs font-bold mb-6 transition-colors cursor-pointer"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            Voltar
-          </button>
-
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#123cc4] to-[#05148d] flex items-center justify-center shadow-lg shadow-blue-600/30">
-              <Rocket className="w-6 h-6 text-white" />
+      <section className="relative z-10 w-full max-w-md" aria-labelledby="login-title">
+        <header className="mb-7 text-center">
+          <div className="mb-4 flex items-center justify-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#123cc4] to-[#05148d] shadow-lg shadow-blue-600/30">
+              <Rocket className="h-6 w-6 text-white" aria-hidden="true" />
             </div>
             <div className="text-left">
-              <div className="text-lg font-black text-[#00067a] tracking-wide">SALA DE MISSÕES</div>
-              <div className="text-xs text-[#123cc4] font-bold">Portal de Entrada</div>
+              <div className="text-lg font-black tracking-wide text-[#00067a]">SALA DE MISSÕES</div>
+              <div className="text-xs font-bold text-[#123cc4]">Portal de entrada</div>
             </div>
           </div>
-          <p className="text-slate-600 text-sm font-medium">Quem vai embarcar nessa aventura?</p>
-        </div>
+          <h1 id="login-title" className="text-xl font-black text-slate-800">Que bom ter você por aqui!</h1>
+          <p className="mt-1 text-sm font-medium text-slate-600">Entre para continuar sua jornada de missões.</p>
+        </header>
 
-        {/* Role Selection */}
-        {!selectedRole && (
-          <div className="space-y-3">
-            {ROLE_OPTIONS.map((role) => (
-              <button
-                key={role.id}
-                onClick={() => handleRoleSelect(role.id)}
-                className={`w-full flex items-center gap-4 p-5 rounded-3xl bg-white border border-slate-200 hover:border-slate-300 transition-all group cursor-pointer text-left shadow-sm hover:shadow-md`}
-              >
-                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${role.color} flex items-center justify-center shadow-lg ${role.glow} shrink-0 group-hover:scale-110 transition-transform`}>
-                  <role.icon className="w-6 h-6 text-white" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-0.5">
-                    <span className="text-base font-black text-slate-800">{role.label}</span>
-                    <span className="text-[10px] font-bold text-[#123cc4] bg-[#EAF4FF] px-2 py-0.5 rounded-full border border-[#C9DDF0]">
-                      {role.badge}
-                    </span>
-                  </div>
-                  <span className="text-xs font-medium text-slate-500">{role.desc}</span>
-                </div>
-                <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-[#123cc4] group-hover:translate-x-0.5 transition-all shrink-0" />
-              </button>
-            ))}
+        <div className="rounded-3xl border border-white/80 bg-white/90 p-5 shadow-xl shadow-indigo-900/10 backdrop-blur sm:p-7">
+          <div className="mb-6 grid grid-cols-2 gap-2 rounded-2xl bg-slate-100 p-1" role="tablist" aria-label="Tipo de acesso">
+            <button type="button" role="tab" id="staff-tab" aria-selected={tab === 'staff'} aria-controls="staff-panel" onClick={() => switchTab('staff')} className={`min-h-11 rounded-xl px-2 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#123cc4] focus-visible:ring-offset-2 ${tab === 'staff' ? 'bg-white text-[#123cc4] shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}>
+              Equipe escolar
+            </button>
+            <button type="button" role="tab" id="student-tab" aria-selected={tab === 'student'} aria-controls="student-panel" onClick={() => switchTab('student')} className={`min-h-11 rounded-xl px-2 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#123cc4] focus-visible:ring-offset-2 ${tab === 'student' ? 'bg-white text-[#123cc4] shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}>
+              Aluno
+            </button>
           </div>
-        )}
 
-        {/* Student Selection */}
-        {selectedRole === 'aluno' && !selectedStudent && (
-          <div className="space-y-4">
-            <div className="flex items-center gap-3 mb-2">
-              <button
-                onClick={() => setSelectedRole(null)}
-                className="text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
-              >
-                <ArrowLeft className="w-4 h-4" />
-              </button>
-              <h3 className="text-base font-black text-slate-800">Quem é você?</h3>
-            </div>
+          {!firebaseConfigured && (
+            <p className="mb-4 rounded-xl border border-amber-300 bg-amber-50 px-3 py-2.5 text-sm font-medium text-amber-900" role="status">
+              O acesso está temporariamente indisponível porque a autenticação não está configurada. Tente novamente mais tarde.
+            </p>
+          )}
+          {error && <p className="mb-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-sm font-medium text-red-800" role="alert">{error}</p>}
+          {notice && <p className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2.5 text-sm font-medium text-emerald-800" role="status">{notice}</p>}
+          {loading && <p className="mb-4 flex items-center gap-2 text-sm font-medium text-[#123cc4]" role="status"><LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />Verificando seus dados…</p>}
 
-            {/* Search */}
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Pesquisar seu nome..."
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                className="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 text-[16px] text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 transition-all shadow-sm"
-                autoFocus
-              />
-            </div>
-
-            {/* Student List Grid */}
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 max-h-[60vh] overflow-y-auto no-scrollbar p-1">
-              {filteredStudents.map((student) => (
-                <button
-                  key={student.id}
-                  onClick={() => handleStudentSelect(student)}
-                  className="flex flex-col items-center gap-2 p-3 rounded-2xl bg-white border border-slate-200 hover:border-[#123cc4] hover:shadow-md transition-all cursor-pointer group"
-                >
-                  <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-slate-100 group-hover:border-[#123cc4] transition-colors bg-slate-100 flex items-center justify-center shrink-0">
-                    {student.avatarUrl ? (
-                      <img src={student.avatarUrl} alt={student.name} className="w-full h-full object-cover" />
-                    ) : (
-                      <span className="text-2xl">{student.avatar}</span>
-                    )}
-                  </div>
-                  <div className="w-full text-center">
-                    <div className="text-[11px] font-black text-slate-800 leading-tight line-clamp-2" title={student.name}>{student.name.split(' ')[0]}</div>
-                    <div className="text-[9px] text-slate-500 font-bold mt-0.5 truncate">{student.classroom}</div>
-                  </div>
+          {tab === 'staff' ? (
+            <section id="staff-panel" role="tabpanel" aria-labelledby="staff-tab">
+              <form className="space-y-4" onSubmit={handleStaffSubmit}>
+                <div>
+                  <label htmlFor="staff-email" className="mb-1.5 block text-sm font-bold text-slate-700">E-mail</label>
+                  <input id="staff-email" name="email" type="email" autoComplete="username" inputMode="email" required disabled={disabled} value={email} onChange={event => setEmail(event.target.value)} placeholder="voce@escola.edu.br" className="min-h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-900 placeholder:text-slate-400 focus-visible:border-[#123cc4] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/15 disabled:cursor-not-allowed disabled:bg-slate-100" />
+                </div>
+                {!resetMode && <div>
+                  <label htmlFor="staff-password" className="mb-1.5 block text-sm font-bold text-slate-700">Senha</label>
+                  <input id="staff-password" name="password" type="password" autoComplete="current-password" required disabled={disabled} value={password} onChange={event => setPassword(event.target.value)} className="min-h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-900 focus-visible:border-[#123cc4] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/15 disabled:cursor-not-allowed disabled:bg-slate-100" />
+                </div>}
+                <button type="submit" disabled={disabled || (resetMode && !onPasswordReset)} className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#123cc4] to-[#05148d] px-4 font-black text-white shadow-lg shadow-blue-600/20 transition hover:from-[#0f32a6] hover:to-[#040e6b] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/30 disabled:cursor-not-allowed disabled:opacity-55">
+                  {loading ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Sparkles className="h-4 w-4" aria-hidden="true" />}
+                  {resetMode ? 'Enviar instruções' : 'Entrar na Sala de Missões'}
                 </button>
-              ))}
-              {filteredStudents.length === 0 && (
-                <div className="col-span-3 sm:col-span-4 text-center py-8 text-slate-500 text-sm font-medium">
-                  Nenhum aluno encontrado
+              </form>
+              {onPasswordReset && <button type="button" disabled={disabled} onClick={() => { setResetMode(!resetMode); setNotice(''); }} className="mt-4 w-full rounded-lg py-1 text-center text-sm font-bold text-[#123cc4] underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#123cc4] disabled:cursor-not-allowed disabled:opacity-55">
+                {resetMode ? 'Voltar ao login' : 'Esqueceu a senha?'}
+              </button>}
+              {resetMode && <p className="mt-2 text-center text-xs text-slate-500">Informe o e-mail da sua conta para solicitar a redefinição.</p>}
+            </section>
+          ) : (
+            <section id="student-panel" role="tabpanel" aria-labelledby="student-tab">
+              <form className="space-y-4" onSubmit={handleStudentSubmit}>
+                <div>
+                  <label htmlFor="student-id" className="mb-1.5 block text-sm font-bold text-slate-700">Identificação do aluno</label>
+                  <input id="student-id" name="studentId" type="text" autoComplete="username" required disabled={disabled} value={studentId} onChange={event => setStudentId(event.target.value)} placeholder="Digite sua identificação" className="min-h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-900 placeholder:text-slate-400 focus-visible:border-[#123cc4] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/15 disabled:cursor-not-allowed disabled:bg-slate-100" />
                 </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* PIN Entry / Direct Login */}
-        {selectedRole === 'aluno' && selectedStudent && (
-          <div className="space-y-6">
-            <div className="flex items-center gap-3 mb-2">
-              <button
-                onClick={() => setSelectedStudent(null)}
-                className="text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
-              >
-                <ArrowLeft className="w-4 h-4" />
-              </button>
-              <h3 className="text-base font-black text-slate-800">Confirmar identidade</h3>
-            </div>
-
-            {/* Selected Student Card */}
-            <div className="flex items-center gap-4 p-5 rounded-3xl bg-white border border-slate-200 shadow-sm">
-              <div className="w-16 h-16 rounded-full overflow-hidden border-4 border-[#EAF4FF] shrink-0 bg-slate-100 flex items-center justify-center">
-                {selectedStudent.avatarUrl ? (
-                  <img src={selectedStudent.avatarUrl} alt={selectedStudent.name} className="w-full h-full object-cover" />
-                ) : (
-                  <div className="text-3xl">
-                    {selectedStudent.avatar}
-                  </div>
-                )}
-              </div>
-              <div>
-                <div className="text-lg font-black text-slate-800">{selectedStudent.name}</div>
-                <div className="text-xs text-slate-500 font-bold">{selectedStudent.classroom}</div>
-                <div className="flex items-center gap-2 mt-1">
-                  <div className="flex items-center gap-1">
-                    <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-                    <span className="text-xs text-amber-600 font-bold">{selectedStudent.currentXp} XP</span>
-                  </div>
-                  <span className="text-slate-300">•</span>
-                  <span className="text-xs text-[#123cc4] font-bold">Nível {selectedStudent.level}</span>
+                <div>
+                  <label htmlFor="student-pin" className="mb-1.5 block text-sm font-bold text-slate-700">PIN ou código de acesso</label>
+                  <input id="student-pin" name="pin" type="password" autoComplete="current-password" inputMode="numeric" required disabled={disabled} value={pin} onChange={event => setPin(event.target.value)} className="min-h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-900 focus-visible:border-[#123cc4] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/15 disabled:cursor-not-allowed disabled:bg-slate-100" />
                 </div>
-              </div>
-            </div>
-
-            {/* Simple PIN or Direct Access */}
-            <div className="text-center">
-              <p className="text-slate-500 text-xs font-bold mb-4">Digite seu PIN de 4 dígitos ou entre diretamente</p>
-
-              <div className="flex gap-3 justify-center mb-6">
-                {[0, 1, 2, 3].map((i) => (
-                  <input
-                    key={i}
-                    id={`pin-${i}`}
-                    type="password"
-                    inputMode="numeric"
-                    maxLength={1}
-                    value={pinDigits[i]}
-                    onChange={e => handlePinInput(e.target.value.replace(/\D/, ''), i)}
-                    onKeyDown={e => handlePinKeyDown(e, i)}
-                    className={`w-14 h-14 text-center text-[16px] font-black rounded-2xl border bg-white text-slate-800 focus:outline-none focus:ring-4 transition-all shadow-sm ${
-                      pinError
-                        ? 'border-red-400 bg-red-50 focus:ring-red-500/20'
-                        : pinDigits[i]
-                          ? 'border-[#123cc4] bg-[#EAF4FF] focus:ring-[#123cc4]/20'
-                          : 'border-slate-200 focus:border-[#123cc4] focus:ring-[#123cc4]/20'
-                    }`}
-                  />
-                ))}
-              </div>
-              
-              {pinError && (
-                <p className="text-xs text-red-500 font-bold mb-4">PIN incorreto. Tente novamente.</p>
-              )}
-
-              <button
-                onClick={handleDirectLogin}
-                className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#123cc4] to-[#05148d] hover:from-[#0f32a6] hover:to-[#040e6b] text-white font-black text-sm transition-all hover:scale-[1.02] cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20"
-              >
-                <Sparkles className="w-4 h-4" />
-                Entrar na Sala de Missões!
-                <Zap className="w-4 h-4" />
-              </button>
-
-              <p className="text-[10px] font-bold text-slate-400 mt-4 uppercase tracking-wider">
-                Modo demonstração — qualquer PIN funciona
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Decorative bottom text */}
-        <div className="mt-8 text-center">
-          <div className="flex items-center justify-center gap-2 text-xs text-slate-600">
-            <Users className="w-3.5 h-3.5" />
-            <span>Ciep Metalúrgico Benedito Cerqueira • 4º e 5º Anos • Escola Pública</span>
-          </div>
+                <button type="submit" disabled={disabled} className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#123cc4] to-[#05148d] px-4 font-black text-white shadow-lg shadow-blue-600/20 transition hover:from-[#0f32a6] hover:to-[#040e6b] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/30 disabled:cursor-not-allowed disabled:opacity-55">
+                  {loading ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" /> : <GraduationCap className="h-5 w-5" aria-hidden="true" />}
+                  Entrar na Sala de Missões
+                </button>
+              </form>
+            </section>
+          )}
         </div>
-      </div>
-    </div>
+
+        <footer className="mt-6 flex items-center justify-center gap-2 text-center text-xs text-slate-600">
+          <Users className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          <span>Ciep Metalúrgico Benedito Cerqueira • 4º e 5º Anos</span>
+        </footer>
+      </section>
+    </main>
   );
 };

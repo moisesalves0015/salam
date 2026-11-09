@@ -6,12 +6,16 @@ interface AchievementsModalProps {
   achievements: AchievementItem[];
   isOpen: boolean;
   onClose: () => void;
+  isLoading?: boolean;
+  error?: string | null;
 }
 
 export const AchievementsModal: React.FC<AchievementsModalProps> = ({
   achievements,
   isOpen,
-  onClose
+  onClose,
+  isLoading = false,
+  error = null
 }) => {
   if (!isOpen) return null;
 
@@ -34,6 +38,13 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
         </div>
 
         <div className="p-6 overflow-y-auto space-y-3 flex-1">
+          {isLoading ? (
+            <div role="status" className="py-8 text-center text-sm font-semibold text-slate-500">Carregando conquistas...</div>
+          ) : error ? (
+            <div role="alert" className="py-8 text-center text-sm font-semibold text-red-700">Não foi possível carregar as conquistas. {error}</div>
+          ) : achievements.length === 0 ? (
+            <div className="py-8 text-center text-sm font-semibold text-slate-500">Nenhuma conquista disponível no momento.</div>
+          ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {achievements.map((ach) => (
               <div
@@ -70,6 +81,7 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
               </div>
             ))}
           </div>
+          )}
         </div>
 
         <div className="bg-slate-50 px-6 py-3.5 border-t border-slate-100 flex justify-end">

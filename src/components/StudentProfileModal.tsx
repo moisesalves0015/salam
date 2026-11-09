@@ -40,8 +40,9 @@ export const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
       case 'em_desenvolvimento':
         return <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">Em desenvolvimento</span>;
       case 'nao_desenvolvida':
-      default:
         return <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-800 border border-red-300">Precisa desenvolver</span>;
+      default:
+        return null;
     }
   };
 
@@ -56,7 +57,7 @@ export const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
                 <img src={student.avatarUrl} alt={student.name} className="w-full h-full rounded-[14px] object-cover" />
               ) : (
                 <div className="w-full h-full bg-purple-100 rounded-[14px] flex items-center justify-center text-3xl font-black text-purple-700">
-                  {student.avatar}
+                  {student.avatar || ''}
                 </div>
               )}
             </div>
@@ -64,22 +65,22 @@ export const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
               <div className="flex items-center gap-2.5 flex-wrap">
                 <h2 className="text-xl font-black text-slate-900">{student.name}</h2>
                 <span className="text-xs px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-300 font-semibold">
-                  {student.grade} • {student.classroom}
+                  {[student.grade, student.classroom].filter(Boolean).join(' • ')}
                 </span>
-                <span className={`text-xs px-2.5 py-0.5 rounded-full font-bold ${
+                {student.status && <span className={`text-xs px-2.5 py-0.5 rounded-full font-bold ${
                   student.status === 'intervencao' 
                     ? 'bg-red-100 text-red-800 border border-red-300' 
                     : student.status === 'atencao'
                       ? 'bg-amber-100 text-amber-800 border border-amber-300'
                       : student.status === 'pronto_avancar'
                         ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                        : 'bg-purple-100 text-purple-800 border border-purple-300'
+                        : ''
                 }`}>
-                  {student.status === 'intervencao' ? 'Intervenção' : student.status === 'atencao' ? 'Atenção' : student.status === 'pronto_avancar' ? 'Pronto para avançar' : 'Evoluindo bem'}
-                </span>
+                  {student.status === 'intervencao' ? 'Intervenção' : student.status === 'atencao' ? 'Atenção' : student.status === 'pronto_avancar' ? 'Pronto para avançar' : student.status === 'evoluindo_bem' ? 'Evoluindo bem' : student.status}
+                </span>}
               </div>
               <p className="text-xs text-slate-600 mt-1 font-medium">
-                Prontuário Pedagógico Evolutivo • Docente: {student.teacherName} • Entrada: {student.entryDate}
+                Prontuário Pedagógico Evolutivo{student.teacherName ? ` • Docente: ${student.teacherName}` : ''}{student.entryDate ? ` • Entrada: ${student.entryDate}` : ''}
               </p>
             </div>
           </div>
@@ -106,7 +107,7 @@ export const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
           {[
             { id: 'habilidades', label: 'Matriz de Habilidades' },
             { id: 'evidencias', label: 'Evidências & Autonomia' },
-            { id: 'intervencoes', label: `Intervenções (${student.interventions.length})` },
+            { id: 'intervencoes', label: 'Intervenções' },
             { id: 'adaptacoes', label: 'Adaptações & Inclusão' },
           ].map((t) => (
             <button
@@ -133,12 +134,12 @@ export const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
                   Estados Operacionais de Domínio
                 </div>
                 <div className="text-[11px] text-purple-700 font-bold">
-                  {student.abilities.length} habilidades monitoradas
+                  {student.abilities.length ? `${student.abilities.length} habilidades monitoradas` : 'Nenhuma habilidade registrada'}
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {student.abilities.map((ab) => (
+                {student.abilities.length ? student.abilities.map((ab) => (
                   <div key={ab.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-200 hover:border-purple-300 transition-all flex flex-col justify-between shadow-xs">
                     <div>
                       <div className="flex items-center justify-between mb-2">
@@ -195,7 +196,7 @@ export const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
                       </button>
                     </div>
                   </div>
-                ))}
+                )) : <p className="text-center py-8 text-slate-500 text-xs">Nenhuma habilidade registrada.</p>}
               </div>
             </div>
           )}
@@ -322,19 +323,19 @@ export const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
                 <div className="space-y-2 pt-2">
                   <div className="text-xs font-bold text-slate-900">Adaptações Ativas:</div>
                   <div className="flex flex-wrap gap-2">
-                    {student.adaptations.map((ad, idx) => (
+                    {student.adaptations?.length ? student.adaptations.map((ad, idx) => (
                       <span key={idx} className="px-3 py-1.5 rounded-xl bg-purple-50 border border-purple-200 text-purple-800 text-xs font-semibold flex items-center gap-1.5">
                         <Sparkles className="w-3.5 h-3.5 text-purple-600 shrink-0" />
                         <span>{ad}</span>
                       </span>
-                    ))}
+                    )) : <p className="text-xs text-slate-500">Nenhuma adaptação registrada.</p>}
                   </div>
                 </div>
 
                 <div className="pt-3 border-t border-slate-200">
                   <div className="text-xs font-bold text-slate-900 mb-1">Anotações Pedagógicas do Professor:</div>
                   <p className="text-xs text-slate-700 bg-white p-3 rounded-xl border border-slate-200 leading-relaxed">
-                    {student.pedagogicalNotes}
+                    {student.pedagogicalNotes || ''}
                   </p>
                 </div>
               </div>

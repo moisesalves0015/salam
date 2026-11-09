@@ -1,326 +1,91 @@
-# Sala de Missões 🚀
+# Sala de Missões
 
-Ecossistema pedagógico gamificado para estudantes do 4º e 5º ano do Ensino Fundamental.
+Aplicação pedagógica gamificada para estudantes do 4º e 5º ano, com frontend React/Vite, API Node/Express, Firebase Authentication e Cloud Firestore.
 
-## Tecnologias
+## Estado da integração
 
-| Camada | Tecnologia |
-|---|---|
-| Frontend | React 19 + TypeScript + Vite + Tailwind CSS |
-| Backend | Node.js + Express + TypeScript |
-| Banco de dados | Cloud Firestore (Firebase) |
-| Autenticação | Firebase Authentication (futuro) |
-| Validação | Zod |
-| Testes | Vitest |
+A aplicação usa Firebase Auth no navegador e token Firebase ID nas chamadas à API. O servidor verifica a identidade e o perfil, aplica papel/escopo e usa Firebase Admin para ler/gravar dados. O catálogo administrativo inclui contas, escolas, turmas, estudantes, trilhas, missões, habilidades, cards, conquistas e recompensas. Tentativas/conclusão de missões e resgates de recompensas são processados no servidor; XP/moedas não devem ser escritos pelo cliente.
 
----
+Não existe configuração de Emulator (`firebase.json`) neste checkout e não foi executado deploy, seed ou gravação de produção nesta implementação. Notificações persistidas, reconhecimentos, exportação de relatórios e alguns fluxos de certificado ainda não possuem endpoint integrado: a interface os identifica como indisponíveis ou vazios, em vez de inventar registros. As questões do diagnóstico permanecem conteúdo pedagógico local; as respostas são persistidas pela API. Não usar conteúdo/demo local como cadastro real.
 
-## Configuração do Ambiente
+## Requisitos e instalação local
 
-### 1. Clonar e instalar dependências
+Requer Node.js compatível com as dependências do projeto e npm.
 
 ```bash
-git clone <url-do-repositorio>
-cd sala-de-missoes
-npm install
-```
-
-### 2. Configurar variáveis de ambiente
-
-```bash
+npm ci
 cp .env.example .env
 ```
 
-Edite o arquivo `.env` com suas credenciais.
+Preencha o `.env` conforme os valores disponibilizados por um administrador do Firebase. Não compartilhe nem versione `.env` ou credenciais de conta de serviço.
 
----
+### Configuração Firebase
 
-## Credenciais Firebase
+Ative Firebase Authentication (provedor e-mail/senha) e Cloud Firestore no projeto escolhido. As variáveis `VITE_FIREBASE_*` são configuração pública do Web SDK; elas não substituem regras de segurança. O servidor precisa de credencial Admin via ADC ou das variáveis privadas `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL` e `FIREBASE_PRIVATE_KEY`. Nunca prefixe segredo Admin com `VITE_`.
 
-### Credenciais Públicas (Frontend)
+Configure também `VITE_API_URL` com a URL do backend (localmente `http://localhost:3001`). `APP_URL` deve apontar para a URL frontend. Configure CORS e restrições da API Key no ambiente de hospedagem apropriado.
 
-As variáveis `VITE_FIREBASE_*` são **configuração pública** do Firebase Web SDK. Elas já estão preenchidas no `.env.example` com os valores do projeto `salam-33122`.
+As regras atuais estão em `firestore.rules`, mas precisam ser revisadas no projeto-alvo e aplicadas por uma pessoa autorizada após validação. Regras não foram publicadas nesta execução. Configure os índices compostos necessários conforme erros/consultas do Firestore.
 
-> ⚠️ Proteja-as usando **Firebase Security Rules** e **restrições de API Key** no Google Cloud Console.
+### Provisionar a primeira conta ADM Master
 
-### Credenciais Administrativas (Backend)
+Apenas em ambiente autorizado, configure credenciais Firebase Admin e o e-mail da pessoa aprovada em `MASTER_ADMIN_EMAIL`. Execute deliberadamente:
 
-As variáveis `FIREBASE_*` são **privadas** e necessárias apenas para o servidor Express.
-
-Para obtê-las:
-
-1. Acesse [Firebase Console](https://console.firebase.google.com)
-2. Selecione o projeto `salam-33122`
-3. Vá em **Project Settings** (ícone ⚙️) → **Service accounts**
-4. Clique em **Generate new private key**
-5. Baixe o JSON e extraia as seguintes variáveis para o `.env`:
-
-```env
-FIREBASE_PROJECT_ID=salam-33122
-FIREBASE_CLIENT_EMAIL=firebase-adminsdk-xxxxx@salam-33122.iam.gserviceaccount.com
-FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nMIIEv...\n-----END PRIVATE KEY-----\n"
+```bash
+npm run admin:provision-master
 ```
 
-> 🚨 **NUNCA commitar** o JSON da Service Account ou o arquivo `.env`. Ambos já estão no `.gitignore`.
+O comando falha se já existir ADM Master ativo, não define senha padrão e cria link temporário de recuperação. Trate a saída como segredo: entregue o link por canal privado e não o registre em tickets/logs compartilhados. Não execute esse provisionamento sem autorização do titular do Firebase.
 
----
+### Executar localmente
 
-## Rodando Localmente
+Em terminais separados:
 
-### Frontend + Backend juntos (recomendado)
-
-Abra dois terminais:
-
-**Terminal 1 — Backend Express:**
 ```bash
 npm run server:dev
-# Servidor em http://localhost:3001
-```
-
-**Terminal 2 — Frontend Vite:**
-```bash
-npm run dev
-# App em http://localhost:3000
-# O Vite redireciona /api/* → http://localhost:3001
-```
-
-### Apenas Frontend (modo demonstração com mocks)
-
-```bash
 npm run dev
 ```
 
-Sem o backend rodando, o frontend usa automaticamente os dados mockados (`VITE_ENABLE_MOCK_FALLBACK=true`).
+A API escuta por padrão na porta 3001 e o Vite na porta 3000. Sem configuração Firebase/backend funcionais, operações autenticadas devem falhar explicitamente; não há fallback legítimo para dados de demonstração.
 
----
+## Validação local
 
-## Migração dos Dados
+```bash
+npx tsc --noEmit --pretty false
+npx tsc --noEmit -p tsconfig.server.json --pretty false
+npm test
+npm run build
+```
 
-### Pré-requisito
+Os testes existentes usam doubles/mocks determinísticos para lógica do servidor; eles não substituem uma execução com Firebase Emulator ou validação contra o projeto real. `git diff --check` verifica whitespace. O build pode emitir aviso de bundle acima de 500 kB.
 
-Configure as variáveis `FIREBASE_*` no `.env` antes de executar qualquer seed.
+## Provisionamento de conteúdo
 
-### 1. Validar sem gravar (dry-run)
+O seed atual é explícito e restringe o conteúdo inicial à carga curricular/recompensas suportada, sem contas, alunos ou eventos de demonstração. Leia `scripts/seedFirebase.ts` e execute primeiro o dry-run:
 
 ```bash
 npm run firebase:seed:dry
 ```
 
-Valida toda a estrutura dos dados mockados sem gravar nada no Firestore.
+Só execute `npm run firebase:seed` com autorização explícita, projeto/credenciais confirmados e revisão do relatório do dry-run. Não execute seeds em produção automaticamente. `npm run firebase:verify` consulta coleções do ambiente configurado; use apenas no projeto autorizado.
 
-### 2. Executar migração completa
+## Segurança e escopo
 
-```bash
-npm run firebase:seed
-```
+- As APIs protegidas exigem Firebase ID token; o papel vem do perfil confiável no servidor, não de uma seleção feita na UI.
+- O primeiro Master é criado pelo comando operacional acima. O console Master administra perfis e cadastros.
+- A conta de aluno pode autenticar por código/PIN tratado no servidor; PIN/hash não deve ser exposto em coleções consultáveis pelo cliente.
+- Professor/coordenação ficam limitados ao escopo escolar/turmas associado ao perfil; aluno somente ao próprio perfil.
+- Regras Firestore negam escrita direta nas coleções de negócio protegidas. As gravações autorizadas passam pela API Admin.
+- Nunca use cabeçalho `X-Mock-Role`, autenticação simulada ou seed de fixtures. Esses métodos não são modos de operação suportados.
+- Não publique, aplique rules ou altere dados de produção sem aprovação explícita e credenciais do responsável.
 
-Migra todos os dados mockados para o Firestore. A operação é **idempotente** — pode ser executada várias vezes sem duplicar dados.
+## Rotas principais
 
-### 3. Verificar dados migrados
+- Sessão: `GET /api/auth/me`; autenticação infantil `POST /api/auth/students/session`.
+- Estudantes: `GET /api/students`, `GET /api/students/:studentId`, diagnósticos e domínio conforme papéis/escopo.
+- Missões: catálogo, tentativas, conclusão e progresso do próprio aluno.
+- Recompensas: catálogo e resgate transacional pelo próprio estudante.
+- Intervenções, cards, conquistas e métricas: endpoints autenticados com restrição de papel/escopo conforme as rotas.
+- ADM Master: `/api/admin-console/*` para visão geral e CRUD administrativo permitido.
 
-```bash
-npm run firebase:verify
-```
-
-Exibe a contagem de documentos em cada coleção do Firestore.
-
-### Migrar apenas entidades específicas
-
-```bash
-tsx scripts/seedFirebase.ts --entity=students --entity=missions
-```
-
----
-
-## Endpoints da API
-
-### Health Check
-```
-GET /api/health
-```
-
-### Estudantes
-```
-GET    /api/students
-GET    /api/students/:studentId
-POST   /api/students
-GET    /api/students/:studentId/abilities
-POST   /api/students/:studentId/abilities/:abilityId/mastery
-POST   /api/students/:studentId/diagnostics
-GET    /api/students/:studentId/history
-```
-
-### Missões
-```
-GET  /api/missions
-GET  /api/missions/:missionId
-POST /api/missions/:missionId/attempts
-POST /api/missions/:missionId/complete
-GET  /api/missions/student/:studentId
-```
-
-### Intervenções
-```
-GET  /api/interventions
-GET  /api/interventions/:id
-POST /api/interventions
-PUT  /api/interventions/:id
-```
-
-### Cards
-```
-GET /api/cards
-GET /api/cards/student/:studentId
-```
-
-### Conquistas
-```
-GET /api/achievements
-GET /api/achievements/student/:studentId
-```
-
-### Recompensas (Loja)
-```
-GET  /api/rewards
-POST /api/rewards/:rewardId/redeem
-```
-
-### Administrativo (requer role: coordenacao ou admin)
-```
-POST /api/admin/seed
-GET  /api/admin/seed/:migrationRunId
-POST /api/admin/seed/rollback
-GET  /api/admin/metrics
-```
-
----
-
-## Autenticação
-
-A autenticação via Firebase ID Token está preparada no middleware mas **não é obrigatória** na versão atual.
-
-Para testar endpoints autenticados em desenvolvimento, use o header:
-```
-X-Mock-Role: professor
-```
-
-Valores aceitos: `aluno`, `professor`, `coordenacao`
-
----
-
-## Coleções Firestore
-
-| Coleção | Descrição |
-|---|---|
-| `schools` | Escolas cadastradas |
-| `users` | Usuários do sistema |
-| `classrooms` | Turmas |
-| `students` | Perfis dos estudantes |
-| `abilities` | Catálogo de habilidades |
-| `studentAbilities` | Progresso de habilidades por aluno |
-| `trails` | Trilhas de aprendizagem |
-| `missions` | Missões pedagógicas |
-| `studentMissions` | Progresso de missões por aluno |
-| `missionAttempts` | Registro de todas as tentativas |
-| `interventions` | Intervenções pedagógicas |
-| `cards` | Catálogo de cards colecionáveis |
-| `studentCards` | Cards desbloqueados por aluno |
-| `achievements` | Catálogo de conquistas |
-| `studentAchievements` | Conquistas desbloqueadas por aluno |
-| `diagnostics` | Diagnósticos pedagógicos |
-| `recognitionEvents` | Eventos de reconhecimento presencial |
-| `coinTransactions` | Histórico de transações de moedas |
-| `rewards` | Catálogo da loja de moedas |
-| `redemptions` | Resgates de recompensas |
-| `historyLogs` | Histórico pedagógico detalhado |
-| `migrationRuns` | Controle de execuções de migração |
-
----
-
-## Comandos
-
-```bash
-npm run dev                    # Inicia frontend (Vite, porta 3000)
-npm run server:dev             # Inicia backend (Express, porta 3001)
-npm run build                  # Build de produção do frontend
-npm run lint                   # TypeScript type check (frontend + backend)
-npm run test                   # Executa todos os testes
-npm run test:watch             # Testes em modo watch
-npm run firebase:seed:dry      # Valida dados sem gravar
-npm run firebase:seed          # Executa migração completa
-npm run firebase:verify        # Verifica coleções no Firestore
-```
-
----
-
-## Estrutura de Arquivos
-
-```
-sala-de-missoes/
-├── server/                    # Backend Express
-│   ├── config/
-│   │   └── firebaseAdmin.ts   # Inicialização do Admin SDK
-│   ├── middleware/
-│   │   ├── auth.ts            # Verificação de token
-│   │   └── requireRole.ts     # Autorização por papel
-│   ├── routes/
-│   │   ├── index.ts
-│   │   ├── students.ts
-│   │   ├── missions.ts
-│   │   ├── interventions.ts
-│   │   ├── cards.ts
-│   │   ├── achievements.ts
-│   │   ├── rewards.ts
-│   │   └── admin.ts
-│   ├── services/
-│   │   ├── studentService.ts
-│   │   ├── missionService.ts
-│   │   ├── interventionService.ts
-│   │   ├── metricsService.ts
-│   │   └── seedService.ts
-│   ├── validators/
-│   │   └── schemas.ts         # Schemas Zod
-│   ├── types/
-│   │   └── server.ts          # Tipos do backend
-│   └── index.ts               # Entry point Express
-├── scripts/
-│   └── seedFirebase.ts        # Script de migração CLI
-├── src/                       # Frontend React
-│   ├── services/
-│   │   └── api.ts             # Cliente de API tipado
-│   ├── data/                  # Dados mockados (fallback)
-│   ├── components/
-│   └── types.ts
-├── tests/                     # Testes Vitest
-├── firestore.rules            # Regras de segurança
-├── .env.example               # Template de variáveis
-├── tsconfig.json              # TypeScript (frontend)
-├── tsconfig.server.json       # TypeScript (backend)
-├── vitest.config.ts           # Configuração de testes
-└── vite.config.ts             # Configuração Vite + proxy
-```
-
----
-
-## Segurança
-
-| Item | Status |
-|---|---|
-| Service Account fora do Git | ✅ Protegida pelo `.gitignore` |
-| Private key nunca no frontend | ✅ Apenas em variáveis do servidor |
-| Admin SDK bypassa Security Rules | ✅ Autorização via middleware Express |
-| Alunos isolados entre si | ✅ Middleware `requireOwnStudent` |
-| XP/moedas só alteráveis pelo backend | ✅ Security Rules negam escrita direta |
-| Chave Web pública protegida por regras | ✅ Firebase Security Rules |
-
----
-
-## Pendências e Próximos Passos
-
-- [ ] Implementar Firebase Authentication no frontend (login real)
-- [ ] Integrar `src/App.tsx` completamente com `src/services/api.ts`
-- [ ] Implementar loading states e error boundaries nos componentes
-- [ ] Adicionar testes de integração com Firebase Emulator
-- [ ] Deploy do backend (Cloud Run ou equivalente)
-- [ ] Configurar Secret Manager em produção para as credenciais
-- [ ] Implementar cache com Redis para métricas frequentes
+Consulte `server/routes/` para a lista exata de métodos/contratos, que pode evoluir.

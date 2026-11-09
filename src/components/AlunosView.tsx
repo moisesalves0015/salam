@@ -14,7 +14,7 @@ import { Student } from '../types';
 interface AlunosViewProps {
   students: Student[];
   onSelectStudent: (student: Student) => void;
-  onAddStudent: (newStudent: Partial<Student>) => void;
+  onAddStudent?: (newStudent: Partial<Student>) => void | Promise<void>;
 }
 
 export const AlunosView: React.FC<AlunosViewProps> = ({
@@ -28,10 +28,12 @@ export const AlunosView: React.FC<AlunosViewProps> = ({
 
   // New Student Form State
   const [newStudentName, setNewStudentName] = useState('');
-  const [newStudentGrade, setNewStudentGrade] = useState('5º ano');
-  const [newStudentClassroom, setNewStudentClassroom] = useState('Turma 5º ano A');
+  const [newStudentGrade, setNewStudentGrade] = useState('');
+  const [newStudentClassroom, setNewStudentClassroom] = useState('');
   const [newStudentNotes, setNewStudentNotes] = useState('');
   const [newStudentAdaptation, setNewStudentAdaptation] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   const filteredStudents = students.filter(s => {
     const matchesFilter = filterStatus === 'todos' || s.status === filterStatus;
@@ -41,22 +43,29 @@ export const AlunosView: React.FC<AlunosViewProps> = ({
     return matchesFilter && matchesSearch;
   });
 
-  const handleCreateStudent = (e: React.FormEvent) => {
+  const handleCreateStudent = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newStudentName.trim()) return;
-
-    onAddStudent({
-      name: newStudentName,
-      grade: newStudentGrade,
-      classroom: newStudentClassroom,
-      pedagogicalNotes: newStudentNotes || 'Aguardando avaliação diagnóstica inicial.',
-      adaptations: newStudentAdaptation ? [newStudentAdaptation] : ['Atividades regulares']
-    });
-
-    setIsAddModalOpen(false);
-    setNewStudentName('');
-    setNewStudentNotes('');
-    setNewStudentAdaptation('');
+    if (!newStudentName.trim() || !onAddStudent || isSubmitting) return;
+    setIsSubmitting(true);
+    setSubmitError('');
+    try {
+      const newStudent: Partial<Student> = { name: newStudentName.trim() };
+      if (newStudentGrade) newStudent.grade = newStudentGrade;
+      if (newStudentClassroom.trim()) newStudent.classroom = newStudentClassroom.trim();
+      if (newStudentNotes.trim()) newStudent.pedagogicalNotes = newStudentNotes.trim();
+      if (newStudentAdaptation.trim()) newStudent.adaptations = [newStudentAdaptation.trim()];
+      await onAddStudent(newStudent);
+      setIsAddModalOpen(false);
+      setNewStudentName('');
+      setNewStudentGrade('');
+      setNewStudentClassroom('');
+      setNewStudentNotes('');
+      setNewStudentAdaptation('');
+    } catch {
+      setSubmitError('Não foi possível cadastrar o aluno. Tente novamente.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -75,8 +84,10 @@ export const AlunosView: React.FC<AlunosViewProps> = ({
         </div>
 
         <button
-          onClick={() => setIsAddModalOpen(true)}
-          className="px-4 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-md shadow-indigo-600/20 flex items-center gap-2 self-start sm:self-auto transition-all cursor-pointer"
+          onClick={() => { setSubmitError(''); setIsAddModalOpen(true); }}
+          disabled={!onAddStudent}
+          title={!onAddStudent ? 'Cadastro disponível apenas pela administração autorizada.' : undefined}
+          className="px-4 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-md shadow-indigo-600/20 flex items-center gap-2 self-start sm:self-auto transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <UserPlus className="w-4 h-4" />
           <span>Cadastrar Aluno</span>
@@ -88,9 +99,9 @@ export const AlunosView: React.FC<AlunosViewProps> = ({
         <div className="flex gap-2 overflow-x-auto pb-1">
           {[
             { id: 'todos', label: `Todos (${students.length})` },
-            { id: 'evoluindo_bem', label: 'Evoluindo bem (18)' },
-            { id: 'atencao', label: 'Atenção (9)' },
-            { id: 'intervencao', label: 'Intervenção (5)' },
+            { id: 'evoluindo_bem', label: 'Evoluindo bem' },
+            { id: 'atencao', label: 'Atenção' },
+            { id: 'intervencao', label: 'Intervenção' },
             { id: 'pronto_avancar', label: 'Pronto p/ Avançar' },
           ].map((f) => (
             <button
@@ -212,6 +223,7 @@ export const AlunosView: React.FC<AlunosViewProps> = ({
               </h3>
               <button
                 onClick={() => setIsAddModalOpen(false)}
+                disabled={isSubmitting}
                 className="p-1.5 rounded-xl bg-slate-100 text-slate-500 hover:text-slate-900 cursor-pointer"
               >
                 <X className="w-4 h-4" />
@@ -239,6 +251,7 @@ export const AlunosView: React.FC<AlunosViewProps> = ({
                     onChange={(e) => setNewStudentGrade(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900 focus:bg-white focus:outline-none focus:border-indigo-500"
                   >
+                    <option value="">Selecione</option>
                     <option value="4º ano">4º ano</option>
                     <option value="5º ano">5º ano</option>
                   </select>
@@ -277,22 +290,26 @@ export const AlunosView: React.FC<AlunosViewProps> = ({
 
               <div className="p-3 bg-indigo-50 border border-indigo-200 rounded-2xl text-[11px] text-indigo-800 flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-indigo-600 shrink-0" />
-                <span>Após o cadastro, o perfil é criado com status <em>Aguardando Diagnóstico</em>.</span>
+                <span>O cadastro depende da confirmação do serviço responsável.</span>
               </div>
+
+              {submitError && <p role="alert" className="text-xs text-red-700">{submitError}</p>}
 
               <div className="pt-2 flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setIsAddModalOpen(false)}
+                  disabled={isSubmitting}
                   className="px-4 py-2 rounded-xl bg-slate-100 border border-slate-200 text-slate-700 font-semibold cursor-pointer hover:bg-slate-200"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold cursor-pointer shadow-xs"
+                  disabled={isSubmitting}
+                  className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold cursor-pointer shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Salvar Cadastro
+                  {isSubmitting ? 'Cadastrando...' : 'Cadastrar Aluno'}
                 </button>
               </div>
             </form>

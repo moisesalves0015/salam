@@ -28,6 +28,10 @@ interface SidebarProps {
   isMobileMenuOpen?: boolean;
   setIsMobileMenuOpen?: (open: boolean) => void;
   selectedStudent?: Student;
+  classrooms?: Array<{ id: string; name: string }>;
+  selectedClassroomId?: string;
+  onSelectClassroom?: (id: string) => void;
+  statusSummary?: { label: string; progress?: number; detail?: string };
 }
 
 interface NavItem {
@@ -47,8 +51,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onOpenCards,
   isMobileMenuOpen = false,
   setIsMobileMenuOpen,
+  classrooms,
+  selectedClassroomId,
+  onSelectClassroom,
+  statusSummary,
 }) => {
-  const [selectedClass, setSelectedClass] = useState<string>('Turma 5º ano A');
   const [isClassDropdownOpen, setIsClassDropdownOpen] = useState<boolean>(false);
 
   const handleNavClick = (item: NavItem) => {
@@ -114,37 +121,42 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* SELETOR DE TURMA DENTRO DO MENU LATERAL */}
-        {currentRole !== 'aluno' && (
+        {currentRole !== 'aluno' && classrooms !== undefined && (
           <div className="space-y-1">
             <div className="px-1 text-[10px] font-black uppercase tracking-widest text-[#60758A]">Turma Ativa</div>
+            {classrooms.length === 0 ? (
+              <div className="px-3 py-2 bg-white border-2 border-[#C9DDF0] rounded-2xl text-xs font-bold text-[#60758A]">Nenhuma turma disponível</div>
+            ) : (
             <div className="relative">
               <button
                 onClick={() => setIsClassDropdownOpen(!isClassDropdownOpen)}
+                disabled={!onSelectClassroom}
                 className="w-full flex items-center justify-between px-3 py-2 bg-white hover:bg-[#EAF4FF] border-2 border-[#C9DDF0] rounded-2xl text-xs font-black text-[#1652A3] transition-colors"
               >
-                <span>{selectedClass}</span>
-                <ChevronDown className="w-3.5 h-3.5 text-[#2676D9]" />
+                <span>{classrooms.find((cls) => cls.id === selectedClassroomId)?.name ?? 'Selecione uma turma'}</span>
+                {onSelectClassroom && <ChevronDown className="w-3.5 h-3.5 text-[#2676D9]" />}
               </button>
 
-              {isClassDropdownOpen && (
+              {isClassDropdownOpen && onSelectClassroom && (
                 <div className="mt-1 p-1 bg-white border-2 border-[#C9DDF0] rounded-2xl shadow-xl space-y-1">
-                  {['Turma 5º ano A', 'Turma 5º ano B', 'Turma 4º ano A', 'Turma 4º ano B'].map((cls) => (
+                  {classrooms.map((cls) => (
                     <button
-                      key={cls}
+                      key={cls.id}
                       onClick={() => {
-                        setSelectedClass(cls);
+                        onSelectClassroom(cls.id);
                         setIsClassDropdownOpen(false);
                       }}
                       className={`w-full text-left px-3 py-2 rounded-xl text-xs font-bold transition-colors ${
-                        selectedClass === cls ? 'bg-[#EAF4FF] text-[#1652A3] font-black' : 'text-[#18324A] hover:bg-[#F6FAFF]'
+                        selectedClassroomId === cls.id ? 'bg-[#EAF4FF] text-[#1652A3] font-black' : 'text-[#18324A] hover:bg-[#F6FAFF]'
                       }`}
                     >
-                      {cls}
+                      {cls.name}
                     </button>
                   ))}
                 </div>
               )}
             </div>
+            )}
           </div>
         )}
 
@@ -186,23 +198,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       </div>
 
-      {/* Mini Motivational / Status Footer Card */}
-      <div className="pt-3 border-t border-slate-200/50">
+      {/* Status Footer Card: exibido somente com resumo recebido da API */}
+      {statusSummary && <div className="pt-3 border-t border-slate-200/50">
         <div className="p-3 rounded-2xl bg-white/60 border border-slate-200/60 text-left space-y-2">
           <div className="flex justify-between items-center">
             <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
-              {currentRole === 'aluno' ? 'Progresso Semanal' : 'Status da Turma'}
+              {statusSummary.label}
             </span>
-            <span className="text-[11px] font-black font-mono text-[#123cc4]">82%</span>
+            {statusSummary.progress !== undefined && <span className="text-[11px] font-black font-mono text-[#123cc4]">{statusSummary.progress}%</span>}
           </div>
-          <div className="w-full bg-slate-200/50 rounded-full h-2 overflow-hidden border border-slate-200">
-            <div className="bg-gradient-to-r from-[#123cc4] to-[#05148d] h-full rounded-full w-[82%] shadow-2xs"></div>
-          </div>
-          <div className="text-[10px] text-slate-700 font-bold">
-            {currentRole === 'aluno' ? '4 de 5 missões concluídas' : '28 de 32 alunos ativos hoje'}
-          </div>
+          {statusSummary.progress !== undefined && <div className="w-full bg-slate-200/50 rounded-full h-2 overflow-hidden border border-slate-200">
+            <div className="bg-gradient-to-r from-[#123cc4] to-[#05148d] h-full rounded-full shadow-2xs" style={{ width: `${Math.max(0, Math.min(100, statusSummary.progress))}%` }}></div>
+          </div>}
+          {statusSummary.detail && <div className="text-[10px] text-slate-700 font-bold">{statusSummary.detail}</div>}
         </div>
-      </div>
+      </div>}
     </div>
   );
 

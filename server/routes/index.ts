@@ -11,9 +11,15 @@ import { cardsRouter } from './cards';
 import { achievementsRouter } from './achievements';
 import { rewardsRouter } from './rewards';
 import { adminRouter } from './admin';
+import { authRouter } from './auth';
+import { adminConsoleRouter } from './adminConsole';
+import { trailsRouter } from './trails';
 
 const apiRouter = Router();
 
+apiRouter.use('/auth', authRouter);
+apiRouter.use('/admin-console', adminConsoleRouter);
+apiRouter.use('/trails', trailsRouter);
 apiRouter.use('/students', studentsRouter);
 apiRouter.use('/missions', missionsRouter);
 apiRouter.use('/interventions', interventionsRouter);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   X, 
   BrainCircuit, 
@@ -12,7 +12,7 @@ interface DiagnosticModalProps {
   student: Student | null;
   isOpen: boolean;
   onClose: () => void;
-  onCompleteDiagnostic: (studentId: string, results: Record<number, number>) => void;
+  onCompleteDiagnostic: (studentId: string, results: Record<number, number>) => void | Promise<void>;
 }
 
 export const DiagnosticModal: React.FC<DiagnosticModalProps> = ({
@@ -24,6 +24,18 @@ export const DiagnosticModal: React.FC<DiagnosticModalProps> = ({
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<{ [key: number]: number }>({});
   const [isFinished, setIsFinished] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      setCurrentQuestionIndex(0);
+      setAnswers({});
+      setIsFinished(false);
+      setIsSaving(false);
+      setSaveError(null);
+    }
+  }, [isOpen, student?.id]);
 
   if (!isOpen || !student) return null;
 
@@ -72,15 +84,25 @@ export const DiagnosticModal: React.FC<DiagnosticModalProps> = ({
     setAnswers(prev => ({ ...prev, [currentQuestionIndex]: optionIdx }));
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      setIsFinished(true);
-      confetti({ particleCount: 70, spread: 70 });
-      setTimeout(() => {
-        onCompleteDiagnostic(student.id, answers);
-      }, 1500);
+      setIsSaving(true);
+      setSaveError(null);
+      try {
+        const result = onCompleteDiagnostic(student.id, answers);
+        if (!result || typeof result.then !== 'function') {
+          throw new Error('A operação não retornou confirmação do servidor.');
+        }
+        await result;
+        setIsFinished(true);
+        confetti({ particleCount: 70, spread: 70 });
+      } catch {
+        setSaveError('Não foi possível confirmar o salvamento do diagnóstico. Tente novamente.');
+      } finally {
+        setIsSaving(false);
+      }
     }
   };
 
@@ -97,7 +119,7 @@ export const DiagnosticModal: React.FC<DiagnosticModalProps> = ({
               <h3 className="text-sm font-bold text-slate-900">Aluno: {student.name} ({student.grade})</h3>
             </div>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-xl bg-white border border-purple-200 text-slate-500 hover:text-slate-900 cursor-pointer shadow-xs">
+          <button onClick={onClose} disabled={isSaving} className="p-1.5 rounded-xl bg-white border border-purple-200 text-slate-500 hover:text-slate-900 disabled:opacity-40 cursor-pointer shadow-xs">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -140,10 +162,20 @@ export const DiagnosticModal: React.FC<DiagnosticModalProps> = ({
             })}
           </div>
 
+          {isSaving && (
+            <div role="status" className="p-3 bg-blue-50 border border-blue-200 rounded-2xl text-center text-xs text-blue-800 font-semibold">
+              Salvando diagnóstico…
+            </div>
+          )}
+          {saveError && (
+            <div role="alert" className="p-3 bg-red-50 border border-red-200 rounded-2xl text-center text-xs text-red-800 font-semibold">
+              {saveError}
+            </div>
+          )}
           {isFinished && (
             <div className="p-3 bg-emerald-50 border border-emerald-300 rounded-2xl text-center text-xs text-emerald-800 font-semibold animate-in zoom-in-95 flex items-center justify-center gap-1.5">
               <Sparkles className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>Diagnóstico concluído! O perfil de aprendizagem e as trilhas foram atualizados.</span>
+              <span>Diagnóstico salvo com confirmação do servidor.</span>
             </div>
           )}
         </div>
@@ -151,16 +183,17 @@ export const DiagnosticModal: React.FC<DiagnosticModalProps> = ({
         <div className="bg-slate-50 px-6 py-3.5 border-t border-slate-100 flex justify-between items-center">
           <button
             onClick={onClose}
+            disabled={isSaving}
             className="px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 text-xs font-bold cursor-pointer shadow-xs"
           >
             Cancelar
           </button>
           <button
             onClick={handleNext}
-            disabled={answers[currentQuestionIndex] === undefined}
+            disabled={answers[currentQuestionIndex] === undefined || isSaving || isFinished}
             className="px-5 py-2 rounded-2xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
           >
-            <span>{currentQuestionIndex === questions.length - 1 ? 'Concluir Diagnóstico' : 'Próxima Questão'}</span>
+            <span>{isSaving ? 'Salvando…' : currentQuestionIndex === questions.length - 1 ? (isFinished ? 'Diagnóstico salvo' : 'Concluir Diagnóstico') : 'Próxima Questão'}</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>

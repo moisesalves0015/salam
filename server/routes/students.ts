@@ -6,11 +6,10 @@ import { Router, Response } from 'express';
 import { AuthRequest } from '../types/server';
 import { authMiddleware } from '../middleware/auth';
 import { requireRole, requireOwnStudent } from '../middleware/requireRole';
-import { validatePayload, createStudentSchema, masterySchema, diagnosticSchema } from '../validators/schemas';
+import { validatePayload, masterySchema, diagnosticSchema } from '../validators/schemas';
 import {
   listStudents,
   getStudent,
-  createStudent,
   getStudentAbilities,
   getStudentHistoryLog,
   confirmAbilityMastery,
@@ -27,12 +26,34 @@ studentsRouter.get('/', authMiddleware, async (req: AuthRequest, res: Response) 
   try {
     const { schoolId, classroomId, status } = req.query as Record<string, string>;
     
-    // Professores e coordenação podem filtrar; alunos só veem a si mesmos
-    const filters = req.user?.role === 'aluno'
-      ? { schoolId: req.user.schoolId }
-      : { schoolId, classroomId, status };
-
-    const students = await listStudents(filters);
+    const user = req.user;
+    if (!user) return res.status(401).json({ success: false, error: 'Não autenticado.' });
+    if (user.role === 'aluno') {
+      if (!user.studentId) return res.status(403).json({ success: false, error: 'Perfil de estudante inválido.' });
+      const student = await getStudent(user.studentId);
+      const students = student?.active ? [student] : [];
+      return res.json({ success: true, data: students, total: students.length });
+    }
+    if (!['admin', 'coordenacao', 'professor'].includes(user.role)) {
+      return res.status(403).json({ success: false, error: 'Acesso negado.' });
+    }
+    if (user.role === 'admin') {
+      const students = await listStudents({ schoolId, classroomId, status });
+      return res.json({ success: true, data: students, total: students.length });
+    }
+    if (!user.schoolId) return res.status(403).json({ success: false, error: 'Escopo de escola ausente.' });
+    if (user.role === 'coordenacao') {
+      const students = await listStudents({ schoolId: user.schoolId, classroomId, status });
+      return res.json({ success: true, data: students, total: students.length });
+    }
+    const scopedClassrooms = [...new Set(user.classroomIds || [])].filter(Boolean);
+    if (!scopedClassrooms.length) return res.json({ success: true, data: [], total: 0 });
+    if (classroomId && !scopedClassrooms.includes(classroomId)) {
+      return res.status(403).json({ success: false, error: 'Acesso permitido somente às suas turmas.' });
+    }
+    const classrooms = classroomId ? [classroomId] : scopedClassrooms;
+    const results = await Promise.all(classrooms.map((id) => listStudents({ schoolId: user.schoolId, classroomId: id, status })));
+    const students = results.flat();
     res.json({ success: true, data: students, total: students.length });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Erro interno';
@@ -71,26 +92,9 @@ studentsRouter.get('/:studentId', authMiddleware, requireOwnStudent, async (req:
   }
 });
 
-// POST /api/students
-studentsRouter.post('/', authMiddleware, requireRole('professor', 'coordenacao', 'admin'), async (req: AuthRequest, res: Response) => {
-  try {
-    const validation = validatePayload(createStudentSchema, req.body);
-    if (!validation.success) {
-      return res.status(400).json({ success: false, error: 'Payload inválido', errors: validation.errors });
-    }
-
-    const student = await createStudent({
-      ...validation.data,
-      schoolId: req.user?.schoolId || 'escola-01',
-      classroomId: req.user?.classroomIds?.[0] || 'turma-5a',
-      teacherName: req.user?.name || 'Professor',
-    });
-
-    res.status(201).json({ success: true, data: student });
-  } catch (err) {
-    const message = err instanceof Error ? err.message : 'Erro interno';
-    res.status(500).json({ success: false, error: message });
-  }
+// Criação exclusivamente pelo console autenticado que provisiona Auth, perfil e PIN.
+studentsRouter.post('/', authMiddleware, (_req: AuthRequest, res: Response) => {
+  res.status(410).json({ success: false, error: 'Cadastro indisponível nesta rota. Use o console administrativo autenticado.' });
 });
 
 // GET /api/students/:studentId/abilities
@@ -109,6 +113,7 @@ studentsRouter.post(
   '/:studentId/abilities/:abilityId/mastery',
   authMiddleware,
   requireRole('professor', 'coordenacao', 'admin'),
+  requireOwnStudent,
   async (req: AuthRequest, res: Response) => {
     try {
       const { studentId, abilityId } = req.params;
@@ -144,6 +149,7 @@ studentsRouter.post(
   '/:studentId/diagnostics',
   authMiddleware,
   requireRole('professor', 'coordenacao', 'admin'),
+  requireOwnStudent,
   async (req: AuthRequest, res: Response) => {
     try {
       const { studentId } = req.params;

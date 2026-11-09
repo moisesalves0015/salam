@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { X, Printer, QrCode, BookOpen, Star, Calendar, User, ArrowRight } from 'lucide-react';
+import { X, Printer, BookOpen, Star, Calendar, User, ArrowRight } from 'lucide-react';
 import { Mission, Student } from '../types';
 
 interface MissionPrintViewProps {
@@ -80,11 +80,6 @@ export const MissionPrintView: React.FC<MissionPrintViewProps> = ({
                 </div>
               </div>
 
-              {/* QR Code Placeholder */}
-              <div className="shrink-0 w-20 h-20 border-2 border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center text-center">
-                <QrCode className="w-6 h-6 text-slate-400 mb-1" />
-                <div className="text-[8px] text-slate-400 font-bold leading-tight">QR para<br/>registrar</div>
-              </div>
             </div>
           </div>
 
@@ -246,8 +241,7 @@ export const MissionPrintView: React.FC<MissionPrintViewProps> = ({
 
           {/* Footer */}
           <div className="text-center text-[9px] text-slate-400 mt-4 print:mt-2">
-            Sala de Missões • Ciep Metalúrgico Benedito Cerqueira • 4º e 5º Anos •
-            Missão: {mission.id} • +{mission.xpReward} XP ao concluir
+            Sala de Missões • Missão: {mission.id} • +{mission.xpReward} XP ao concluir
           </div>
         </div>
       </div>

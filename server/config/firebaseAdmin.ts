@@ -67,7 +67,7 @@ function resolveCredential(): Credential | undefined {
 
   // Modo Emulator — sem credenciais reais necessárias
   if (isEmulatorActive()) {
-    console.log('[Firebase] 🔧 Modo Emulator detectado — usando credenciais mockadas');
+    console.log('[Firebase] Modo Emulator detectado — conectando aos serviços locais configurados');
     return applicationDefault();
   }
 

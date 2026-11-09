@@ -1,15 +1,27 @@
 import React from 'react';
-import { X, BookOpen, Download, Printer, Shapes } from 'lucide-react';
-import { RECOMMENDED_RESOURCES } from '../data/initialData';
+import { X, BookOpen, Printer, Shapes } from 'lucide-react';
+
+export interface Resource {
+  id: string;
+  title: string;
+  category: string;
+  desc: string;
+}
 
 interface ResourcesModalProps {
   isOpen: boolean;
   onClose: () => void;
+  resources?: Resource[];
+  isLoading?: boolean;
+  error?: string;
 }
 
 export const ResourcesModal: React.FC<ResourcesModalProps> = ({
   isOpen,
-  onClose
+  onClose,
+  resources,
+  isLoading = false,
+  error
 }) => {
   if (!isOpen) return null;
 
@@ -32,7 +44,13 @@ export const ResourcesModal: React.FC<ResourcesModalProps> = ({
         </div>
 
         <div className="p-6 overflow-y-auto space-y-3.5 flex-1">
-          {RECOMMENDED_RESOURCES.map((res) => (
+          {isLoading ? (
+            <p className="py-8 text-center text-sm text-slate-500">Carregando recursos...</p>
+          ) : error ? (
+            <p role="alert" className="py-8 text-center text-sm text-red-700">Não foi possível carregar os recursos. {error}</p>
+          ) : !resources?.length ? (
+            <p className="py-8 text-center text-sm text-slate-500">Nenhum recurso disponível no momento.</p>
+          ) : resources.map((res) => (
             <div key={res.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-4 shadow-xs">
               <div className="flex items-start gap-3.5">
                 <div className="w-10 h-10 rounded-2xl bg-purple-100 border border-purple-200 flex items-center justify-center text-purple-700 shrink-0">
@@ -52,13 +70,6 @@ export const ResourcesModal: React.FC<ResourcesModalProps> = ({
                   title="Imprimir"
                 >
                   <Printer className="w-4 h-4 text-cyan-600" />
-                </button>
-                <button
-                  onClick={() => alert(`Baixando material didático: ${res.title}`)}
-                  className="p-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white cursor-pointer shadow-xs"
-                  title="Baixar PDF"
-                >
-                  <Download className="w-4 h-4" />
                 </button>
               </div>
             </div>

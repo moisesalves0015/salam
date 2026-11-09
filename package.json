@@ -14,6 +14,7 @@
     "firebase:seed:dry": "npx tsx scripts/seedFirebase.ts --dry-run",
     "firebase:seed": "npx tsx scripts/seedFirebase.ts",
     "firebase:verify": "npx tsx scripts/seedFirebase.ts --verify",
+    "admin:provision-master": "npx tsx scripts/provisionMaster.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
@@ -33,6 +34,8 @@
     "cors": "^2.8.6",
     "dotenv": "^17.2.3",
     "express": "^4.21.2",
+    "express-rate-limit": "^7.5.1",
+    "firebase": "^11.10.0",
     "firebase-admin": "^14.4.0",
     "lucide-react": "^0.546.0",
     "motion": "^12.23.24",

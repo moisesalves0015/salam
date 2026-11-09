@@ -1,6 +1,6 @@
 import { Track } from '../../types';
 
-export const trackGari: Track = {
+export const trackGari = ({
   id: 'gari-mission',
   subjectId: 'matematica',
   title: 'Área e Perímetro',
@@ -841,4 +841,4 @@ export const trackGari: Track = {
       ]
     }
   ]
-};
+} as unknown as Track);

@@ -16,11 +16,15 @@ import { GameButton, RarityBadge } from './game-ui/GameComponents';
 interface CardsAlbumViewProps {
   cards: CardItem[];
   onSelectCard: (card: CardItem) => void;
+  isLoading?: boolean;
+  error?: string | null;
 }
 
 export const CardsAlbumView: React.FC<CardsAlbumViewProps> = ({
   cards,
-  onSelectCard
+  onSelectCard,
+  isLoading = false,
+  error = null
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('todos');
   const [selectedRarity, setSelectedRarity] = useState<string>('todos');
@@ -119,6 +123,15 @@ export const CardsAlbumView: React.FC<CardsAlbumViewProps> = ({
       </div>
 
       {/* Cards Grid */}
+      {isLoading ? (
+        <div role="status" className="rounded-3xl border-2 border-[#C9DDF0] bg-white p-8 text-center text-sm font-bold text-[#60758A]">Carregando cards...</div>
+      ) : error ? (
+        <div role="alert" className="rounded-3xl border-2 border-red-200 bg-white p-8 text-center text-sm font-bold text-red-700">Não foi possível carregar os cards. {error}</div>
+      ) : filteredCards.length === 0 ? (
+        <div className="rounded-3xl border-2 border-[#C9DDF0] bg-white p-8 text-center text-sm font-bold text-[#60758A]">
+          {cards.length === 0 ? 'Nenhum card disponível no momento.' : 'Nenhum card corresponde aos filtros selecionados.'}
+        </div>
+      ) : (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
         {filteredCards.map((card) => {
           const rConfig = RARITY_CONFIGS[card.rarity] || RARITY_CONFIGS.comum;
@@ -185,7 +198,7 @@ export const CardsAlbumView: React.FC<CardsAlbumViewProps> = ({
           );
         })}
       </div>
+      )}
     </div>
   );
 };
-

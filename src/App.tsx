@@ -1,593 +1,178 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { onAuthStateChanged, type User } from 'firebase/auth';
+import { firebaseAuth, firebaseClientConfigured, requestPasswordReset, signInWithCustomToken, signInWithEmailAndPassword, signOutUser } from './services/firebaseClient';
+import { adminApi, studentsApi, trailsApi, missionsApi, cardsApi, achievementsApi, metricsApi, interventionsApi, rewardsApi, type TrailCatalogItem } from './services/api';
+import { LoginScreen } from './components/LoginScreen';
+import AdminConsole from './components/AdminConsole';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
+import { TrilhasView } from './components/TrilhasView';
 import { ProfessorDashboard } from './components/ProfessorDashboard';
 import { StudentDashboard } from './components/StudentDashboard';
-import { AlunosView } from './components/AlunosView';
-import { TrilhasView } from './components/TrilhasView';
 import { CardsAlbumView } from './components/CardsAlbumView';
-import { RelatoriosView } from './components/RelatoriosView';
-import { CoordenacaoDashboard } from './components/CoordenacaoDashboard';
-import { PainelSalaMissoes } from './components/PainelSalaMissoes';
-import { MissionPlayerModal } from './components/MissionPlayerModal';
-import { LessonRunner } from './components/game-ui/LessonRunner';
-import { StudentProfileModal } from './components/StudentProfileModal';
 import { CardDetailModal } from './components/CardDetailModal';
+import { AchievementsModal } from './components/AchievementsModal';
+import { MissionPlayerModal } from './components/MissionPlayerModal';
+import { MissionPrintView } from './components/MissionPrintView';
+import { LojaMoedasView } from './components/LojaMoedasView';
+import { CoordenacaoDashboard } from './components/CoordenacaoDashboard';
+import { RelatoriosView } from './components/RelatoriosView';
+import { PainelSalaMissoes } from './components/PainelSalaMissoes';
 import { InterventionModal } from './components/InterventionModal';
 import { DiagnosticModal } from './components/DiagnosticModal';
-import { ResourcesModal } from './components/ResourcesModal';
-import { AchievementsModal } from './components/AchievementsModal';
-import { NotificationsModal } from './components/NotificationsModal';
-import { LandingPage } from './components/LandingPage';
-import { LoginScreen } from './components/LoginScreen';
-import { ReconhecimentoView } from './components/ReconhecimentoView';
-import { LojaMoedasView } from './components/LojaMoedasView';
-import { MissionPrintView } from './components/MissionPrintView';
-import { IntervencoesView } from './components/IntervencoesView';
-import { DiagnosticoView } from './components/DiagnosticoView';
-import { DevAssistant } from './components/DevAssistant';
-import { 
-  INITIAL_STUDENTS, 
-  INITIAL_CARDS, 
-  INITIAL_ACHIEVEMENTS, 
-  INITIAL_MISSION_DIVISAO, 
-  INITIAL_CLASS_METRICS 
-} from './data/initialData';
-import { UserRole, Student, CardItem, InterventionRecord } from './types';
-import confetti from 'canvas-confetti';
+import type { UserRole, Student, Mission, CardItem, AchievementItem } from './types';
 
-// App-level navigation states
-type AppScreen = 'landing' | 'login' | 'app';
+type Profile = Awaited<ReturnType<typeof adminApi.me>>;
+const asStudent = (input: unknown): Student => {
+  const row = (input && typeof input === 'object' ? input : {}) as Record<string, any>;
+  const id = String(row.id ?? row.studentId ?? '');
+  return {
+    ...row, id, name: String(row.name ?? ''), avatar: String(row.avatar ?? ''), avatarUrl: row.avatarUrl,
+    classroom: String(row.classroom ?? row.classroomName ?? ''), grade: String(row.grade ?? ''), teacherName: String(row.teacherName ?? ''), entryDate: String(row.entryDate ?? ''),
+    status: row.status, statusAlertText: String(row.statusAlertText ?? ''),
+    level: Number(row.level ?? 0), currentXp: Number(row.currentXp ?? 0), nextLevelXp: Number(row.nextLevelXp ?? 0), coins: typeof row.coins === 'number' ? row.coins : undefined, streakDays: Number(row.streakDays ?? 0),
+    weekDaysActive: Array.isArray(row.weekDaysActive) ? row.weekDaysActive : [], trailProgress: row.trailProgress,
+    abilities: Array.isArray(row.abilities) ? row.abilities : [], currentMission: row.currentMission,
+    cards: Array.isArray(row.cards) ? row.cards : [], achievements: Array.isArray(row.achievements) ? row.achievements : [], interventions: Array.isArray(row.interventions) ? row.interventions : [],
+    pedagogicalNotes: String(row.pedagogicalNotes ?? ''), adaptations: Array.isArray(row.adaptations) ? row.adaptations : [], diagnosticCompleted: Boolean(row.diagnosticCompleted), historyLog: Array.isArray(row.historyLog) ? row.historyLog : [],
+  };
+};
 
 export default function App() {
-  // Screen / Navigation
-  const [currentScreen, setCurrentScreen] = useState<AppScreen>('login');
-  const [loginDefaultRole, setLoginDefaultRole] = useState<'aluno' | 'professor' | 'coordenacao' | undefined>('aluno');
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [students, setStudents] = useState<Student[]>([]);
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  const [trails, setTrails] = useState<TrailCatalogItem[]>([]);
+  const [missions, setMissions] = useState<Mission[]>([]);
+  const [cards, setCards] = useState<CardItem[]>([]);
+  const [achievements, setAchievements] = useState<AchievementItem[]>([]);
+  const [metrics, setMetrics] = useState<Record<string, unknown> | null>(null);
+  const [interventions, setInterventions] = useState<any[]>([]);
+  const [rewards, setRewards] = useState<Record<string, any>[]>([]);
+  const [adminData, setAdminData] = useState<Record<string, Array<Record<string, unknown>>>>({});
+  const [adminSummary, setAdminSummary] = useState<Record<string, number>>();
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+  const [mobileMenu, setMobileMenu] = useState(false);
+  const [tv, setTv] = useState(false);
+  const [selectedCard, setSelectedCard] = useState<CardItem | null>(null);
+  const [missionToPlay, setMissionToPlay] = useState<Mission | null>(null);
+  const [missionToPrint, setMissionToPrint] = useState<Mission | null>(null);
+  const [showAchievements, setShowAchievements] = useState(false);
+  const [showIntervention, setShowIntervention] = useState(false);
+  const [showDiagnostic, setShowDiagnostic] = useState(false);
+  const [interventionStudentId, setInterventionStudentId] = useState('');
+  const [selectedClass, setSelectedClass] = useState<string>();
 
-  // Global States
-  const [currentRole, setCurrentRole] = useState<UserRole>('professor');
-  const [activeTab, setActiveTab] = useState<string>('dashboard');
-  const [students, setStudents] = useState<Student[]>(INITIAL_STUDENTS);
-  const [selectedStudent, setSelectedStudent] = useState<Student>(INITIAL_STUDENTS[0]);
-  const [cards, setCards] = useState<CardItem[]>(INITIAL_CARDS);
-  const [achievements, setAchievements] = useState(INITIAL_ACHIEVEMENTS);
-  const [metrics, setMetrics] = useState(INITIAL_CLASS_METRICS);
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [isTvModeOpen, setIsTvModeOpen] = useState<boolean>(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
-
-  const [isOffline, setIsOffline] = useState(!navigator.onLine);
+  const clearSession = useCallback(() => {
+    setProfile(null); setStudents([]); setSelectedStudent(null); setTrails([]); setMissions([]); setCards([]); setAchievements([]); setMetrics(null); setInterventions([]); setRewards([]); setAdminData({}); setAdminSummary(undefined); setActiveTab('dashboard');
+  }, []);
+  const loadAdmin = useCallback(async () => {
+    const [summary, ...collections] = await Promise.all([
+      adminApi.getOverview(), ...['users','schools','classrooms','students','trails','missions','abilities','cards','achievements','rewards','redemptions','coinTransactions','auditLogs'].map(c => adminApi.listRecords(c)),
+    ]);
+    setAdminSummary(summary); setAdminData(Object.fromEntries(['users','schools','classrooms','students','trails','missions','abilities','cards','achievements','rewards','redemptions','coinTransactions','auditLogs'].map((c,i) => [c, collections[i]])));
+  }, []);
+  const loadProfileData = useCallback(async (p: Profile) => {
+    setLoading(true); setError(null);
+    try {
+      if (p.role === 'admin') { await loadAdmin(); }
+      else if (p.role === 'aluno') {
+        if (!p.studentId) throw new Error('Perfil de aluno sem studentId. Acesso bloqueado.');
+        const raw = await studentsApi.get(p.studentId);
+        if (!raw) throw new Error('O aluno associado à conta não foi encontrado.');
+        const own = asStudent(raw); setStudents([own]); setSelectedStudent(own);
+        const [trailRows, missionRows, cardRows, achievementRows, rewardRows] = await Promise.all([trailsApi.list(), missionsApi.list({ studentId: own.id }), cardsApi.getStudentCards(own.id), achievementsApi.getStudentAchievements(own.id), rewardsApi.list()]);
+        setTrails(trailRows); setMissions(missionRows); setCards(cardRows); setAchievements(achievementRows); setRewards(rewardRows as Record<string, any>[]);
+      } else {
+        const authorized = [...new Set((p.classroomIds ?? []).filter(Boolean))];
+        if (!authorized.length) throw new Error('Nenhuma turma autorizada está associada ao perfil; alunos não carregados.');
+        const classroomId = selectedClass && authorized.includes(selectedClass) ? selectedClass : authorized.length === 1 ? authorized[0] : undefined;
+        if (classroomId) {
+          setStudents((await studentsApi.list({ schoolId: p.schoolId, classroomId })).map(asStudent));
+          setMetrics(await metricsApi.getClassMetrics({ schoolId: p.schoolId, classroomId }) as unknown as Record<string, unknown>);
+        } else {
+          const batches = await Promise.all(authorized.map(classroomId => studentsApi.list({ schoolId: p.schoolId, classroomId })));
+          const unique = new Map(batches.flat().map(s => [String((s as any).id ?? (s as any).studentId), s]));
+          setStudents([...unique.values()].map(asStudent)); setMetrics(null);
+        }
+        const [trailRows, missionRows, intRows] = await Promise.all([trailsApi.list(), missionsApi.list(), interventionsApi.list()]);
+        setTrails(trailRows); setMissions(missionRows); setInterventions(intRows);
+      }
+    } catch (e) { setError(e instanceof Error ? e.message : String(e)); }
+    finally { setLoading(false); }
+  }, [loadAdmin, selectedClass]);
 
   useEffect(() => {
-    const handleOnline = () => setIsOffline(false);
-    const handleOffline = () => setIsOffline(true);
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
+    if (!firebaseClientConfigured || !firebaseAuth) { setLoading(false); return; }
+    return onAuthStateChanged(firebaseAuth, async (user: User | null) => {
+      if (!user) { clearSession(); setLoading(false); return; }
+      setLoading(true); setError(null);
+      try {
+        const p = await adminApi.me();
+        if (!p || !['admin','professor','coordenacao','aluno'].includes(p.role) || !p.userId || !p.name) throw new Error('Perfil ativo inválido. Entre novamente ou contate a administração.');
+        setProfile(p); await loadProfileData(p);
+      } catch (e) { setError(e instanceof Error ? e.message : String(e)); setProfile(null); setLoading(false); }
+    });
+  }, [clearSession, loadProfileData]);
 
-  // Landing / Login Handlers
-  const handleEnterAsStudent = () => {
-    setLoginDefaultRole('aluno');
-    setCurrentScreen('login');
-  };
-  const handleEnterAsProfessor = () => {
-    setCurrentRole('professor');
-    setActiveTab('dashboard');
-    setCurrentScreen('app');
-  };
-  const handleEnterAsCoordenacao = () => {
-    setCurrentRole('coordenacao');
-    setActiveTab('dashboard');
-    setCurrentScreen('app');
-  };
-  const handleLoginStudent = (student: Student) => {
-    setSelectedStudent(student);
-    setCurrentRole('aluno');
-    setActiveTab('dashboard');
-    setCurrentScreen('app');
-  };
-
-  // Modal States
-  const [isMissionPlayerOpen, setIsMissionPlayerOpen] = useState(false);
-  const [activeMissionData, setActiveMissionData] = useState<any>(null);
-  const [isMissionPrintOpen, setIsMissionPrintOpen] = useState(false);
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-  const [isCardDetailOpen, setIsCardDetailOpen] = useState(false);
-  const [selectedCard, setSelectedCard] = useState<CardItem | null>(null);
-  const [isInterventionModalOpen, setIsInterventionModalOpen] = useState(false);
-  const [isDiagnosticModalOpen, setIsDiagnosticModalOpen] = useState(false);
-  const [isResourcesModalOpen, setIsResourcesModalOpen] = useState(false);
-  const [isAchievementsModalOpen, setIsAchievementsModalOpen] = useState(false);
-  const [isNotificationsModalOpen, setIsNotificationsModalOpen] = useState(false);
-
-
-  // Handlers
-  const handleSelectStudent = (student: Student) => {
-    setSelectedStudent(student);
-    setIsProfileModalOpen(true);
-  };
-
-  const handleStartMission = (missionNode?: any) => {
-    if (missionNode && missionNode.unitData) {
-      setActiveMissionData(missionNode.unitData);
+  const loginStaff = async (email: string, password: string) => { setLoading(true); setError(null); try { await signInWithEmailAndPassword(email, password); } catch (e) { setError(e instanceof Error ? e.message : 'Falha ao entrar.'); setLoading(false); throw e; } };
+  const loginStudent = async (code: string, pin: string) => { setLoading(true); setError(null); try { const session = await adminApi.studentSession(code, pin); await signInWithCustomToken(session.token); } catch (e) { setError(e instanceof Error ? e.message : 'Falha ao entrar.'); setLoading(false); throw e; } };
+  const logout = async () => { setLoading(true); try { await signOutUser(); clearSession(); setError(null); } catch (e) { setError(e instanceof Error ? e.message : 'Falha ao sair.'); } finally { setLoading(false); } };
+  const refresh = async () => { if (profile) await loadProfileData(profile); };
+  const adminAction = async (action: string, entity: string, payload: Record<string, unknown>) => {
+    if (!['create','update','archive','delete'].includes(action)) throw new Error('Ação não suportada.');
+    let result: unknown;
+    if (action === 'create') result = await adminApi.createRecord(entity, payload);
+    else {
+      const id = String(payload.id ?? ''); if (!id) throw new Error('Identificador ausente para a alteração.');
+      if (action === 'update') { const { id: _id, ...body } = payload; result = await adminApi.updateRecord(entity, id, body); }
+      else { await adminApi.archiveRecord(entity, id); result = { archived: true, id }; }
     }
-    setIsMissionPlayerOpen(true);
+    await loadAdmin(); setNotice('Alteração confirmada pelo servidor.'); return result;
   };
 
-  const handleOpenCard = (card: CardItem) => {
-    setSelectedCard(card);
-    setIsCardDetailOpen(true);
-  };
+  if (!profile) return <LoginScreen onStaffLogin={loginStaff} onStudentLogin={loginStudent} onPasswordReset={requestPasswordReset} loading={loading} error={error} firebaseConfigured={firebaseClientConfigured} />;
+  if (loading) return <main className="min-h-screen grid place-items-center bg-slate-50"><p role="status">Carregando dados autorizados…</p></main>;
+  if (profile.role === 'admin') return <AdminConsole actor={{name:profile.name,email:profile.email,role:profile.role}} data={adminData} summary={adminSummary} loading={loading} error={error} onRefresh={refresh} onLogout={logout} onOpenTv={()=>setNotice('Painel TV não aberto: selecione primeiro uma escola e turma válidas. Não exibimos alunos de várias escolas em conjunto.')} onAction={adminAction}/>;
 
-  const handleCompleteMission = (xpEarned: number, updatedAbility: string) => {
-    setIsMissionPlayerOpen(false);
-
-    if (import.meta.env.VITE_ENABLE_MISSION_PREVIEW === 'true') {
-      console.log('Modo de revisão ativo: nenhum progresso foi salvo.');
-      return;
-    }
-
-    // Update active student data
-    setStudents(prev => prev.map(s => {
-      if (s.id === selectedStudent.id) {
-        const updatedXP = s.currentXp + xpEarned;
-        const updatedAbilities = s.abilities.map(ab => {
-          if (ab.id === 'mat-divisao') {
-            return {
-              ...ab,
-              score: Math.min(100, ab.score + 15),
-              attempts: ab.attempts + 1,
-              autonomy: Math.min(100, ab.autonomy + 12),
-              state: 'consolidando' as const
-            };
-          }
-          return ab;
-        });
-
-        const updatedStudent: Student = {
-          ...s,
-          currentXp: updatedXP,
-          streakDays: s.streakDays + 1,
-          status: 'evoluindo_bem',
-          statusAlertText: 'Compreendeu divisão com materiais visuais. Avançando para problemas contextualizados.',
-          abilities: updatedAbilities,
-          trailProgress: {
-            ...s.trailProgress,
-            matematica: Math.min(100, s.trailProgress.matematica + 10)
-          }
-        };
-        setSelectedStudent(updatedStudent);
-        return updatedStudent;
-      }
-      return s;
-    }));
-
-    // Unlock Card "Guardião da Divisão"
-    setCards(prev => prev.map(c => {
-      if (c.id === 'card-guardiao-divisao') {
-        return {
-          ...c,
-          unlocked: true,
-          unlockedAt: 'Hoje'
-        };
-      }
-      return c;
-    }));
-
-    // Unlock achievement if not unlocked
-    setAchievements(prev => prev.map(a => {
-      if (a.id === 'ach-explorador-destemido') {
-        return { ...a, unlocked: true, unlockedAt: 'Hoje' };
-      }
-      return a;
-    }));
-  };
-
-  const handleConfirmMastery = (studentId: string, abilityId: string) => {
-    setStudents(prev => prev.map(s => {
-      if (s.id === studentId) {
-        const updatedAbilities = s.abilities.map(ab => {
-          if (ab.id === abilityId) {
-            return {
-              ...ab,
-              score: 95,
-              state: 'dominada' as const,
-              evidence: {
-                ...ab.evidence,
-                precision: 'dominada' as const,
-                autonomy: 'dominada' as const,
-                consistency: 'dominada' as const
-              }
-            };
-          }
-          return ab;
-        });
-        const updatedStudent = {
-          ...s,
-          abilities: updatedAbilities,
-          status: 'pronto_avancar' as const,
-          statusAlertText: 'Domínio confirmado pelo professor com base nas evidências pedagógicas.'
-        };
-        if (selectedStudent.id === studentId) setSelectedStudent(updatedStudent);
-        return updatedStudent;
-      }
-      return s;
-    }));
-
-    confetti({ particleCount: 50, spread: 60 });
-  };
-
-  const handleSaveIntervention = (newIntervention: InterventionRecord) => {
-    setStudents(prev => prev.map(s => {
-      if (s.id === newIntervention.studentId) {
-        const updatedStudent = {
-          ...s,
-          interventions: [newIntervention, ...s.interventions]
-        };
-        if (selectedStudent.id === s.id) setSelectedStudent(updatedStudent);
-        return updatedStudent;
-      }
-      return s;
-    }));
-  };
-
-  const handleCompleteDiagnostic = (studentId: string, answers: any) => {
-    setIsDiagnosticModalOpen(false);
-    setStudents(prev => prev.map(s => {
-      if (s.id === studentId) {
-        const updatedStudent: Student = {
-          ...s,
-          status: 'evoluindo_bem',
-          statusAlertText: 'Diagnóstico concluído: trilha adaptada para reforçar operações com materiais manipuláveis.'
-        };
-        if (selectedStudent.id === s.id) setSelectedStudent(updatedStudent);
-        return updatedStudent;
-      }
-      return s;
-    }));
-  };
-
-  const handleAddStudent = (newStudentData: Partial<Student>) => {
-    const newStudent: Student = {
-      id: `aluno-${Date.now()}`,
-      name: newStudentData.name || 'Novo Aluno',
-      grade: newStudentData.grade || '5º ano',
-      classroom: newStudentData.classroom || 'Turma 5º ano A',
-      teacherName: 'Prof. Marcelo Fernandes',
-      entryDate: 'Hoje',
-      status: 'atencao',
-      statusAlertText: 'Aguardando avaliação diagnóstica inicial.',
-      avatar: '🌟',
-      level: 1,
-      currentXp: 0,
-      nextLevelXp: 500,
-      streakDays: 0,
-      weekDaysActive: [
-        { day: 'S', active: true },
-        { day: 'T', active: false },
-        { day: 'Q', active: false },
-        { day: 'Q', active: false },
-        { day: 'S', active: false },
-        { day: 'S', active: false },
-        { day: 'D', active: false }
-      ],
-      cards: [],
-      achievements: [],
-      diagnosticCompleted: false,
-      historyLog: [],
-      trailProgress: { portugues: 10, matematica: 10, ciencias: 10 },
-      currentMission: INITIAL_MISSION_DIVISAO,
-      abilities: INITIAL_STUDENTS[0].abilities,
-      pedagogicalNotes: newStudentData.pedagogicalNotes || 'Novo aluno cadastrado.',
-      adaptations: newStudentData.adaptations || ['Atividades regulares'],
-      interventions: []
-    };
-
-    setStudents(prev => [newStudent, ...prev]);
-    setSelectedStudent(newStudent);
-  };
-
-  // Landing Page
-  if (currentScreen === 'landing') {
-    return (
-      <LandingPage
-        onEnterAsStudent={handleEnterAsStudent}
-        onEnterAsProfessor={handleEnterAsProfessor}
-        onEnterAsCoordenacao={handleEnterAsCoordenacao}
-      />
-    );
-  }
-
-  // Login / Profile Selection Screen
-  if (currentScreen === 'login') {
-    return (
-      <LoginScreen
-        students={students}
-        onLoginAsStudent={handleLoginStudent}
-        onLoginAsProfessor={handleEnterAsProfessor}
-        onLoginAsCoordenacao={handleEnterAsCoordenacao}
-        onBack={() => setCurrentScreen('landing')}
-        defaultRole={loginDefaultRole}
-      />
-    );
-  }
-
-  // If TV Mode is active, render full-screen Presentation Panel without admin menus
-  if (isTvModeOpen || activeTab === 'painel-tv') {
-    return (
-      <PainelSalaMissoes
-        students={students}
-        cards={cards}
-        achievements={achievements}
-        metrics={metrics}
-        onClose={() => {
-          setIsTvModeOpen(false);
-          if (activeTab === 'painel-tv') {
-            setActiveTab('dashboard');
-          }
-        }}
-      />
-    );
-  }
-
-  return (
-    <div className="app-shell min-h-screen bg-[radial-gradient(circle_at_center,#ffffff_0%,#e0e7ff_100%)] text-slate-800 flex flex-col font-sans selection:bg-[#123cc4] selection:text-white relative">
-      
-      {isOffline && (
-        <div className="bg-amber-500 text-white text-xs font-bold text-center py-2 px-4 safe-pt z-[9999] shadow-md flex items-center justify-center gap-2">
-          <span>⚠️</span> Você está offline. Reconecte para salvar seu progresso.
-        </div>
-      )}
-
-      {/* Dev Assistant (Floating Developer Tools) */}
-      <DevAssistant
-        currentRole={currentRole}
-        setCurrentRole={setCurrentRole}
-        onOpenTvMode={() => setIsTvModeOpen(true)}
-        students={students}
-        selectedStudent={selectedStudent}
-        setSelectedStudent={setSelectedStudent}
-      />
-
-      {/* Global Application Header */}
-      <div className="app-header">
-        <Header
-          currentRole={currentRole}
-          selectedStudent={selectedStudent}
-          onOpenNotifications={() => setIsNotificationsModalOpen(true)}
-          isMobileMenuOpen={isMobileMenuOpen}
-          setIsMobileMenuOpen={setIsMobileMenuOpen}
-        />
-      </div>
-
-      {/* Main Layout Area with Sidebar & Dynamic View */}
-      <div className="flex-1 flex flex-col lg:flex-row w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 gap-4 sm:gap-6">
-        {/* Navigation Sidebar (Desktop + Mobile Drawer) */}
-        <div className="app-sidebar">
-          <Sidebar
-            currentRole={currentRole}
-            activeTab={activeTab}
-            onTabChange={setActiveTab}
-            onOpenMission={() => setIsMissionPlayerOpen(true)}
-            onOpenCards={() => setActiveTab('cards')}
-            isMobileMenuOpen={isMobileMenuOpen}
-            setIsMobileMenuOpen={setIsMobileMenuOpen}
-          />
-        </div>
-
-        {/* Central Dynamic View Area */}
-        <main className="flex-1 min-w-0">
-          {/* TEACHER DASHBOARD VIEW */}
-          {currentRole === 'professor' && activeTab === 'dashboard' && (
-            <ProfessorDashboard
-              students={students}
-              metrics={metrics}
-              onSelectStudent={handleSelectStudent}
-              onNavigateToTab={setActiveTab}
-              onOpenNewInterventionModal={(studentId) => {
-                const std = students.find(s => s.id === studentId);
-                if (std) setSelectedStudent(std);
-                setIsInterventionModalOpen(true);
-              }}
-              onOpenResourceModal={() => setIsResourcesModalOpen(true)}
-            />
-          )}
-
-          {/* STUDENT DASHBOARD VIEW */}
-          {currentRole === 'aluno' && activeTab === 'dashboard' && (
-            <StudentDashboard
-              student={selectedStudent || students[0]}
-              mission={selectedStudent?.currentMission || students[0]?.currentMission}
-              unlockedCard={cards.find(c => c.unlocked) || cards[0]}
-              onStartMission={handleStartMission}
-              onViewCard={handleOpenCard}
-              onViewAchievements={() => setIsAchievementsModalOpen(true)}
-              onViewTrails={() => setActiveTab('trilhas')}
-            />
-          )}
-
-          {/* COORDINATION VIEW (Shows Class Metrics & Reports) */}
-          {currentRole === 'coordenacao' && activeTab === 'dashboard' && (
-            <CoordenacaoDashboard
-              students={students}
-              metrics={metrics}
-              onNavigateToTab={setActiveTab}
-            />
-          )}
-
-          {/* ALUNOS VIEW */}
-          {activeTab === 'alunos' && (
-            <AlunosView
-              students={students}
-              onSelectStudent={handleSelectStudent}
-              onAddStudent={handleAddStudent}
-            />
-          )}
-
-          {/* TRILHAS VIEW */}
-          {(activeTab === 'trilhas' || activeTab === 'missoes') && (
-            <TrilhasView
-              onStartMission={handleStartMission}
-              selectedStudent={selectedStudent}
-            />
-          )}
-
-          {/* CARDS ALBUM VIEW */}
-          {activeTab === 'cards' && (
-            <CardsAlbumView
-              cards={cards}
-              onSelectCard={handleOpenCard}
-            />
-          )}
-
-          {/* RELATÓRIOS & MEMÓRIA PEDAGÓGICA VIEW */}
-          {activeTab === 'relatorios' && (
-            <RelatoriosView
-              students={students}
-              metrics={metrics}
-            />
-          )}
-
-          {/* INTERVENÇÕES VIEW */}
-          {activeTab === 'intervencoes' && (
-            <IntervencoesView 
-              students={students}
-              onOpenNewIntervention={() => setIsInterventionModalOpen(true)}
-            />
-          )}
-
-          {/* DIAGNOSTICO VIEW */}
-          {activeTab === 'diagnostico' && (
-            <DiagnosticoView
-              selectedStudent={selectedStudent}
-              onOpenDiagnostic={() => setIsDiagnosticModalOpen(true)}
-            />
-          )}
-
-          {/* RECONHECIMENTO VIEW */}
-          {activeTab === 'reconhecimento' && (
-            <ReconhecimentoView students={students} />
-          )}
-
-          {/* LOJA DE MOEDAS VIEW (Aluno) */}
-          {activeTab === 'loja' && (
-            <LojaMoedasView student={selectedStudent} />
-          )}
-
-        </main>
-      </div>
-
-      {/* MODALS */}
-      {/* 1. Interactive 5-Step Mission Player Modal */}
-      {isMissionPlayerOpen && activeMissionData ? (
-        <div className="fixed inset-0 z-[100] bg-white overflow-y-auto animate-fadeIn">
-          <LessonRunner
-            unit={activeMissionData}
-            userStats={{
-              xp: selectedStudent.currentXp,
-              level: selectedStudent.level,
-              streakDays: selectedStudent.streakDays,
-              hearts: 5,
-              maxHearts: 5,
-              completedUnits: [],
-              completedTracks: [],
-              masteredSkills: [],
-              mistakeHistory: [],
-              earnedBadges: []
-            }}
-            onFinishLesson={(unitId, earnedXp) => {
-              handleCompleteMission(earnedXp, activeMissionData.title);
-            }}
-            onClose={() => setIsMissionPlayerOpen(false)}
-            onRecordMistake={() => {}}
-          />
-        </div>
-      ) : (
-        <MissionPlayerModal
-          mission={INITIAL_MISSION_DIVISAO}
-          student={selectedStudent}
-          isOpen={isMissionPlayerOpen}
-          onClose={() => setIsMissionPlayerOpen(false)}
-          onCompleteMission={handleCompleteMission}
-        />
-      )}
-
-      {/* 2. Prontuário Pedagógico Evolutivo Modal */}
-      <StudentProfileModal
-        student={selectedStudent}
-        isOpen={isProfileModalOpen}
-        onClose={() => setIsProfileModalOpen(false)}
-        onConfirmMastery={handleConfirmMastery}
-        onCreateIntervention={(studentId) => {
-          const std = students.find(s => s.id === studentId);
-          if (std) setSelectedStudent(std);
-          setIsProfileModalOpen(false);
-          setIsInterventionModalOpen(true);
-        }}
-        onStartDiagnostic={(studentId) => {
-          const std = students.find(s => s.id === studentId);
-          if (std) setSelectedStudent(std);
-          setIsProfileModalOpen(false);
-          setIsDiagnosticModalOpen(true);
-        }}
-      />
-
-      {/* 3. Card Detail Modal */}
-      <CardDetailModal
-        card={selectedCard}
-        isOpen={isCardDetailOpen}
-        onClose={() => setIsCardDetailOpen(false)}
-      />
-
-      {/* 4. New Intervention Modal */}
-      <InterventionModal
-        isOpen={isInterventionModalOpen}
-        onClose={() => setIsInterventionModalOpen(false)}
-        students={students}
-        preselectedStudentId={selectedStudent.id}
-        onSaveIntervention={handleSaveIntervention}
-      />
-
-      {/* 5. Diagnostic Assessment Modal */}
-      <DiagnosticModal
-        student={selectedStudent}
-        isOpen={isDiagnosticModalOpen}
-        onClose={() => setIsDiagnosticModalOpen(false)}
-        onCompleteDiagnostic={handleCompleteDiagnostic}
-      />
-
-      {/* 6. Resources & Concrete Materials Modal */}
-      <ResourcesModal
-        isOpen={isResourcesModalOpen}
-        onClose={() => setIsResourcesModalOpen(false)}
-      />
-
-      {/* 7. Achievements Modal */}
-      <AchievementsModal
-        achievements={achievements}
-        isOpen={isAchievementsModalOpen}
-        onClose={() => setIsAchievementsModalOpen(false)}
-      />
-
-      {/* 8. Notifications Modal */}
-      <NotificationsModal
-        isOpen={isNotificationsModalOpen}
-        onClose={() => setIsNotificationsModalOpen(false)}
-        onSelectStudent={handleSelectStudent}
-        students={students}
-      />
-
-      {/* 9. Mission Print View Modal */}
-      <MissionPrintView
-        mission={INITIAL_MISSION_DIVISAO}
-        student={selectedStudent}
-        isOpen={isMissionPrintOpen}
-        onClose={() => setIsMissionPrintOpen(false)}
-      />
+  const role = profile.role as UserRole;
+  const current = selectedStudent;
+  const availableTabs = role === 'aluno' ? ['dashboard','trilhas','cards','conquistas','loja','relatorios'] : role === 'professor' ? ['dashboard','alunos','missoes','trilhas','intervencoes','relatorios','reconhecimento','cards'] : ['dashboard','alunos','relatorios','trilhas','reconhecimento'];
+  const activeMission = missions.find(m => ['Disponível', 'Em andamento', 'em_andamento'].includes(String(m.status)));
+  const openMission = (mission?: Mission) => { const realMission = mission ?? activeMission; if (!realMission || !current) { setNotice('Não há missão real disponível para este aluno.'); return; } setMissionToPlay(realMission); };
+  if (tv) return <PainelSalaMissoes students={students} metrics={metrics as any} loading={loading} error={error} onClose={()=>setTv(false)} />;
+  return <div className="app-shell min-h-screen bg-[radial-gradient(circle_at_center,#ffffff_0%,#e0e7ff_100%)] text-slate-800 flex flex-col font-sans">
+    {notice && <p role="status" className="bg-emerald-100 p-2 text-center">{notice}</p>}
+    <Header currentRole={role} userName={profile.name} userEmail={profile.email} selectedStudent={current ?? undefined} onOpenNotifications={()=>setNotice('Notificações indisponíveis: não há endpoint de notificações para esta conta.')} onLogout={()=>void logout()} isMobileMenuOpen={mobileMenu} setIsMobileMenuOpen={setMobileMenu}/>
+    <div className="flex-1 flex flex-col lg:flex-row w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 gap-4">
+      <Sidebar currentRole={role} activeTab={activeTab} onTabChange={tab=>{if(tab==='painel-tv' && role!=='aluno') setTv(true); else if(availableTabs.includes(tab)) setActiveTab(tab);}} onOpenMission={()=>openMission()} onOpenCards={()=>setActiveTab('cards')} selectedStudent={current ?? undefined} isMobileMenuOpen={mobileMenu} setIsMobileMenuOpen={setMobileMenu}/>
+      <main className="flex-1 min-w-0 rounded-2xl bg-white/70 p-4">
+        {error && <div role="alert" className="mb-4 rounded border border-red-300 bg-red-50 p-3 text-red-800">{error}<button onClick={()=>void refresh()} className="ml-3 underline">Tentar novamente</button></div>}
+        {role !== 'aluno' && (profile.classroomIds?.length ?? 0) > 1 && <label className="mb-4 block text-sm">Turma autorizada <select className="ml-2 rounded border p-2" value={selectedClass ?? ''} onChange={e=>setSelectedClass(e.target.value || undefined)}><option value="">Selecione uma turma</option>{profile.classroomIds.map(id=><option key={id} value={id}>{id}</option>)}</select></label>}
+        {loading && <p role="status">Carregando…</p>}
+        {role === 'aluno' && current && activeTab === 'dashboard' && (activeMission && cards.some(c=>c.unlocked) ? <StudentDashboard student={current} mission={activeMission} unlockedCard={cards.find(c=>c.unlocked)} onStartMission={()=>openMission(activeMission)} onViewCard={setSelectedCard} onViewAchievements={()=>setShowAchievements(true)} onViewTrails={()=>setActiveTab('trilhas')}/> : <section className="rounded-3xl bg-white p-6"><h2 className="text-2xl font-bold">Olá, {current.name}</h2><p className="mt-2">{activeMission ? `Missão disponível: ${activeMission.title}` : 'Nenhuma missão real disponível no momento.'}</p>{activeMission && <button onClick={()=>openMission(activeMission)} className="mt-4 rounded bg-indigo-700 px-4 py-2 text-white">Iniciar missão</button>}<button onClick={()=>setActiveTab('trilhas')} className="ml-2 mt-4 rounded border px-4 py-2">Ver trilhas</button></section>)}
+        {role === 'aluno' && current && activeTab === 'trilhas' && <TrilhasView selectedStudent={current} trails={trails} missions={missions} loading={false} error={error} onRefresh={()=>void refresh()} onStartMission={node=>openMission(node as Mission | undefined)}/>}
+        {role === 'aluno' && activeTab === 'cards' && <CardsAlbumView cards={cards} onSelectCard={setSelectedCard}/>}
+        {role === 'aluno' && activeTab === 'conquistas' && <section className="rounded-2xl bg-white p-6"><h2 className="text-xl font-bold">Conquistas do aluno</h2>{achievements.length ? <button className="mt-3 rounded bg-amber-600 px-4 py-2 text-white" onClick={()=>setShowAchievements(true)}>Ver {achievements.length} registros</button> : <p className="mt-3">Nenhuma conquista retornada pela API.</p>}</section>}
+        {role === 'aluno' && activeTab === 'loja' && current && <LojaMoedasView student={current} rewards={rewards.map(r=>({id:String(r.id??''),name:String(r.name??r.title??''),desc:String(r.description??r.desc??''),cost:Number(r.cost??0),category:['escola','experiencias','digitais','cultura'].includes(String(r.category))?r.category as any:'escola',availability:r.availability==='esgotado'||r.availability==='reservado'?r.availability:'disponivel',popular:typeof r.popular==='boolean'?r.popular:undefined,note:typeof r.note==='string'?r.note:undefined})).filter(r=>r.id)} loading={loading} error={error} onRedeem={async rewardId=>{const result=await rewardsApi.redeem(rewardId,current.id);await refresh();return result.remainingCoins;}}/>}
+        {role !== 'aluno' && activeTab === 'dashboard' && (role === 'professor' && metrics ? <ProfessorDashboard students={students} metrics={metrics as any} onSelectStudent={setSelectedStudent} onNavigateToTab={tab=>{if(tab==='painel-tv') setTv(true); else setActiveTab(tab);}} onOpenNewInterventionModal={id=>{setInterventionStudentId(id??'');setShowIntervention(true);}}/> : role==='coordenacao' && metrics ? <CoordenacaoDashboard students={students} metrics={metrics as any}/> : <section className="rounded-2xl bg-white p-6"><h2 className="text-2xl font-bold">Visão da turma</h2>{metrics ? <dl className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">{[['Alunos',metrics.totalStudents],['Evoluindo bem',metrics.evolvingWell],['Precisam de atenção',metrics.needsAttention],['Intervenções',metrics.needsIntervention],['Progresso médio',`${metrics.averageMissionProgressPercent}%`],['Missões concluídas',metrics.completedMissionsMonth]].map(([k,v])=><div className="rounded-xl bg-indigo-50 p-4" key={String(k)}><dt>{String(k)}</dt><dd className="text-2xl font-bold">{String(v ?? '—')}</dd></div>)}</dl> : <p className="mt-3">Selecione uma turma autorizada para consultar métricas.</p>}</section>)}
+        {role !== 'aluno' && activeTab === 'alunos' && <section className="rounded-2xl bg-white p-6"><h2 className="text-xl font-bold">Alunos autorizados</h2><p className="text-sm">Cadastro de alunos é restrito à Administração Master.</p>{students.length ? students.map(s=><button key={s.id} className="block w-full border-b py-3 text-left" onClick={()=>{void studentsApi.get(s.id).then(row=>row&&setSelectedStudent(asStudent(row))).catch(e=>setError(String(e)));}}>{s.name} · {s.classroom}</button>) : <p>Nenhum aluno disponível no escopo atual.</p>}{current && <div className="mt-4 rounded bg-slate-50 p-4"><b>{current.name}</b><p>{current.grade} · {current.classroom}</p><p>{current.pedagogicalNotes||'Sem observações registradas.'}</p>{current.abilities?.length ? current.abilities.map(a=><p key={a.id}>{a.name}: {a.state}</p>) : <p>Sem dados de habilidades.</p>}<button type="button" onClick={()=>setShowDiagnostic(true)} className="mt-3 rounded bg-indigo-700 px-4 py-2 text-white">Aplicar diagnóstico</button></div>}</section>}
+        {role === 'professor' && activeTab === 'missoes' && <section className="rounded-2xl bg-white p-6"><h2 className="text-xl font-bold">Catálogo real de missões</h2>{missions.length ? missions.map(m=><div key={m.id} className="flex justify-between border-b p-3">{m.title} · {m.status}<button className="text-indigo-700 underline" onClick={()=>setMissionToPrint(m)}>Imprimir</button></div>) : <p>Nenhuma missão retornada pela API.</p>}</section>}
+        {role === 'professor' && activeTab === 'trilhas' && <section className="rounded-2xl bg-white p-6"><h2 className="text-xl font-bold">Trilhas curriculares</h2>{trails.length ? trails.map(t=><p className="border-b p-3" key={t.id}><b>{t.name}</b> · {t.subject} {t.description}</p>) : <p>Nenhuma trilha retornada pela API.</p>}</section>}
+        {role === 'professor' && activeTab === 'intervencoes' && <section className="rounded-2xl bg-white p-6"><button className="rounded bg-violet-700 px-3 py-2 text-white" onClick={()=>setShowIntervention(true)}>Nova intervenção</button><h2 className="mt-4 text-xl font-bold">Intervenções</h2>{interventions.length ? interventions.map(i=><article className="border-b p-3" key={i.id}><b>{i.studentName} · {i.ability}</b><p>{i.title} · {i.strategy}</p></article>) : <p>Nenhuma intervenção retornada pela API.</p>}</section>}
+        {role !== 'aluno' && activeTab === 'relatorios' && (metrics ? <RelatoriosView students={students} metrics={metrics as any}/> : <section className="rounded-2xl bg-white p-6"><h2 className="text-xl font-bold">Relatórios</h2><p className="mt-3">Selecione uma turma autorizada para ver métricas.</p></section>)}
+        {role === 'professor' && activeTab === 'cards' && <CardsAlbumView cards={cards} onSelectCard={setSelectedCard}/>}
+        {role !== 'aluno' && activeTab === 'reconhecimento' && <section className="rounded-2xl bg-white p-6"><h2 className="text-xl font-bold">Reconhecimento</h2><p>A API não oferece ação de registro de reconhecimento; nenhum dado local será criado.</p></section>}
+      </main>
     </div>
-  );
+    <CardDetailModal card={selectedCard} isOpen={!!selectedCard} onClose={()=>setSelectedCard(null)}/>
+    <AchievementsModal achievements={achievements} isOpen={showAchievements} onClose={()=>setShowAchievements(false)}/>
+    {missionToPlay && current && <MissionPlayerModal mission={missionToPlay} student={current} isOpen onClose={()=>setMissionToPlay(null)} onRecordAttempt={async(stepIndex,answer)=>{const result=await missionsApi.attempt(missionToPlay.id,{studentId:current.id,stepIndex,answer});return {isCorrect:result.isCorrect,feedback:result.feedback};}} onCompleteMission={async()=>{await missionsApi.complete(missionToPlay.id,{studentId:current.id});await refresh();setMissionToPlay(null);}}/>}
+    {missionToPrint && <MissionPrintView mission={missionToPrint} student={current ?? undefined} isOpen onClose={()=>setMissionToPrint(null)}/>}
+    {showIntervention && <InterventionModal isOpen students={students} preselectedStudentId={interventionStudentId} onClose={()=>setShowIntervention(false)} onSaveIntervention={async payload=>{await interventionsApi.create(payload);await refresh();setNotice('Intervenção registrada pelo servidor.');}}/>}
+    {showDiagnostic && current && <DiagnosticModal student={current} isOpen onClose={()=>setShowDiagnostic(false)} onCompleteDiagnostic={async(studentId,results)=>{await studentsApi.completeDiagnostic(studentId,{abilityId:'diagnostico-inicial',answers:Object.fromEntries(Object.entries(results).map(([k,v])=>[k,String(v)]))});await refresh();setNotice('Diagnóstico salvo pelo servidor.');}}/>}
+  </div>;
 }
