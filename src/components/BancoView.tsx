@@ -55,10 +55,10 @@ const ActionButton: React.FC<{ label: string; icon: React.ReactNode; onClick: ()
 
 const TransactionRow: React.FC<{ item: Transaction }> = ({ item }) => {
   const incoming = item.direction === 'in';
-  return <li className="flex items-center gap-3 border-b border-slate-100 py-4 last:border-0 last:pb-0">
-    <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-full ${incoming ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-600'}`}>{incoming ? <ArrowDownLeft size={19} /> : <ArrowUpRight size={19} />}</span>
-    <span className="min-w-0 flex-1"><span className="block truncate text-sm font-bold text-slate-900">{item.title}</span><span className="mt-0.5 block truncate text-xs text-slate-500">{item.subtitle} · {item.date}</span></span>
-    <span className="shrink-0 text-right"><span className={`block text-sm font-extrabold tabular-nums ${incoming ? 'text-emerald-700' : 'text-slate-900'}`}>{incoming ? '+' : '−'}{item.amount} moedas</span><span className="mt-0.5 block text-[10px] font-semibold text-slate-400">{item.category} · demo</span></span>
+  return <li className="flex min-w-0 items-center gap-2 border-b border-slate-100 py-3 last:border-0 last:pb-0 sm:gap-3 sm:py-4">
+    <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-full sm:h-11 sm:w-11 ${incoming ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-600'}`}>{incoming ? <ArrowDownLeft size={18} /> : <ArrowUpRight size={18} />}</span>
+    <span className="min-w-0 flex-1"><span className="block truncate text-xs font-bold text-slate-900 sm:text-sm">{item.title}</span><span className="mt-0.5 block truncate text-[10px] text-slate-500 sm:text-xs">{item.subtitle} · {item.date}</span></span>
+    <span className="shrink-0 text-right"><span className={`block whitespace-nowrap text-xs font-extrabold tabular-nums sm:text-sm ${incoming ? 'text-emerald-700' : 'text-slate-900'}`}>{incoming ? '+' : '−'}{item.amount} <span className="hidden xs:inline">moedas</span></span><span className="mt-0.5 block text-[9px] font-semibold text-slate-400 sm:text-[10px]">{item.category} · demo</span></span>
   </li>;
 };
 
@@ -149,7 +149,7 @@ export const BancoView: React.FC<{ studentName: string; nfcRoute?: boolean; onEx
   };
 
   return <main className="mx-auto w-full max-w-6xl space-y-5 pb-12 text-slate-900 sm:space-y-7">
-    <header className="flex flex-wrap items-center justify-between gap-3">
+    <header className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
       <div className="flex items-center gap-3">
         <span className="grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-[#123cc4] to-[#05148d] text-white shadow-md shadow-blue-900/15"><Wallet size={22} /></span>
         <div><p className="mb-0 text-[10px] font-black uppercase tracking-[.16em] text-[#123cc4]">Carteira escolar</p><h1 className="mb-0 font-[Outfit] text-2xl font-black tracking-tight sm:text-3xl">Banco de moedas</h1></div>
@@ -158,11 +158,11 @@ export const BancoView: React.FC<{ studentName: string; nfcRoute?: boolean; onEx
     </header>
 
     <section className="grid gap-4 lg:grid-cols-[1.2fr_.8fr]">
-      <div className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#123cc4] via-[#0d32a7] to-[#07185f] p-5 text-white shadow-xl shadow-blue-950/15 sm:p-7">
-        <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full border-[34px] border-white/[.06]" />
-        <div className="relative flex items-start justify-between gap-3"><div><p className="mb-1 text-xs font-semibold text-blue-100">Carteira de aprendizagem</p><h2 className="mb-0 font-[Outfit] text-xl font-extrabold">Olá, {studentName || 'Estudante'}</h2></div><button type="button" onClick={() => setHideBalance(hidden => !hidden)} className="grid h-10 w-10 place-items-center rounded-xl border border-white/15 bg-white/10 text-white transition hover:bg-white/20" aria-label={hideBalance ? 'Mostrar saldo' : 'Ocultar saldo'}>{hideBalance ? <Eye size={18} /> : <EyeOff size={18} />}</button></div>
-        <div className="relative mt-7"><p className="mb-1 text-xs font-semibold text-blue-100">Saldo disponível</p><p className="mb-0 flex items-baseline gap-2"><span className="font-[Outfit] text-5xl font-black tracking-tight tabular-nums sm:text-6xl">{hideBalance ? '••••' : balance}</span><span className="text-lg font-bold text-blue-100">moedas</span></p></div>
-        <div className="relative mt-6 flex items-center gap-2 text-xs font-semibold text-blue-100"><ShieldCheck size={15} /><span>Saldo fictício · as operações são apenas simulações</span></div>
+      <div className="relative overflow-hidden rounded-[24px] border border-blue-100 bg-gradient-to-br from-[#f0f6ff] via-white to-[#e8efff] p-4 text-slate-900 shadow-sm sm:rounded-[28px] sm:p-7">
+        <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full border-[34px] border-blue-900/[.035]" />
+        <div className="relative flex items-start justify-between gap-3"><div className="min-w-0"><p className="mb-1 text-xs font-semibold text-[#123cc4]">Carteira de aprendizagem</p><h2 className="mb-0 truncate font-[Outfit] text-lg font-extrabold sm:text-xl">Olá, {studentName || 'Estudante'}</h2></div><button type="button" onClick={() => setHideBalance(hidden => !hidden)} className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-blue-100 bg-white text-[#123cc4] transition hover:bg-blue-50" aria-label={hideBalance ? 'Mostrar saldo' : 'Ocultar saldo'}>{hideBalance ? <Eye size={18} /> : <EyeOff size={18} />}</button></div>
+        <div className="relative mt-5 sm:mt-7"><p className="mb-1 text-xs font-semibold text-slate-500">Saldo disponível</p><p className="mb-0 flex flex-wrap items-baseline gap-x-2"><span className="font-[Outfit] text-4xl font-black tracking-tight tabular-nums text-[#05148d] sm:text-6xl">{hideBalance ? '••••' : balance}</span><span className="text-base font-bold text-slate-600 sm:text-lg">moedas</span></p></div>
+        <div className="relative mt-4 flex items-start gap-2 text-[11px] font-semibold leading-relaxed text-slate-600 sm:mt-6 sm:text-xs"><ShieldCheck size={15} className="mt-0.5 shrink-0 text-[#123cc4]" /><span>Saldo fictício · operações apenas demonstrativas</span></div>
       </div>
 
       <aside className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
@@ -176,7 +176,7 @@ export const BancoView: React.FC<{ studentName: string; nfcRoute?: boolean; onEx
       </aside>
     </section>
 
-    <div className="border-b border-slate-200" role="tablist" aria-label="Seções da carteira">
+    <div className="flex overflow-x-auto border-b border-slate-200" role="tablist" aria-label="Seções da carteira">
       <BankTabButton label="Visão geral" selected={activeTab === 'inicio'} onClick={() => setActiveTab('inicio')} />
       <BankTabButton label="Extrato" selected={activeTab === 'extrato'} onClick={() => setActiveTab('extrato')} />
       <BankTabButton label="Receber" selected={activeTab === 'receber'} onClick={() => setActiveTab('receber')} />
@@ -189,11 +189,11 @@ export const BancoView: React.FC<{ studentName: string; nfcRoute?: boolean; onEx
         <div className="mb-1 flex items-center justify-between"><div><p className="mb-1 text-[10px] font-black uppercase tracking-[.14em] text-slate-400">Sua conta</p><h2 className="mb-0 font-[Outfit] text-xl font-bold">Movimentações recentes</h2></div><button type="button" onClick={() => setActiveTab('extrato')} className="inline-flex items-center gap-1 rounded-lg px-2 py-2 text-xs font-bold text-[#123cc4] hover:bg-blue-50">Ver extrato <ChevronRight size={15} /></button></div>
         <ul className="m-0 list-none p-0">{transactions.slice(0, 4).map(item => <TransactionRow key={item.id} item={item} />)}</ul>
       </div>
-      <div className="overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm">
-        <div className="bg-slate-950 p-5 text-white sm:p-6">
-          <div className="flex items-start justify-between"><span className="grid h-10 w-10 place-items-center rounded-xl bg-white/10"><CreditCard size={19} /></span><span className="rounded-full border border-white/15 bg-white/10 px-2.5 py-1 text-[9px] font-black tracking-[.12em]">CARTÃO DEMO</span></div>
-          <p className="mb-1 mt-7 text-xs text-slate-300">Carteira de</p><p className="mb-5 truncate font-[Outfit] text-lg font-bold">{studentName || 'Estudante'}</p>
-          <div className="flex items-end justify-between"><span className="font-mono text-sm tracking-[.2em] text-slate-300">••••  ••••  ••••  0000</span><span className="text-[10px] font-bold text-cyan-300">NFC · DEMO</span></div>
+      <div className="overflow-hidden rounded-[24px] border border-blue-100 bg-white shadow-sm">
+        <div className="bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-5 sm:p-6">
+          <div className="flex items-start justify-between"><span className="grid h-10 w-10 place-items-center rounded-xl border border-blue-100 bg-white text-[#123cc4]"><CreditCard size={19} /></span><span className="rounded-full border border-blue-100 bg-white px-2.5 py-1 text-[9px] font-black tracking-[.12em] text-[#123cc4]">CARTÃO DEMO</span></div>
+          <p className="mb-1 mt-6 text-xs text-slate-500">Carteira de</p><p className="mb-5 truncate font-[Outfit] text-lg font-bold text-slate-900">{studentName || 'Estudante'}</p>
+          <div className="flex flex-wrap items-end justify-between gap-2"><span className="font-mono text-sm tracking-[.12em] text-slate-500 sm:tracking-[.2em]">•••• &nbsp;•••• &nbsp;•••• &nbsp;0000</span><span className="text-[10px] font-bold text-indigo-700">NFC · DEMO</span></div>
         </div>
         <div className="p-5"><p className="mb-3 text-xs leading-relaxed text-slate-600">Cartão visual para a demonstração. Gere um endereço de exemplo para testar a abertura por aproximação.</p><button type="button" onClick={() => setActiveTab('receber')} className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-3 text-sm font-bold text-[#123cc4] transition hover:bg-blue-100"><Link2 size={16} />Criar link NFC demonstrativo<ArrowRight size={15} /></button></div>
       </div>
