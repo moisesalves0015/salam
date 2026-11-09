@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { onAuthStateChanged, type User } from 'firebase/auth';
-import { firebaseAuth, firebaseClientConfigured, requestPasswordReset, signInWithCustomToken, signInWithEmailAndPassword, signOutUser } from './services/firebaseClient';
+import { firebaseAuth, firebaseClientConfigured, requestPasswordReset, signInWithEmailAndPassword, signOutUser } from './services/firebaseClient';
 import { adminApi, studentsApi, trailsApi, missionsApi, cardsApi, achievementsApi, metricsApi, interventionsApi, rewardsApi, type TrailCatalogItem } from './services/api';
+import { INITIAL_STUDENTS } from './data/initialData';
 import { LoginScreen } from './components/LoginScreen';
 import AdminConsole from './components/AdminConsole';
 import { Header } from './components/Header';
@@ -41,6 +42,7 @@ const asStudent = (input: unknown): Student => {
 
 export default function App() {
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [demoStudent, setDemoStudent] = useState<Student | null>(null);
   const [students, setStudents] = useState<Student[]>([]);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [trails, setTrails] = useState<TrailCatalogItem[]>([]);
@@ -79,7 +81,7 @@ export default function App() {
   }, []);
 
   const clearSession = useCallback(() => {
-    setProfile(null); setStudents([]); setSelectedStudent(null); setTrails([]); setMissions([]); setCards([]); setAchievements([]); setMetrics(null); setInterventions([]); setRewards([]); setAdminData({}); setAdminSummary(undefined); setActiveTab('dashboard');
+    setProfile(null); setDemoStudent(null); setStudents([]); setSelectedStudent(null); setTrails([]); setMissions([]); setCards([]); setAchievements([]); setMetrics(null); setInterventions([]); setRewards([]); setAdminData({}); setAdminSummary(undefined); setActiveTab('dashboard');
   }, []);
   const loadAdmin = useCallback(async () => {
     const [summary, ...collections] = await Promise.all([
@@ -90,6 +92,10 @@ export default function App() {
   const loadProfileData = useCallback(async (p: Profile) => {
     setLoading(true); setError(null);
     try {
+      if (demoStudent && p.role === 'aluno') {
+        setStudents([demoStudent]); setSelectedStudent(demoStudent); setTrails([]); setMissions([]); setCards([]); setAchievements([]); setMetrics(null); setInterventions([]); setRewards([]);
+        return;
+      }
       if (p.role === 'admin') { await loadAdmin(); }
       else if (p.role === 'aluno') {
         if (!p.studentId) throw new Error('Perfil de aluno sem studentId. Acesso bloqueado.');
@@ -115,9 +121,10 @@ export default function App() {
       }
     } catch (e) { setError(e instanceof Error ? e.message : String(e)); }
     finally { setLoading(false); }
-  }, [loadAdmin, selectedClass]);
+  }, [demoStudent, loadAdmin, selectedClass]);
 
   useEffect(() => {
+    if (demoStudent) { setLoading(false); return; }
     if (!firebaseClientConfigured || !firebaseAuth) { setLoading(false); return; }
     return onAuthStateChanged(firebaseAuth, async (user: User | null) => {
       if (!user) { clearSession(); setLoading(false); return; }
@@ -128,11 +135,19 @@ export default function App() {
         setProfile(p); await loadProfileData(p);
       } catch (e) { setError(e instanceof Error ? e.message : String(e)); setProfile(null); setLoading(false); }
     });
-  }, [clearSession, loadProfileData]);
+  }, [clearSession, demoStudent, loadProfileData]);
 
   const loginStaff = async (email: string, password: string) => { setLoading(true); setError(null); try { await signInWithEmailAndPassword(email, password); } catch (e) { setError(e instanceof Error ? e.message : 'Falha ao entrar.'); setLoading(false); throw e; } };
-  const loginStudent = async (code: string, pin: string) => { setLoading(true); setError(null); try { const session = await adminApi.studentSession(code, pin); await signInWithCustomToken(session.token); } catch (e) { setError(e instanceof Error ? e.message : 'Falha ao entrar.'); setLoading(false); throw e; } };
-  const logout = async () => { setLoading(true); try { await signOutUser(); clearSession(); setError(null); } catch (e) { setError(e instanceof Error ? e.message : 'Falha ao sair.'); } finally { setLoading(false); } };
+  const loginDemoStudent = (student: Student) => {
+    setDemoStudent(student);
+    setProfile({ firebaseUid: `demo-${student.id}`, userId: `demo-${student.id}`, email: '', name: student.name, role: 'aluno', schoolId: 'demo', classroomIds: [], studentId: student.id });
+    setStudents([student]); setSelectedStudent(student); setTrails([]); setMissions([]); setCards([]); setAchievements([]); setMetrics(null); setInterventions([]); setRewards([]);
+    setError(null); setNotice('Modo demonstração: sessão local, sem Firebase ou gravação de dados.'); setLoading(false);
+  };
+  const logout = async () => {
+    if (demoStudent) { clearSession(); setNotice(null); setError(null); setLoading(false); return; }
+    setLoading(true); try { await signOutUser(); clearSession(); setError(null); } catch (e) { setError(e instanceof Error ? e.message : 'Falha ao sair.'); } finally { setLoading(false); }
+  };
   const refresh = async () => { if (profile) await loadProfileData(profile); };
   const adminAction = async (action: string, entity: string, payload: Record<string, unknown>) => {
     if (!['create','update','archive','delete'].includes(action)) throw new Error('Ação não suportada.');
@@ -146,7 +161,7 @@ export default function App() {
     await loadAdmin(); setNotice('Alteração confirmada pelo servidor.'); return result;
   };
 
-  if (!profile) return <LoginScreen onStaffLogin={loginStaff} onStudentLogin={loginStudent} onPasswordReset={requestPasswordReset} loading={loading} error={error} firebaseConfigured={firebaseClientConfigured} />;
+  if (!profile) return <LoginScreen students={INITIAL_STUDENTS} onDemoStudentLogin={loginDemoStudent} onStaffLogin={loginStaff} onPasswordReset={requestPasswordReset} loading={loading} error={error} firebaseConfigured={firebaseClientConfigured} />;
   if (loading) return <main className="min-h-screen grid place-items-center bg-slate-50"><p role="status">Carregando dados autorizados…</p></main>;
   if (profile.role === 'admin' && routePath.startsWith('/banco')) return <div className="min-h-screen bg-[#f4f7fc] p-4 sm:p-8"><div className="mx-auto mb-5 flex max-w-6xl justify-between"><span className="self-center text-sm font-bold text-slate-700">Banco demonstrativo · ADM Master</span><button onClick={()=>{window.history.pushState({}, '', '/');setRoutePath('/');}} className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700">Voltar à administração</button></div><BancoView studentName={profile.name} nfcRoute={routePath.startsWith('/banco/nfc/')} onExitNfc={()=>{window.history.replaceState({}, '', '/banco');setRoutePath('/banco');}}/></div>;
   if (profile.role === 'admin') return <AdminConsole actor={{name:profile.name,email:profile.email,role:profile.role}} data={adminData} summary={adminSummary} loading={loading} error={error} onRefresh={refresh} onLogout={logout} onOpenBank={()=>{window.history.pushState({}, '', '/banco');setRoutePath('/banco');}} onOpenTv={()=>setNotice('Painel TV não aberto: selecione primeiro uma escola e turma válidas. Não exibimos alunos de várias escolas em conjunto.')} onAction={adminAction}/>;
