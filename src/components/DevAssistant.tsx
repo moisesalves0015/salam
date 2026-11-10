@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, Tv, Maximize, Minimize, GraduationCap, Compass, Layers, X, User } from 'lucide-react';
+import { Settings, Tv, Maximize, Minimize, GraduationCap, Compass, Layers, X, User, Shield, Database, Wallet } from 'lucide-react';
 import { UserRole, Student } from '../types';
+import { adminApi } from '../services/api';
 
 interface DevAssistantProps {
   currentRole: UserRole;
   setCurrentRole: (role: UserRole) => void;
   onOpenTvMode: () => void;
+  onOpenBank?: () => void;
+  onOpenAdmin?: () => void;
   students: Student[];
   selectedStudent: Student;
   setSelectedStudent: (student: Student) => void;
@@ -15,12 +18,25 @@ export const DevAssistant: React.FC<DevAssistantProps> = ({
   currentRole,
   setCurrentRole,
   onOpenTvMode,
+  onOpenBank,
+  onOpenAdmin,
   students,
   selectedStudent,
   setSelectedStudent
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [migrationStatus, setMigrationStatus] = useState<string | null>(null);
+
+  const handleQuickMigration = async () => {
+    setMigrationStatus('Sincronizando...');
+    try {
+      const res = await adminApi.migrateMockups('idempotent-preserve');
+      setMigrationStatus(`OK: ${res.totalIdentified} reg. (${res.totalImported} novos / ${res.totalIgnored} preservados)`);
+    } catch {
+      setMigrationStatus('Erro ao sincronizar');
+    }
+  };
 
   useEffect(() => {
     const handleFs = () => setIsFullscreen(!!document.fullscreenElement);
@@ -71,12 +87,35 @@ export const DevAssistant: React.FC<DevAssistantProps> = ({
                   <span className="text-[10px] text-white font-bold">Tela Cheia</span>
                 </button>
               </div>
+              <div className="flex gap-2">
+                {onOpenBank && (
+                  <button
+                    onClick={onOpenBank}
+                    className="flex-1 flex flex-col items-center justify-center gap-1.5 bg-slate-800 hover:bg-slate-700 p-2 rounded-2xl border border-slate-700 transition-colors cursor-pointer"
+                  >
+                    <Wallet className="w-4 h-4 text-emerald-400" />
+                    <span className="text-[10px] text-white font-bold">Banco NFC</span>
+                  </button>
+                )}
+                <button
+                  onClick={handleQuickMigration}
+                  className="flex-1 flex flex-col items-center justify-center gap-1.5 bg-slate-800 hover:bg-slate-700 p-2 rounded-2xl border border-slate-700 transition-colors cursor-pointer"
+                >
+                  <Database className="w-4 h-4 text-purple-400" />
+                  <span className="text-[10px] text-white font-bold">Sync Firebase</span>
+                </button>
+              </div>
+              {migrationStatus && (
+                <div className="text-[10px] text-emerald-300 bg-emerald-950/60 border border-emerald-700/50 rounded-xl px-2.5 py-1.5 font-bold">
+                  {migrationStatus}
+                </div>
+              )}
             </div>
 
             {/* Role Switcher */}
             <div className="space-y-2">
               <div className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Alternar Papel</div>
-              <div className="grid grid-cols-3 gap-1.5">
+              <div className="grid grid-cols-4 gap-1.5">
                 <button
                   onClick={() => setCurrentRole('professor')}
                   className={`p-2 rounded-xl border flex flex-col items-center gap-1 transition-all cursor-pointer ${
@@ -103,6 +142,18 @@ export const DevAssistant: React.FC<DevAssistantProps> = ({
                 >
                   <Layers className="w-3.5 h-3.5" />
                   <span className="text-[9px] font-bold">Coord</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setCurrentRole('admin');
+                    onOpenAdmin?.();
+                  }}
+                  className={`p-2 rounded-xl border flex flex-col items-center gap-1 transition-all cursor-pointer ${
+                    currentRole === 'admin' ? 'bg-purple-600 border-purple-500 text-white' : 'bg-slate-800 border-slate-700 text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <Shield className="w-3.5 h-3.5" />
+                  <span className="text-[9px] font-bold">Admin</span>
                 </button>
               </div>
             </div>

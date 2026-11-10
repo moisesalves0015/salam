@@ -23,6 +23,7 @@ import {
   MISSIONS_CIENCIAS,
   MISSIONS_CULTURA,
 } from '../../src/data/missionsData';
+import { allTracks } from '../../src/data/curriculum';
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
 
@@ -77,6 +78,7 @@ const TRAILS_DATA = [
   { id: 'trail-por', name: 'Jornada da Língua', subject: 'Língua Portuguesa', description: 'Trilha de leitura, escrita e interpretação', order: 2, active: true },
   { id: 'trail-cie', name: 'Ilha das Ciências', subject: 'Ciências', description: 'Trilha de ciências naturais e método científico', order: 3, active: true },
   { id: 'trail-cul', name: 'Mundo da Cultura', subject: 'Língua Portuguesa', description: 'Trilha de diversidade cultural, literatura e cidadania', order: 4, active: true },
+  { id: 'trail-fin', name: 'Educação Financeira', subject: 'Matemática', description: 'Trilha de consumo consciente, cédulas, moedas e simulador Pix', order: 5, active: true },
 ];
 
 // Mapeamento missão → trilha
@@ -402,7 +404,24 @@ async function seedTrails(options: SeedOptions): Promise<SeedProgress> {
     id: t.id,
     data: { ...t, createdAt: Timestamp.now() },
   }));
-  return commitBatches(items, 'trails', options);
+  const progress = await commitBatches(items, 'trails', options);
+
+  // Também faz seed das curriculumTracks (15 trilhas interativas do currículo)
+  const trackItems = allTracks.map((track) => ({
+    id: track.id,
+    data: {
+      ...track,
+      active: true,
+      createdAt: Timestamp.now(),
+    },
+  }));
+  if (trackItems.length > 0) {
+    const ctProgress = await commitBatches(trackItems, 'curriculumTracks', options);
+    progress.created += ctProgress.created;
+    progress.updated += ctProgress.updated;
+  }
+
+  return progress;
 }
 
 async function seedMissions(options: SeedOptions): Promise<SeedProgress> {

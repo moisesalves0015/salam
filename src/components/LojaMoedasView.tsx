@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ShoppingBag,
   Star,
@@ -17,9 +17,11 @@ import {
   Sparkles
 } from 'lucide-react';
 import { Student } from '../types';
+import { rewardsApi } from '../services/api';
 
 interface LojaMoedasViewProps {
   student: Student;
+  onUpdateCoins?: (newBalance: number) => void;
 }
 
 type Category = 'all' | 'escola' | 'experiencias' | 'digitais' | 'cultura';
@@ -98,22 +100,59 @@ const CATEGORY_TABS: { id: Category; label: string; icon: React.ComponentType<{ 
   { id: 'cultura', label: 'Cultura', icon: Palette },
 ];
 
-export const LojaMoedasView: React.FC<LojaMoedasViewProps> = ({ student }) => {
+export const LojaMoedasView: React.FC<LojaMoedasViewProps> = ({ student, onUpdateCoins }) => {
   const [activeCategory, setActiveCategory] = useState<Category>('all');
   const [cart, setCart] = useState<string[]>([]);
   const [redeemed, setRedeemed] = useState<string[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [storeItems, setStoreItems] = useState<StoreItem[]>(STORE_ITEMS);
+  const [studentCoins, setStudentCoins] = useState<number>(student?.coins ?? 320);
 
-  const studentCoins = student?.coins || 320;
+  useEffect(() => {
+    setStudentCoins(student?.coins ?? 320);
+  }, [student?.id, student?.coins]);
+
+  useEffect(() => {
+    rewardsApi.list().then((rows) => {
+      if (rows && rows.length > 0) {
+        const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+          Palette,
+          BookOpen,
+          Star,
+          Sparkles,
+          Gift,
+          Trophy,
+          Zap,
+          Music,
+        };
+        const mapped: StoreItem[] = rows.map((r: any) => {
+          const existing = STORE_ITEMS.find((s) => s.id === r.id);
+          return {
+            id: r.id,
+            name: r.name,
+            desc: r.description || existing?.desc || '',
+            cost: Number(r.cost || existing?.cost || 50),
+            category: (r.category || existing?.category || 'escola') as Category,
+            icon: iconMap[r.icon] || existing?.icon || Star,
+            emoji: r.emoji || existing?.emoji || '⭐',
+            availability: (r.availability || existing?.availability || 'disponivel') as StoreItem['availability'],
+            popular: r.popular ?? existing?.popular,
+            note: r.note ?? existing?.note,
+          };
+        });
+        setStoreItems(mapped);
+      }
+    }).catch(() => {});
+  }, []);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3500);
   };
 
-  const filteredItems = activeCategory === 'all' ? STORE_ITEMS : STORE_ITEMS.filter(item => item.category === activeCategory);
+  const filteredItems = activeCategory === 'all' ? storeItems : storeItems.filter(item => item.category === activeCategory);
 
-  const handleRedeem = (item: StoreItem) => {
+  const handleRedeem = async (item: StoreItem) => {
     if (studentCoins < item.cost) {
       showToast(`Você precisa de ${item.cost - studentCoins} moedas a mais para resgatar este item.`);
       return;
@@ -122,16 +161,28 @@ export const LojaMoedasView: React.FC<LojaMoedasViewProps> = ({ student }) => {
       showToast('Este item não está disponível no momento.');
       return;
     }
-    setRedeemed(prev => [...prev, item.id]);
-    showToast(`O item "${item.name}" foi resgatado! Mostre o comprovante ao seu professor.`);
+    try {
+      const result = await rewardsApi.redeem(item.id, student.id);
+      const nextCoins = result?.remainingCoins ?? (studentCoins - item.cost);
+      setStudentCoins(nextCoins);
+      onUpdateCoins?.(nextCoins);
+      setRedeemed(prev => [...prev, item.id]);
+      showToast(`O item "${item.name}" foi resgatado e salvo no Firebase! Novo saldo: ${nextCoins} moedas.`);
+    } catch {
+      const nextCoins = studentCoins - item.cost;
+      setStudentCoins(nextCoins);
+      onUpdateCoins?.(nextCoins);
+      setRedeemed(prev => [...prev, item.id]);
+      showToast(`O item "${item.name}" foi resgatado! Mostre o comprovante ao seu professor.`);
+    }
   };
 
   const categoryTotal: Record<Category, number> = {
-    all: STORE_ITEMS.filter(i => i.availability === 'disponivel').length,
-    escola: STORE_ITEMS.filter(i => i.category === 'escola' && i.availability === 'disponivel').length,
-    experiencias: STORE_ITEMS.filter(i => i.category === 'experiencias' && i.availability === 'disponivel').length,
-    digitais: STORE_ITEMS.filter(i => i.category === 'digitais' && i.availability === 'disponivel').length,
-    cultura: STORE_ITEMS.filter(i => i.category === 'cultura' && i.availability === 'disponivel').length,
+    all: storeItems.filter(i => i.availability === 'disponivel').length,
+    escola: storeItems.filter(i => i.category === 'escola' && i.availability === 'disponivel').length,
+    experiencias: storeItems.filter(i => i.category === 'experiencias' && i.availability === 'disponivel').length,
+    digitais: storeItems.filter(i => i.category === 'digitais' && i.availability === 'disponivel').length,
+    cultura: storeItems.filter(i => i.category === 'cultura' && i.availability === 'disponivel').length,
   };
 
   return (

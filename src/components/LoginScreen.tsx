@@ -9,8 +9,12 @@ import {
   ArrowLeft,
   Sparkles,
   Users,
-  Zap
+  Zap,
+  Shield,
+  KeyRound
 } from 'lucide-react';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { firebaseAuth } from '../services/firebaseClient';
 import { Student } from '../types';
 
 interface LoginScreenProps {
@@ -18,6 +22,7 @@ interface LoginScreenProps {
   onLoginAsStudent: (student: Student) => void;
   onLoginAsProfessor: () => void;
   onLoginAsCoordenacao: () => void;
+  onLoginAsAdmin?: () => void;
   onBack: () => void;
   defaultRole?: 'aluno' | 'professor' | 'coordenacao';
 }
@@ -60,6 +65,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
   onLoginAsStudent,
   onLoginAsProfessor,
   onLoginAsCoordenacao,
+  onLoginAsAdmin,
   onBack,
   defaultRole
 }) => {
@@ -68,6 +74,44 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [pinDigits, setPinDigits] = useState<string[]>(['', '', '', '']);
   const [pinError, setPinError] = useState(false);
+  const [showCredentialForm, setShowCredentialForm] = useState(false);
+  const [emailInput, setEmailInput] = useState('');
+  const [passwordInput, setPasswordInput] = useState('');
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [authLoading, setAuthLoading] = useState(false);
+
+  const handleFirebaseLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthError(null);
+    setAuthLoading(true);
+    try {
+      if (!firebaseAuth) {
+        throw new Error('Firebase Auth não inicializado');
+      }
+      const normalizedEmail = emailInput.includes('@')
+        ? emailInput.trim().toLowerCase()
+        : `${emailInput.trim().toLowerCase()}@alunos.salademissoes.local`;
+      const cred = await signInWithEmailAndPassword(firebaseAuth, normalizedEmail, passwordInput);
+      const tokenResult = await cred.user.getIdTokenResult();
+      const claimRole = tokenResult.claims.role as string | undefined;
+      if (claimRole === 'admin' && onLoginAsAdmin) {
+        onLoginAsAdmin();
+      } else if (claimRole === 'coordenacao') {
+        onLoginAsCoordenacao();
+      } else if (claimRole === 'professor') {
+        onLoginAsProfessor();
+      } else {
+        const matched = students.find(
+          (s) => s.id === tokenResult.claims.studentId || normalizedEmail.startsWith(s.id)
+        );
+        onLoginAsStudent(matched || students[0]);
+      }
+    } catch {
+      setAuthError('Credenciais inválidas ou usuário não provisionado no Firebase Auth. Use os perfis rápidos abaixo ou verifique a senha.');
+    } finally {
+      setAuthLoading(false);
+    }
+  };
 
   const filteredStudents = students.filter(s =>
     s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -175,6 +219,77 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                 <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-[#123cc4] group-hover:translate-x-0.5 transition-all shrink-0" />
               </button>
             ))}
+
+            {onLoginAsAdmin && (
+              <button
+                onClick={onLoginAsAdmin}
+                className="w-full flex items-center gap-4 p-4 rounded-3xl bg-white/80 border border-slate-200 hover:border-purple-300 transition-all group cursor-pointer text-left shadow-xs hover:shadow-md"
+              >
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-slate-800 to-indigo-900 flex items-center justify-center shadow-md shrink-0 group-hover:scale-105 transition-transform">
+                  <Shield className="w-5 h-5 text-white" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-black text-slate-800">Console Admin & Firebase</span>
+                    <span className="text-[9px] font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-200">
+                      Master / DB
+                    </span>
+                  </div>
+                  <span className="text-[11px] font-medium text-slate-500">Gerenciar usuários, turmas e migração Firebase</span>
+                </div>
+                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-purple-600 transition-all shrink-0" />
+              </button>
+            )}
+
+            <div className="pt-2 text-center">
+              <button
+                type="button"
+                onClick={() => setShowCredentialForm(!showCredentialForm)}
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#123cc4] hover:underline cursor-pointer"
+              >
+                <KeyRound className="w-3.5 h-3.5" />
+                {showCredentialForm ? 'Ocultar login com credenciais Firebase' : 'Entrar com E-mail / Código Firebase Auth'}
+              </button>
+            </div>
+
+            {showCredentialForm && (
+              <form onSubmit={handleFirebaseLogin} className="p-4 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-3">
+                <div>
+                  <label className="block text-[10px] font-black uppercase text-slate-500 mb-1">E-mail ou Código de Acesso</label>
+                  <input
+                    type="text"
+                    value={emailInput}
+                    onChange={(e) => setEmailInput(e.target.value)}
+                    placeholder="professor@escola.com ou código"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-800"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-black uppercase text-slate-500 mb-1">Senha</label>
+                  <input
+                    type="password"
+                    value={passwordInput}
+                    onChange={(e) => setPasswordInput(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-800"
+                    required
+                  />
+                </div>
+                {authError && (
+                  <p className="text-[11px] font-bold text-rose-600 bg-rose-50 p-2 rounded-xl border border-rose-200">
+                    {authError}
+                  </p>
+                )}
+                <button
+                  type="submit"
+                  disabled={authLoading}
+                  className="w-full py-2.5 rounded-xl bg-[#123cc4] hover:bg-[#0e2fb2] text-white text-xs font-black transition-all cursor-pointer"
+                >
+                  {authLoading ? 'Autenticando...' : 'Autenticar no Firebase'}
+                </button>
+              </form>
+            )}
           </div>
         )}
 

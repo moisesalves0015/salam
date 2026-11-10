@@ -6,7 +6,9 @@ import {
   Compass, 
   Menu, 
   X,
-  Sparkles
+  Sparkles,
+  Coins,
+  LogOut
 } from 'lucide-react';
 import { UserRole, Student } from '../types';
 
@@ -16,6 +18,7 @@ interface HeaderProps {
   onOpenNotifications: () => void;
   isMobileMenuOpen?: boolean;
   setIsMobileMenuOpen?: (open: boolean) => void;
+  onLogout?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -23,7 +26,8 @@ export const Header: React.FC<HeaderProps> = ({
   selectedStudent,
   onOpenNotifications,
   isMobileMenuOpen = false,
-  setIsMobileMenuOpen
+  setIsMobileMenuOpen,
+  onLogout
 }) => {
   const [isClassDropdownOpen, setIsClassDropdownOpen] = useState(false);
   const [selectedClass, setSelectedClass] = useState('Turma 5º ano A');
@@ -106,6 +110,12 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Right Side: Notifications & User Profile */}
       <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        {currentRole === 'aluno' && (
+          <div className="hidden sm:flex items-center gap-1.5 bg-amber-50 text-amber-800 px-3 py-1.5 rounded-2xl border border-amber-200 text-xs font-black shadow-2xs">
+            <Coins className="w-3.5 h-3.5 text-amber-500" />
+            <span>{selectedStudent?.coins ?? 320}</span>
+          </div>
+        )}
         
         {/* Notifications Icon */}
         <button
@@ -137,15 +147,25 @@ export const Header: React.FC<HeaderProps> = ({
 
           <div className="text-left hidden md:block">
             <div className="text-xs font-black text-slate-900 leading-tight">
-              {currentRole === 'aluno' ? (selectedStudent?.name || 'Estudante') : currentRole === 'coordenacao' ? 'Coord. Paula' : 'Prof. Carla'}
+              {currentRole === 'aluno' ? (selectedStudent?.name || 'Estudante') : currentRole === 'coordenacao' ? 'Coord. Paula' : currentRole === 'admin' ? 'Admin Master' : 'Prof. Carla'}
             </div>
             <div className="text-[10px] text-slate-500 font-bold leading-none mt-0.5">
-              {currentRole === 'aluno' ? `Aluno • Nível ${selectedStudent?.level || 1}` : currentRole === 'coordenacao' ? 'Coordenação' : 'Professora'}
+              {currentRole === 'aluno' ? `Aluno • Nível ${selectedStudent?.level || 1}` : currentRole === 'coordenacao' ? 'Coordenação' : currentRole === 'admin' ? 'Administrador' : 'Professora'}
             </div>
           </div>
           
           <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-0.5 hidden sm:block" />
         </div>
+
+        {onLogout && (
+          <button
+            onClick={onLogout}
+            className="p-1.5 sm:p-2 rounded-2xl bg-white/90 hover:bg-rose-50 text-slate-500 hover:text-rose-600 border border-slate-200/80 transition-all cursor-pointer shadow-2xs active:scale-95"
+            title="Voltar à Página Inicial / Trocar Perfil"
+          >
+            <LogOut className="w-4 h-4 sm:w-5 sm:h-5" />
+          </button>
+        )}
 
       </div>
     </header>

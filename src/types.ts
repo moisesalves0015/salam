@@ -1,4 +1,4 @@
-export type UserRole = 'professor' | 'aluno' | 'coordenacao';
+export type UserRole = 'professor' | 'aluno' | 'coordenacao' | 'admin';
 
 export type AbilityState = 
   | 'nao_desenvolvida' 

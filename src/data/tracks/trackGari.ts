@@ -3,21 +3,14 @@ import { Track } from '../../types';
 export const trackGari: Track = {
   id: 'gari-mission',
   subjectId: 'matematica',
-  title: 'Área e Perímetro',
-  subtitle: 'Um dia de trabalho com um gari',
+  number: 0,
+  title: 'Área e Perímetro: Um dia com o Gari',
   description: 'Trilha lúdica sobre área, perímetro, frações, volume e probabilidade acompanhando o dia a dia de um gari trabalhador.',
   objective: 'Aplicar conceitos de área, perímetro, frações e probabilidade em cenários reais.',
   bnccSkills: ['Matemática do 4º e 5º ano'],
-  theme: {
-    primary: 'from-amber-600 to-orange-500',
-    secondary: 'from-yellow-500 to-amber-500',
-    accent: 'bg-amber-400',
-    background: 'bg-[#10213f]',
-    cardBg: 'bg-[#1a2b54]',
-    textMain: 'text-amber-50',
-    textMuted: 'text-amber-200/60',
-  },
-  worldName: 'Ciep Metalúrgico Benedito Cerqueira',
+  color: 'from-amber-600 to-orange-500',
+  badgeName: 'Parceiro do Gari',
+  badgeIcon: 'Award',
   units: [
     {
       id: 'gari-unit-1',
@@ -840,5 +833,12 @@ export const trackGari: Track = {
         }
       ]
     }
-  ]
+  ],
+  trackChallenge: {
+    id: 'gari-challenge',
+    title: 'Desafio Final do Gari',
+    description: 'Revisão geral de área, perímetro, frações e probabilidade.',
+    xpReward: 150,
+    steps: []
+  }
 };

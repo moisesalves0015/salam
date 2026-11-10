@@ -15,7 +15,10 @@ import {
   FileSpreadsheet, 
   Calendar, 
   X, 
-  ChevronDown
+  ChevronDown,
+  Wallet,
+  Shield,
+  Tv
 } from 'lucide-react';
 import { UserRole, Student } from '../types';
 
@@ -71,6 +74,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'relatorios', label: 'Relatórios & Memória', icon: BarChart3 },
     { id: 'reconhecimento', label: 'Reconhecimento & Cert.', icon: Trophy, badge: 'Novo', badgeColor: 'bg-purple-100 text-purple-700 border border-purple-200' },
     { id: 'cards', label: 'Álbum de Cards', icon: Star },
+    { id: 'banco', label: 'Banco de Moedas (NFC)', icon: Wallet, badge: 'NFC', badgeColor: 'bg-emerald-100 text-emerald-700 border border-emerald-200' },
+    { id: 'painel-tv', label: 'Painel Sala / TV', icon: Tv },
   ];
 
   const alunoNavItems: NavItem[] = [
@@ -80,6 +85,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'cards', label: 'Meus Cards', icon: Star, action: onOpenCards },
     { id: 'conquistas', label: 'Conquistas & Selos', icon: Trophy },
     { id: 'loja', label: 'Loja de Moedas', icon: Activity, badge: 'Novo', badgeColor: 'bg-amber-100 text-amber-700 border border-amber-200' },
+    { id: 'banco', label: 'Banco de Moedas (NFC)', icon: Wallet, badge: 'NFC', badgeColor: 'bg-emerald-100 text-emerald-700 border border-emerald-200' },
     { id: 'relatorios', label: 'Minha Evolução', icon: BarChart3 },
   ];
 
@@ -89,13 +95,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'relatorios', label: 'Relatórios & Memória', icon: FileSpreadsheet },
     { id: 'trilhas', label: 'Matriz Curricular', icon: GitBranch },
     { id: 'reconhecimento', label: 'Reconhecimentos', icon: Trophy, badge: 'Novo', badgeColor: 'bg-amber-100 text-amber-700 border border-amber-200' },
+    { id: 'banco', label: 'Banco de Moedas (NFC)', icon: Wallet },
+    { id: 'admin', label: 'Console Admin & Firebase', icon: Shield, badge: 'DB', badgeColor: 'bg-blue-100 text-blue-700 border border-blue-200' },
+  ];
+
+  const adminNavItems: NavItem[] = [
+    { id: 'admin', label: 'Console Admin & Firebase', icon: Shield, badge: 'Master', badgeColor: 'bg-purple-100 text-purple-700 border border-purple-200' },
+    { id: 'dashboard', label: 'Visão Geral', icon: LayoutGrid },
+    { id: 'alunos', label: 'Turmas & Alunos', icon: Users },
+    { id: 'trilhas', label: 'Trilhas de Aprendizagem', icon: GitBranch },
+    { id: 'banco', label: 'Banco de Moedas (NFC)', icon: Wallet },
+    { id: 'relatorios', label: 'Relatórios & Memória', icon: FileSpreadsheet },
   ];
 
   const navItems = currentRole === 'aluno' 
     ? alunoNavItems 
     : currentRole === 'coordenacao' 
       ? coordenacaoNavItems 
-      : professorNavItems;
+      : currentRole === 'admin'
+        ? adminNavItems
+        : professorNavItems;
 
   const sidebarContent = (
     <div className="flex flex-col h-full justify-between space-y-4">

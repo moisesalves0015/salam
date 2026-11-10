@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { ProfessorDashboard } from './components/ProfessorDashboard';
@@ -26,37 +26,146 @@ import { MissionPrintView } from './components/MissionPrintView';
 import { IntervencoesView } from './components/IntervencoesView';
 import { DiagnosticoView } from './components/DiagnosticoView';
 import { DevAssistant } from './components/DevAssistant';
-import { 
-  INITIAL_STUDENTS, 
-  INITIAL_CARDS, 
-  INITIAL_ACHIEVEMENTS, 
-  INITIAL_MISSION_DIVISAO, 
-  INITIAL_CLASS_METRICS 
+import { BancoView } from './components/BancoView';
+import { AdminConsole } from './components/AdminConsole';
+import {
+  INITIAL_STUDENTS,
+  INITIAL_CARDS,
+  INITIAL_ACHIEVEMENTS,
+  INITIAL_MISSION_DIVISAO,
+  INITIAL_CLASS_METRICS,
 } from './data/initialData';
-import { UserRole, Student, CardItem, InterventionRecord } from './types';
+import { allTracks } from './data/curriculum';
+import {
+  studentsApi,
+  cardsApi,
+  achievementsApi,
+  metricsApi,
+  trailsApi,
+  missionsApi,
+  interventionsApi,
+} from './services/api';
+import { UserRole, Student, CardItem, InterventionRecord, Track } from './types';
 import confetti from 'canvas-confetti';
 
 // App-level navigation states
 type AppScreen = 'landing' | 'login' | 'app';
 
-export default function App() {
-  // Screen / Navigation
-  const [currentScreen, setCurrentScreen] = useState<AppScreen>('login');
-  const [loginDefaultRole, setLoginDefaultRole] = useState<'aluno' | 'professor' | 'coordenacao' | undefined>('aluno');
+const SESSION_STORAGE_KEY = 'salam_active_session_v1';
 
-  // Global States
-  const [currentRole, setCurrentRole] = useState<UserRole>('professor');
-  const [activeTab, setActiveTab] = useState<string>('dashboard');
+function loadSavedSession(): {
+  screen: AppScreen;
+  role: UserRole;
+  tab: string;
+  studentId: string;
+} | null {
+  try {
+    if (typeof window === 'undefined' || !window.localStorage) return null;
+    const raw = window.localStorage.getItem(SESSION_STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+export default function App() {
+  const savedSession = loadSavedSession();
+  const isInitialBankRoute =
+    typeof window !== 'undefined' && window.location.pathname.startsWith('/banco');
+
+  // Screen / Navigation
+  const [currentScreen, setCurrentScreen] = useState<AppScreen>(
+    isInitialBankRoute ? 'app' : savedSession?.screen || 'landing'
+  );
+  const [loginDefaultRole, setLoginDefaultRole] = useState<
+    'aluno' | 'professor' | 'coordenacao' | undefined
+  >('aluno');
+
+  // Global States (initialized with mockups for instant render, immediately hydrated from Firebase)
+  const [currentRole, setCurrentRole] = useState<UserRole>(
+    savedSession?.role || 'professor'
+  );
+  const [activeTab, setActiveTab] = useState<string>(
+    isInitialBankRoute ? 'banco' : savedSession?.tab || 'dashboard'
+  );
   const [students, setStudents] = useState<Student[]>(INITIAL_STUDENTS);
-  const [selectedStudent, setSelectedStudent] = useState<Student>(INITIAL_STUDENTS[0]);
+  const [selectedStudent, setSelectedStudent] = useState<Student>(() => {
+    if (savedSession?.studentId) {
+      const found = INITIAL_STUDENTS.find((s) => s.id === savedSession.studentId);
+      if (found) return found;
+    }
+    return INITIAL_STUDENTS[0];
+  });
   const [cards, setCards] = useState<CardItem[]>(INITIAL_CARDS);
   const [achievements, setAchievements] = useState(INITIAL_ACHIEVEMENTS);
   const [metrics, setMetrics] = useState(INITIAL_CLASS_METRICS);
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [curriculumTracks, setCurriculumTracks] = useState<Track[]>(allTracks);
   const [isTvModeOpen, setIsTvModeOpen] = useState<boolean>(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+  const [isOffline, setIsOffline] = useState(
+    typeof navigator !== 'undefined' ? !navigator.onLine : false
+  );
 
-  const [isOffline, setIsOffline] = useState(!navigator.onLine);
+  // Persist navigation session across page reloads
+  useEffect(() => {
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        window.localStorage.setItem(
+          SESSION_STORAGE_KEY,
+          JSON.stringify({
+            screen: currentScreen,
+            role: currentRole,
+            tab: activeTab,
+            studentId: selectedStudent?.id || INITIAL_STUDENTS[0].id,
+          })
+        );
+      }
+    } catch {
+      // Ignore storage errors
+    }
+  }, [currentScreen, currentRole, activeTab, selectedStudent?.id]);
+
+  // Hydrate all data from Firebase / persistent replica
+  const hydrateFromFirebase = useCallback(async () => {
+    try {
+      const targetStudentId = selectedStudent?.id || INITIAL_STUDENTS[0].id;
+      const [studentsList, cardsList, achievementsList, metricsObj, tracksList] =
+        await Promise.all([
+          studentsApi.list(),
+          cardsApi.getStudentCards(targetStudentId),
+          achievementsApi.getStudentAchievements(targetStudentId),
+          metricsApi.getClassMetrics(),
+          trailsApi.listCurriculumTracks(),
+        ]);
+
+      if (studentsList && studentsList.length > 0) {
+        setStudents(studentsList);
+        setSelectedStudent((prev) => {
+          const updated = studentsList.find((s: Student) => s.id === prev?.id);
+          return updated || studentsList[0];
+        });
+      }
+      if (cardsList && cardsList.length > 0) {
+        setCards(cardsList);
+      }
+      if (achievementsList && achievementsList.length > 0) {
+        setAchievements(achievementsList);
+      }
+      if (metricsObj) {
+        setMetrics(metricsObj);
+      }
+      if (tracksList && tracksList.length > 0) {
+        setCurriculumTracks(tracksList);
+      }
+    } catch (err) {
+      console.warn('[App] Usando réplica persistente local:', err);
+    }
+  }, [selectedStudent?.id]);
+
+  useEffect(() => {
+    hydrateFromFirebase();
+  }, [hydrateFromFirebase]);
 
   useEffect(() => {
     const handleOnline = () => setIsOffline(false);
@@ -84,6 +193,11 @@ export default function App() {
     setActiveTab('dashboard');
     setCurrentScreen('app');
   };
+  const handleEnterAsAdmin = () => {
+    setCurrentRole('admin');
+    setActiveTab('admin');
+    setCurrentScreen('app');
+  };
   const handleLoginStudent = (student: Student) => {
     setSelectedStudent(student);
     setCurrentRole('aluno');
@@ -104,7 +218,6 @@ export default function App() {
   const [isAchievementsModalOpen, setIsAchievementsModalOpen] = useState(false);
   const [isNotificationsModalOpen, setIsNotificationsModalOpen] = useState(false);
 
-
   // Handlers
   const handleSelectStudent = (student: Student) => {
     setSelectedStudent(student);
@@ -114,6 +227,8 @@ export default function App() {
   const handleStartMission = (missionNode?: any) => {
     if (missionNode && missionNode.unitData) {
       setActiveMissionData(missionNode.unitData);
+    } else {
+      setActiveMissionData(null);
     }
     setIsMissionPlayerOpen(true);
   };
@@ -123,135 +238,222 @@ export default function App() {
     setIsCardDetailOpen(true);
   };
 
-  const handleCompleteMission = (xpEarned: number, updatedAbility: string) => {
+  const handleCompleteMission = async (xpEarned: number, updatedAbility: string) => {
     setIsMissionPlayerOpen(false);
 
-    if (import.meta.env.VITE_ENABLE_MISSION_PREVIEW === 'true') {
-      console.log('Modo de revisão ativo: nenhum progresso foi salvo.');
-      return;
-    }
+    // Update active student data optimistically + persist in Firebase
+    const missionId = activeMissionData?.id || INITIAL_MISSION_DIVISAO.id;
+    let updatedStudentRef: Student | null = null;
 
-    // Update active student data
-    setStudents(prev => prev.map(s => {
-      if (s.id === selectedStudent.id) {
-        const updatedXP = s.currentXp + xpEarned;
-        const updatedAbilities = s.abilities.map(ab => {
-          if (ab.id === 'mat-divisao') {
-            return {
-              ...ab,
-              score: Math.min(100, ab.score + 15),
-              attempts: ab.attempts + 1,
-              autonomy: Math.min(100, ab.autonomy + 12),
-              state: 'consolidando' as const
-            };
-          }
-          return ab;
-        });
+    setStudents((prev) =>
+      prev.map((s) => {
+        if (s.id === selectedStudent.id) {
+          const updatedXP = s.currentXp + xpEarned;
+          const updatedCoins = (s.coins || 0) + 30;
+          const updatedAbilities = s.abilities.map((ab) => {
+            if (ab.id === 'mat-divisao' || ab.name === updatedAbility) {
+              return {
+                ...ab,
+                score: Math.min(100, ab.score + 15),
+                attempts: ab.attempts + 1,
+                autonomy: Math.min(100, ab.autonomy + 12),
+                state: 'consolidando' as const,
+              };
+            }
+            return ab;
+          });
 
-        const updatedStudent: Student = {
-          ...s,
-          currentXp: updatedXP,
-          streakDays: s.streakDays + 1,
-          status: 'evoluindo_bem',
-          statusAlertText: 'Compreendeu divisão com materiais visuais. Avançando para problemas contextualizados.',
-          abilities: updatedAbilities,
-          trailProgress: {
-            ...s.trailProgress,
-            matematica: Math.min(100, s.trailProgress.matematica + 10)
-          }
-        };
-        setSelectedStudent(updatedStudent);
-        return updatedStudent;
-      }
-      return s;
-    }));
+          const updatedStudent: Student = {
+            ...s,
+            currentXp: updatedXP,
+            coins: updatedCoins,
+            streakDays: s.streakDays + 1,
+            status: 'evoluindo_bem',
+            statusAlertText:
+              'Compreendeu divisão com materiais visuais. Avançando para problemas contextualizados.',
+            abilities: updatedAbilities,
+            trailProgress: {
+              ...s.trailProgress,
+              matematica: Math.min(100, s.trailProgress.matematica + 10),
+            },
+          };
+          updatedStudentRef = updatedStudent;
+          setSelectedStudent(updatedStudent);
+          return updatedStudent;
+        }
+        return s;
+      })
+    );
 
     // Unlock Card "Guardião da Divisão"
-    setCards(prev => prev.map(c => {
-      if (c.id === 'card-guardiao-divisao') {
-        return {
-          ...c,
-          unlocked: true,
-          unlockedAt: 'Hoje'
-        };
-      }
-      return c;
-    }));
+    setCards((prev) =>
+      prev.map((c) => {
+        if (c.id === 'card-guardiao-divisao') {
+          return {
+            ...c,
+            unlocked: true,
+            unlockedAt: 'Hoje',
+          };
+        }
+        return c;
+      })
+    );
 
     // Unlock achievement if not unlocked
-    setAchievements(prev => prev.map(a => {
-      if (a.id === 'ach-explorador-destemido') {
-        return { ...a, unlocked: true, unlockedAt: 'Hoje' };
+    setAchievements((prev) =>
+      prev.map((a) => {
+        if (a.id === 'ach-explorador-destemido') {
+          return { ...a, unlocked: true, unlockedAt: 'Hoje' };
+        }
+        return a;
+      })
+    );
+
+    // Persist mission completion to Firebase + replica
+    try {
+      await missionsApi.complete(missionId, {
+        studentId: selectedStudent.id,
+        xpEarned,
+        title: updatedAbility,
+      });
+      if (updatedStudentRef) {
+        await studentsApi.update(selectedStudent.id, updatedStudentRef);
       }
-      return a;
-    }));
+    } catch (err) {
+      console.warn('[App] Erro ao persistir conclusão de missão:', err);
+    }
   };
 
-  const handleConfirmMastery = (studentId: string, abilityId: string) => {
-    setStudents(prev => prev.map(s => {
-      if (s.id === studentId) {
-        const updatedAbilities = s.abilities.map(ab => {
-          if (ab.id === abilityId) {
-            return {
-              ...ab,
-              score: 95,
-              state: 'dominada' as const,
-              evidence: {
-                ...ab.evidence,
-                precision: 'dominada' as const,
-                autonomy: 'dominada' as const,
-                consistency: 'dominada' as const
-              }
-            };
-          }
-          return ab;
-        });
-        const updatedStudent = {
-          ...s,
-          abilities: updatedAbilities,
-          status: 'pronto_avancar' as const,
-          statusAlertText: 'Domínio confirmado pelo professor com base nas evidências pedagógicas.'
-        };
-        if (selectedStudent.id === studentId) setSelectedStudent(updatedStudent);
-        return updatedStudent;
-      }
-      return s;
-    }));
+  const handleConfirmMastery = async (studentId: string, abilityId: string) => {
+    setStudents((prev) =>
+      prev.map((s) => {
+        if (s.id === studentId) {
+          const updatedAbilities = s.abilities.map((ab) => {
+            if (ab.id === abilityId) {
+              return {
+                ...ab,
+                score: 95,
+                state: 'dominada' as const,
+                evidence: {
+                  ...ab.evidence,
+                  precision: 'dominada' as const,
+                  autonomy: 'dominada' as const,
+                  consistency: 'dominada' as const,
+                },
+              };
+            }
+            return ab;
+          });
+          const updatedStudent = {
+            ...s,
+            abilities: updatedAbilities,
+            status: 'pronto_avancar' as const,
+            statusAlertText:
+              'Domínio confirmado pelo professor com base nas evidências pedagógicas.',
+          };
+          if (selectedStudent.id === studentId) setSelectedStudent(updatedStudent);
+          return updatedStudent;
+        }
+        return s;
+      })
+    );
 
-    confetti({ particleCount: 50, spread: 60 });
+    try {
+      await studentsApi.confirmMastery(studentId, abilityId);
+    } catch (err) {
+      console.warn('[App] Erro ao persistir domínio:', err);
+    }
+
+    try {
+      confetti({ particleCount: 50, spread: 60 });
+    } catch {
+      // Ignore confetti errors in headless environments
+    }
   };
 
-  const handleSaveIntervention = (newIntervention: InterventionRecord) => {
-    setStudents(prev => prev.map(s => {
-      if (s.id === newIntervention.studentId) {
-        const updatedStudent = {
-          ...s,
-          interventions: [newIntervention, ...s.interventions]
-        };
-        if (selectedStudent.id === s.id) setSelectedStudent(updatedStudent);
-        return updatedStudent;
-      }
-      return s;
-    }));
+  const handleSaveIntervention = async (newIntervention: InterventionRecord) => {
+    setStudents((prev) =>
+      prev.map((s) => {
+        if (s.id === newIntervention.studentId) {
+          const updatedStudent = {
+            ...s,
+            interventions: [newIntervention, ...s.interventions],
+          };
+          if (selectedStudent.id === s.id) setSelectedStudent(updatedStudent);
+          return updatedStudent;
+        }
+        return s;
+      })
+    );
+
+    try {
+      await interventionsApi.create({
+        studentId: newIntervention.studentId,
+        studentName: newIntervention.studentName,
+        ability: newIntervention.ability,
+        subject: newIntervention.subject,
+        title: newIntervention.title,
+        strategy: newIntervention.strategy,
+        initialAttemptError: newIntervention.initialAttemptError,
+        interventionApplied: newIntervention.interventionApplied,
+        newAttemptResult: newIntervention.newAttemptResult,
+        nextStep: newIntervention.nextStep,
+        date: newIntervention.date,
+        time: newIntervention.time,
+        status: newIntervention.status || 'realizada',
+      });
+    } catch (err) {
+      console.warn('[App] Erro ao persistir intervenção:', err);
+    }
   };
 
-  const handleCompleteDiagnostic = (studentId: string, answers: any) => {
+  const handleCompleteDiagnostic = async (studentId: string, answers: any) => {
     setIsDiagnosticModalOpen(false);
-    setStudents(prev => prev.map(s => {
-      if (s.id === studentId) {
-        const updatedStudent: Student = {
-          ...s,
-          status: 'evoluindo_bem',
-          statusAlertText: 'Diagnóstico concluído: trilha adaptada para reforçar operações com materiais manipuláveis.'
-        };
-        if (selectedStudent.id === s.id) setSelectedStudent(updatedStudent);
-        return updatedStudent;
-      }
-      return s;
-    }));
+    setStudents((prev) =>
+      prev.map((s) => {
+        if (s.id === studentId) {
+          const updatedStudent: Student = {
+            ...s,
+            diagnosticCompleted: true,
+            status: 'evoluindo_bem',
+            statusAlertText:
+              'Diagnóstico concluído: trilha adaptada para reforçar operações com materiais manipuláveis.',
+          };
+          if (selectedStudent.id === s.id) setSelectedStudent(updatedStudent);
+          return updatedStudent;
+        }
+        return s;
+      })
+    );
+
+    try {
+      await studentsApi.completeDiagnostic(studentId, {
+        abilityId: selectedStudent?.abilities?.[0]?.id || 'mat-divisao',
+        answers: answers || {},
+      });
+    } catch (err) {
+      console.warn('[App] Erro ao persistir diagnóstico:', err);
+    }
   };
 
-  const handleAddStudent = (newStudentData: Partial<Student>) => {
+  const handleAddStudent = async (newStudentData: Partial<Student>) => {
+    try {
+      const created = await studentsApi.create({
+        name: newStudentData.name || 'Novo Aluno',
+        grade: newStudentData.grade || '5º ano',
+        classroom: newStudentData.classroom || 'Turma 5º ano A',
+        pedagogicalNotes: newStudentData.pedagogicalNotes || 'Novo aluno cadastrado.',
+        adaptations: newStudentData.adaptations || ['Atividades regulares'],
+      });
+      if (created) {
+        setStudents((prev) => [created, ...prev]);
+        setSelectedStudent(created);
+        return;
+      }
+    } catch (err) {
+      console.warn('[App] Fallback local ao criar aluno:', err);
+    }
+
     const newStudent: Student = {
       id: `aluno-${Date.now()}`,
       name: newStudentData.name || 'Novo Aluno',
@@ -265,6 +467,7 @@ export default function App() {
       level: 1,
       currentXp: 0,
       nextLevelXp: 500,
+      coins: 100,
       streakDays: 0,
       weekDaysActive: [
         { day: 'S', active: true },
@@ -273,7 +476,7 @@ export default function App() {
         { day: 'Q', active: false },
         { day: 'S', active: false },
         { day: 'S', active: false },
-        { day: 'D', active: false }
+        { day: 'D', active: false },
       ],
       cards: [],
       achievements: [],
@@ -284,11 +487,18 @@ export default function App() {
       abilities: INITIAL_STUDENTS[0].abilities,
       pedagogicalNotes: newStudentData.pedagogicalNotes || 'Novo aluno cadastrado.',
       adaptations: newStudentData.adaptations || ['Atividades regulares'],
-      interventions: []
+      interventions: [],
     };
 
-    setStudents(prev => [newStudent, ...prev]);
+    setStudents((prev) => [newStudent, ...prev]);
     setSelectedStudent(newStudent);
+  };
+
+  const handleUpdateStudentCoins = (newBalance: number) => {
+    setStudents((prev) =>
+      prev.map((s) => (s.id === selectedStudent.id ? { ...s, coins: newBalance } : s))
+    );
+    setSelectedStudent((prev) => ({ ...prev, coins: newBalance }));
   };
 
   // Landing Page
@@ -310,6 +520,7 @@ export default function App() {
         onLoginAsStudent={handleLoginStudent}
         onLoginAsProfessor={handleEnterAsProfessor}
         onLoginAsCoordenacao={handleEnterAsCoordenacao}
+        onLoginAsAdmin={handleEnterAsAdmin}
         onBack={() => setCurrentScreen('landing')}
         defaultRole={loginDefaultRole}
       />
@@ -336,7 +547,6 @@ export default function App() {
 
   return (
     <div className="app-shell min-h-screen bg-[radial-gradient(circle_at_center,#ffffff_0%,#e0e7ff_100%)] text-slate-800 flex flex-col font-sans selection:bg-[#123cc4] selection:text-white relative">
-      
       {isOffline && (
         <div className="bg-amber-500 text-white text-xs font-bold text-center py-2 px-4 safe-pt z-[9999] shadow-md flex items-center justify-center gap-2">
           <span>⚠️</span> Você está offline. Reconecte para salvar seu progresso.
@@ -348,6 +558,8 @@ export default function App() {
         currentRole={currentRole}
         setCurrentRole={setCurrentRole}
         onOpenTvMode={() => setIsTvModeOpen(true)}
+        onOpenBank={() => setActiveTab('banco')}
+        onOpenAdmin={() => setActiveTab('admin')}
         students={students}
         selectedStudent={selectedStudent}
         setSelectedStudent={setSelectedStudent}
@@ -361,6 +573,7 @@ export default function App() {
           onOpenNotifications={() => setIsNotificationsModalOpen(true)}
           isMobileMenuOpen={isMobileMenuOpen}
           setIsMobileMenuOpen={setIsMobileMenuOpen}
+          onLogout={() => setCurrentScreen('landing')}
         />
       </div>
 
@@ -381,6 +594,30 @@ export default function App() {
 
         {/* Central Dynamic View Area */}
         <main className="flex-1 min-w-0">
+          {/* ADMIN CONSOLE & FIREBASE MIGRATION VIEW */}
+          {(activeTab === 'admin' || (currentRole === 'admin' && activeTab === 'dashboard')) && (
+            <AdminConsole
+              onBack={() => {
+                setCurrentRole('professor');
+                setActiveTab('dashboard');
+              }}
+              onMigrationComplete={() => {
+                hydrateFromFirebase();
+              }}
+            />
+          )}
+
+          {/* BANCO DE MOEDAS / NFC VIEW */}
+          {activeTab === 'banco' && (
+            <BancoView
+              studentId={selectedStudent.id}
+              studentName={selectedStudent.name}
+              initialBalance={selectedStudent.coins ?? 320}
+              onBalanceChange={handleUpdateStudentCoins}
+              onExitNfc={() => setActiveTab('dashboard')}
+            />
+          )}
+
           {/* TEACHER DASHBOARD VIEW */}
           {currentRole === 'professor' && activeTab === 'dashboard' && (
             <ProfessorDashboard
@@ -389,7 +626,7 @@ export default function App() {
               onSelectStudent={handleSelectStudent}
               onNavigateToTab={setActiveTab}
               onOpenNewInterventionModal={(studentId) => {
-                const std = students.find(s => s.id === studentId);
+                const std = students.find((s) => s.id === studentId);
                 if (std) setSelectedStudent(std);
                 setIsInterventionModalOpen(true);
               }}
@@ -402,7 +639,7 @@ export default function App() {
             <StudentDashboard
               student={selectedStudent || students[0]}
               mission={selectedStudent?.currentMission || students[0]?.currentMission}
-              unlockedCard={cards.find(c => c.unlocked) || cards[0]}
+              unlockedCard={cards.find((c) => c.unlocked) || cards[0]}
               onStartMission={handleStartMission}
               onViewCard={handleOpenCard}
               onViewAchievements={() => setIsAchievementsModalOpen(true)}
@@ -433,28 +670,28 @@ export default function App() {
             <TrilhasView
               onStartMission={handleStartMission}
               selectedStudent={selectedStudent}
+              curriculumTracks={curriculumTracks}
             />
           )}
 
           {/* CARDS ALBUM VIEW */}
           {activeTab === 'cards' && (
-            <CardsAlbumView
-              cards={cards}
-              onSelectCard={handleOpenCard}
-            />
+            <CardsAlbumView cards={cards} onSelectCard={handleOpenCard} />
+          )}
+
+          {/* CONQUISTAS TAB SHORTCUT */}
+          {activeTab === 'conquistas' && (
+            <ReconhecimentoView students={students} />
           )}
 
           {/* RELATÓRIOS & MEMÓRIA PEDAGÓGICA VIEW */}
           {activeTab === 'relatorios' && (
-            <RelatoriosView
-              students={students}
-              metrics={metrics}
-            />
+            <RelatoriosView students={students} metrics={metrics} />
           )}
 
           {/* INTERVENÇÕES VIEW */}
           {activeTab === 'intervencoes' && (
-            <IntervencoesView 
+            <IntervencoesView
               students={students}
               onOpenNewIntervention={() => setIsInterventionModalOpen(true)}
             />
@@ -475,14 +712,16 @@ export default function App() {
 
           {/* LOJA DE MOEDAS VIEW (Aluno) */}
           {activeTab === 'loja' && (
-            <LojaMoedasView student={selectedStudent} />
+            <LojaMoedasView
+              student={selectedStudent}
+              onUpdateCoins={handleUpdateStudentCoins}
+            />
           )}
-
         </main>
       </div>
 
       {/* MODALS */}
-      {/* 1. Interactive 5-Step Mission Player Modal */}
+      {/* 1. Interactive 5-Step Mission Player Modal / LessonRunner */}
       {isMissionPlayerOpen && activeMissionData ? (
         <div className="fixed inset-0 z-[100] bg-white overflow-y-auto animate-fadeIn">
           <LessonRunner
@@ -497,7 +736,7 @@ export default function App() {
               completedTracks: [],
               masteredSkills: [],
               mistakeHistory: [],
-              earnedBadges: []
+              earnedBadges: [],
             }}
             onFinishLesson={(unitId, earnedXp) => {
               handleCompleteMission(earnedXp, activeMissionData.title);
@@ -523,13 +762,13 @@ export default function App() {
         onClose={() => setIsProfileModalOpen(false)}
         onConfirmMastery={handleConfirmMastery}
         onCreateIntervention={(studentId) => {
-          const std = students.find(s => s.id === studentId);
+          const std = students.find((s) => s.id === studentId);
           if (std) setSelectedStudent(std);
           setIsProfileModalOpen(false);
           setIsInterventionModalOpen(true);
         }}
         onStartDiagnostic={(studentId) => {
-          const std = students.find(s => s.id === studentId);
+          const std = students.find((s) => s.id === studentId);
           if (std) setSelectedStudent(std);
           setIsProfileModalOpen(false);
           setIsDiagnosticModalOpen(true);

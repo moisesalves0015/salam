@@ -15,6 +15,7 @@ import { TrailFilterBar } from './trail-game/TrailFilterBar';
 interface TrilhasViewProps {
   onStartMission: (missionNode?: any) => void;
   selectedStudent: Student;
+  curriculumTracks?: any[];
   /** Ref to the sidebar/menu button that opened Trilhas, for focus restoration */
   triggerRef?: React.RefObject<HTMLElement | null>;
 }
@@ -116,12 +117,18 @@ const CULTURE_NODES: TrailNode[] = [
   { id: 'cul-04', title: 'Arte que Fala', sub: 'Artes visuais e patrimônio cultural', status: 'ativo', xp: 65, coins: 32, modalidade: ['grupo', 'impresso'], habilidades: ['Leitura de obras de arte', 'Patrimônio cultural', 'Expressão visual'], criterioAvanco: 'Analisar obras de arte identificando elementos visuais e contexto cultural', cultural: '🎨 Arte, Criação e Patrimônio' },
 ];
 
+const FINANCE_NODES: TrailNode[] = [
+  { id: 'fin-01', title: 'Moedas, Cédulas e o Pix!', sub: 'Dinheiro físico, centavos e transferência no celular virtual (PixSimulator)', status: 'concluido', xp: 100, coins: 40, modalidade: ['individual', 'dupla'], habilidades: ['Sistema Monetário Brasileiro (EF05MA24)', 'Operações com Decimais e Pix'], criterioAvanco: 'Realizar pagamentos combinando cédulas, moedas e Pix no simulador interativo' },
+  { id: 'fin-02', title: 'Desejo vs. Necessidade', sub: 'Consumo consciente, prioridades e orçamento familiar', status: 'ativo', xp: 120, coins: 45, modalidade: ['individual', 'grupo'], habilidades: ['Consumo consciente', 'Planejamento financeiro'], criterioAvanco: 'Classificar gastos essenciais e supérfluos em situações reais' },
+  { id: 'fin-03', title: 'Planejando um Sonho (Poupança)', sub: 'Metas financeiras de curto e médio prazo', status: 'ativo', xp: 150, coins: 60, modalidade: ['individual', 'dupla', 'impresso'], habilidades: ['Poupança e metas', 'Cálculo de parcelas e prazos'], criterioAvanco: 'Elaborar plano de economia para atingir meta financeira' },
+];
+
 const TRAIL_DATA: Record<Discipline, TrailNode[]> = {
   mat: MATH_NODES,
   por: PORTUGUESE_NODES,
   cie: SCIENCE_NODES,
   cul: CULTURE_NODES,
-  fin: [],
+  fin: FINANCE_NODES,
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -129,6 +136,7 @@ const TRAIL_DATA: Record<Discipline, TrailNode[]> = {
 export const TrilhasView: React.FC<TrilhasViewProps> = ({
   onStartMission,
   selectedStudent,
+  curriculumTracks,
   triggerRef,
 }) => {
   const [selectedDiscipline, setSelectedDiscipline] = useState<Discipline>('mat');
@@ -137,7 +145,7 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
   const [isOpen, setIsOpen] = useState(true);
 
   // Modo de revisão
-  const isPreviewMode = import.meta.env.VITE_ENABLE_MISSION_PREVIEW === 'true';
+  const isPreviewMode = (import.meta as any).env?.VITE_ENABLE_MISSION_PREVIEW === 'true';
 
   const currentDisc = DISCIPLINES.find(d => d.id === selectedDiscipline)!;
   // Se for preview, força o status para 'ativo'
@@ -159,13 +167,19 @@ export const TrilhasView: React.FC<TrilhasViewProps> = ({
   const completedCount = allNodes.length > 0 ? allNodes.filter(n => n.status === 'concluido').length : 0;
   const progressPercent = allNodes.length > 0 ? Math.round((completedCount / allNodes.length) * 100) : 0;
 
-  // Active tracks from curriculum data
+  // Active tracks from Firebase curriculumTracks (with fallback to curriculum.ts)
   const subjectIdStr = selectedDiscipline === 'mat' ? 'matematica'
     : selectedDiscipline === 'por' ? 'portugues'
     : selectedDiscipline === 'cie' ? 'ciencias'
     : selectedDiscipline === 'cul' ? 'artes'
     : 'financeira';
-  const activeTracks = subjectTracksMap[subjectIdStr] || [];
+  const activeTracks = useMemo(() => {
+    if (curriculumTracks && curriculumTracks.length > 0) {
+      const fromDb = curriculumTracks.filter((t: any) => t.subjectId === subjectIdStr);
+      if (fromDb.length > 0) return fromDb;
+    }
+    return subjectTracksMap[subjectIdStr] || [];
+  }, [curriculumTracks, subjectIdStr]);
 
   // Next mission
   const nextNode = allNodes.find(n => n.status === 'ativo');
